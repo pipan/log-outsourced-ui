@@ -7,10 +7,12 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator'
     import ProjectsContainer from '@/components/ProjectsContainer.vue'
+    import StringInput from '@/components/form/StringInput.vue'
     import { ProjectEntity } from '@/lib/log-outsourced'
     @Component({
         components: {
-            ProjectsContainer
+            ProjectsContainer,
+            StringInput
         }
     })
     export default class App extends Vue {
@@ -27,5 +29,6 @@
 @import "../assets/scss/card.scss";
 @import "../assets/scss/list.scss";
 @import "../assets/scss/button.scss";
+@import "../assets/scss/form.scss";
 @import "../assets/scss/composition.scss";
 </style>

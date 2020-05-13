@@ -3,7 +3,7 @@
         <div class="card">
             <header class="card__header">Create Project</header>
             <div class="card__body">
-                TODO: Name input
+                <string-input id="name" label="Name"></string-input>
             </div>
             <footer class="card__footer">
                 <button class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -16,8 +16,13 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import { Broadcast } from '../lib/broadcast'
+    import StringInput from '@/components/form/StringInput.vue'
 
-    @Component
+    @Component({
+        components: {
+            StringInput
+        }
+    })
     export default class ProjectCreate extends Vue {
         @Prop() readonly broadcast!: Broadcast
 

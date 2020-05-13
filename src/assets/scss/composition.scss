@@ -55,3 +55,17 @@
         margin-right: var(--unit-l);
     }
 }
+
+.bottom {
+    &-s {
+        margin-bottom: var(--unit-s);
+    }
+    
+    &-m {
+        margin-bottom: var(--unit-m);
+    }
+    
+    &-l {
+        margin-bottom: var(--unit-l);
+    }
+}

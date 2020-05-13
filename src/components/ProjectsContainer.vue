@@ -1,10 +1,9 @@
 <template>
-    <section class="material__container flexbox-row start">
-        <button class="btn btn--forward right-m" @click="create()">
+    <section class="material__container">
+        <button class="btn btn--forward bottom-m" @click="create()">
             <i class="material-icons">add</i>
         </button>
-        <project-list class="flex" v-bind:items="projects" @open="open($event)">
-        </project-list>
+        <project-list class="flex" v-bind:items="projects" @open="open($event)"></project-list>
     </section>
 </template>
 
