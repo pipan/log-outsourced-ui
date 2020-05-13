@@ -20,7 +20,7 @@ export class Channel implements Listenable, Dispatchable {
         this.listeners.splice(index, 1)
     }
 
-    public dispatch (data: any): void {
+    public dispatch (data?: any): void {
         for (const listener of this.listeners) {
             listener.handle(data)
         }

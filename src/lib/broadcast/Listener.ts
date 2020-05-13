@@ -1,3 +1,3 @@
 export interface Listener {
-    handle(data: any): void
+    handle(data?: any): void
 }

@@ -2,33 +2,45 @@ import { Service } from '../service/Service'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
+import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
+import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
 import { Context } from '../Context'
+import { Broadcast, Closable } from '@/lib/broadcast'
+import { RouteChangeListener } from './listeners/RouteChangeListener'
 
 export class GuiService implements Service {
-    private context!: Context
+    private broadcast!: Broadcast
     private vue: Vue | null = null
+    private closables: Array<Closable> = []
 
     public constructor (context: Context) {
-        this.context = context
+        this.broadcast = context.broadcast()
     }
 
     public start (): void {
         Vue.use(VueRouter)
         Vue.config.productionTip = false
 
-        const services = {
-            broadcast: this.context.broadcast()
-        }
-
         const router = new VueRouter({
             routes: [
                 {
                     path: '',
-                    component: Index,
-                    props: { broadcast: services.broadcast }
+                    component: Layout,
+                    children: [
+                        {
+                            path: '',
+                            component: Index,
+                            props: { broadcast: this.broadcast }
+                        },
+                        {
+                            path: 'create',
+                            component: ProjectCreate,
+                            props: { broadcast: this.broadcast }
+                        }
+                    ]
                 },
                 {
                     path: '/project',
@@ -44,6 +56,11 @@ export class GuiService implements Service {
             mode: 'history'
         })
 
+        this.closables.push(
+            this.broadcast.channel('route.change')
+                .addListener(new RouteChangeListener(router))
+        )
+
         this.vue = new Vue({
             router,
             render: h => h(App)
@@ -51,6 +68,9 @@ export class GuiService implements Service {
     }
 
     public stop (): void {
+        for (const closable of this.closables) {
+            closable.close()
+        }
         if (this.vue == null) {
             return
         }

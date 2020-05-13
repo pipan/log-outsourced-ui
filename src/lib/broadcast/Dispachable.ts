@@ -1,3 +1,3 @@
 export interface Dispatchable {
-    dispatch (data: any): void;
+    dispatch (data?: any): void;
 }

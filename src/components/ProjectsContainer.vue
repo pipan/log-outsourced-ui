@@ -1,6 +1,6 @@
 <template>
     <section class="material__container flexbox-row start">
-        <button class="btn btn--forward right-m">
+        <button class="btn btn--forward right-m" @click="create()">
             <i class="material-icons">add</i>
         </button>
         <project-list class="flex" v-bind:items="projects" @open="open($event)">
@@ -23,6 +23,10 @@
 
         public open (project: ProjectEntity): void {
             this.$emit('open', project)
+        }
+
+        public create (): void {
+            this.$emit('create')
         }
     }
 </script>

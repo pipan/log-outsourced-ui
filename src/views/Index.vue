@@ -1,12 +1,5 @@
 <template>
-    <div>
-        <header class="material__header">
-            <div>Log Outsourced</div>
-        </header>
-        <div class="material__body">
-            <projects-container :projects="projects" @open="open($event)"></projects-container>
-        </div>
-    </div>
+    <projects-container :projects="projects" @open="open($event)" @create="create()"></projects-container>
 </template>
 
 <script lang="ts">
@@ -29,6 +22,11 @@
         public open (project: ProjectEntity): void {
             this.broadcast.channel('project.open')
                 .dispatch(project)
+        }
+
+        public create (): void {
+            this.broadcast.channel('project.create')
+                .dispatch()
         }
     }
 </script>
