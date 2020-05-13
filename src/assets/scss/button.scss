@@ -1,0 +1,41 @@
+.btn {
+    border: none;
+    border-radius: var(--corner-radius);
+    background-color: transparent;
+    padding: var(--unit-s) var(--unit-m);
+    transition: background-color var(--transition-fast) ease,
+        transform var(--transition-fast) ease,
+        opacity var(--transition-fast) ease;
+    cursor: pointer;
+
+    &:active {
+        transform: scale(0.9);
+    }
+
+    &--primary {
+        color: var(--primary);
+
+        &:hover {
+            background-color: var(--bg-level-bottom);
+        }
+    }
+
+    &--secondary {
+        color: var(--fg);
+
+        &:hover {
+            background-color: var(--bg-level-bottom);
+        }
+    }
+
+    &--forward {
+        background-color: var(--primary);
+        color: var(--bg-level-top);
+        padding: var(--unit-s);
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

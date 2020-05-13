@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import App from './App.vue'
+import { ApplicationService } from './app/ApplicationService'
 
-Vue.config.productionTip = false
+const appService: ApplicationService = new ApplicationService()
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+appService.start()

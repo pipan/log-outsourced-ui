@@ -1,0 +1,24 @@
+.list {
+    &__item {
+        border-radius: var(--corner-radius);
+        background-color: var(--bg-level-middle);
+        margin-top: var(--unit-m);
+        transition: background-color var(--transition-fast) ease;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &--active {
+            background-color: var(--bg-level-top);
+        }
+
+        &__top {
+            padding: var(--unit-m);
+        }
+
+        &__bottom {
+            padding: 0px var(--unit-m) var(--unit-m) var(--unit-m);
+        }
+    }
+}
