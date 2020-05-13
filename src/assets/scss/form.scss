@@ -28,4 +28,19 @@
             border-color: var(--primary)
         }
     }
+
+    &__error {
+        color: var(--error);
+        margin-top: 4px;
+    }
+
+    &--error {
+        .field__label {
+            font-size: 12px;
+        }
+
+        .field__input {
+            border-color: var(--error);
+        }
+    }
 }

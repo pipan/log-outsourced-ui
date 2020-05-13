@@ -1,7 +1,10 @@
 <template>
-    <div class="field">
-        <label :for="id" class="field__label">{{ label }}</label>
-        <input :id="id" class="field__input" type="text" :placeholder="placeholder" />
+    <div class="field" :class="{'field--error': hasError()}">
+        <label :for="id" class="field__label">
+            <div>{{ label }}</div>
+            <div class="field__error top-s" v-if="hasError()">{{ error }}</div>
+        </label>
+        <input :id="id" class="field__input" type="text" :value="value" @input="change($event)" :placeholder="placeholder" />
     </div>
 </template>
 
@@ -14,6 +17,17 @@
         @Prop({ default: '' }) readonly id!: string;
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly placeholder!: string;
+        @Prop({ default: '' }) readonly error!: string;
+        @Prop({ default: '' }) readonly value!: string;
+
+        public change (event: any): void {
+            this.$emit('input', event.target.value)
+            this.$emit('change', event.target.value)
+        }
+
+        public hasError (): boolean {
+            return this.error !== ''
+        }
     }
 </script>
 

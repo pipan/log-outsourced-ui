@@ -31,4 +31,5 @@
 @import "../assets/scss/button.scss";
 @import "../assets/scss/form.scss";
 @import "../assets/scss/composition.scss";
+@import "../assets/scss/text.scss";
 </style>

@@ -1,7 +1,7 @@
 <template>
     <section class="material__container">
         <button class="btn btn--forward bottom-m" @click="create()">
-            <i class="material-icons">add</i>
+            <i class="material-icons md-18">add</i>
         </button>
         <project-list class="flex" v-bind:items="projects" @open="open($event)"></project-list>
     </section>
