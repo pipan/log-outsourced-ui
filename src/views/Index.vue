@@ -5,8 +5,8 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import ProjectsContainer from '@/components/ProjectsContainer.vue'
-    import { ProjectEntity } from '../lib/log-outsourced'
-    import { Channel } from '../lib/broadcast/Channel'
+    import { ProjectEntity } from '@/lib/log-outsourced-api'
+    import { Channel } from '@/lib/broadcast/Channel'
     @Component({
         components: {
             ProjectsContainer

@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator'
-    import { ProjectEntity } from '../lib/log-outsourced'
+    import { ProjectEntity } from '@/lib/log-outsourced-api'
     @Component
     export default class ProjectLayout extends Vue {
         public project: ProjectEntity = new ProjectEntity('1234', 'Ovaldo')

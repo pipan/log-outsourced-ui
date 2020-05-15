@@ -23,7 +23,7 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringInput from '@/components/form/StringInput.vue'
-    import { Channel } from '../lib/broadcast/Channel'
+    import { Channel } from '@/lib/broadcast/Channel'
 
     @Component({
         components: {
