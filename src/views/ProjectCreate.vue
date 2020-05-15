@@ -22,7 +22,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { Broadcast } from '../lib/broadcast'
     import StringInput from '@/components/form/StringInput.vue'
     import { Channel } from '../lib/broadcast/Channel'
 

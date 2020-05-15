@@ -1,5 +1,5 @@
-import { Controller } from '@/lib/framework';
-import { ObservableProperty } from '@wildebeest/observe-changes';
+import { Controller } from '@/lib/framework'
+import { ObservableProperty } from '@wildebeest/observe-changes'
 
 export class SceneChangeController implements Controller {
     private scene: ObservableProperty<string>

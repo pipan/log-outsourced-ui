@@ -10,11 +10,10 @@
     import ProjectsContainer from '@/components/ProjectsContainer.vue'
     import StringInput from '@/components/form/StringInput.vue'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
-    import { ProjectEntity } from '@/lib/log-outsourced'
-    import { AlertContract, SimpleAlert } from '../components/alert'
+    import { AlertContract } from '../components/alert'
     import { ObservableList, ListChange } from '@wildebeest/observe-changes'
-    import { Broadcast, Closable } from '../lib/broadcast'
-import { Channel } from '../lib/broadcast/Channel'
+    import { Closable } from '../lib/broadcast'
+    import { Channel } from '../lib/broadcast/Channel'
     @Component({
         components: {
             ProjectsContainer,

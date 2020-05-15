@@ -1,5 +1,5 @@
-import { Listener } from '@/lib/broadcast/Listener';
-import { Controller } from './Controller';
+import { Listener } from '@/lib/broadcast/Listener'
+import { Controller } from './Controller'
 
 export class ControllerListener implements Listener {
     private controller: Controller

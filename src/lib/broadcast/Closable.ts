@@ -1,3 +1,3 @@
 export interface Closable {
-    close (): void
+    close (): void;
 }
