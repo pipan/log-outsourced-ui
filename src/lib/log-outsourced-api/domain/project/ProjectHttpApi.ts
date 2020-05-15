@@ -20,4 +20,31 @@ export class ProjectHttpApi implements ProjectApi {
                 return adapter.adapt(data)
             })
     }
+
+    public view (uuid: string): Promise<ProjectEntity> {
+        return fetch(this.host + '/api/v1/projects/' + uuid)
+            .then(response => response.json())
+            .then(data => this.readAdapter.adapt(data))
+    }
+
+    public delete (project: ProjectEntity): Promise<void> {
+        return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+    }
+
+    public create (project: ProjectEntity): Promise<ProjectEntity> {
+        return fetch(this.host + '/api/v1/projects', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: project.getName()
+            })
+        })
+            .then(response => response.json())
+            .then(data => this.readAdapter.adapt(data))
+    }
 }

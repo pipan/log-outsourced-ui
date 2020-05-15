@@ -44,7 +44,12 @@
                 this.nameError = 'required'
                 return
             }
-            this.channel.dispatch({ event: 'project.create@save' })
+            this.channel.dispatch({
+                event: 'project@create',
+                data: {
+                    name: this.name
+                }
+            })
         }
 
         public onNameChange (name: string): void {

@@ -11,8 +11,7 @@
     import StringInput from '@/components/form/StringInput.vue'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { AlertContract } from '../components/alert'
-    import { ObservableList, ListChange } from '@wildebeest/observe-changes'
-    import { Closable } from '../lib/broadcast'
+    import { ObservableList, Closable } from '@wildebeest/observe-changes'
     import { Channel } from '../lib/broadcast/Channel'
     @Component({
         components: {
@@ -30,15 +29,17 @@
 
         public closeAlert (alert: AlertContract): void {
             this.channel.dispatch({
-                event: 'alert.close',
+                event: 'alert@remove',
                 data: alert
             })
         }
 
         public mounted (): void {
-            this.alertsProperty.addListenerAndCall((change: ListChange<AlertContract>) => {
-                this.alerts = this.alertsProperty.all()
-            })
+            this.closables.push(
+                this.alertsProperty.addListenerAndCall(() => {
+                    this.alerts = this.alertsProperty.all()
+                })
+            )
         }
 
         public beforeDestroy (): void {

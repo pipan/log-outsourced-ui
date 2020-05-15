@@ -6,14 +6,21 @@ import { Controller } from './controller/Controller'
 import { Context } from './module/Context'
 import { SimpleContext } from './module/SimpleContext'
 import { MapChange } from '@wildebeest/observe-changes'
+import { Channel } from '../broadcast/Channel'
+import { OutsideEventListener } from './listener/OutsideEventListener'
 
 export class ModularFramework implements Framework {
     private broadcast: Broadcast = new SimpleBroadcast()
+    private channel: Channel = new Channel()
     private context: Context = new SimpleContext()
 
     public constructor (modules: Array<Module> = []) {
+        this.context.observables().add('channel', this.channel)
         this.context.controllers().addListener(
             this.onControllersChange.bind(this)
+        )
+        this.channel.addListener(
+            new OutsideEventListener(this)
         )
 
         for (const module of modules) {
@@ -40,5 +47,9 @@ export class ModularFramework implements Framework {
 
     public getObservable (name: string): any {
         return this.context.observables().get(name)
+    }
+
+    public getChannel (): Channel {
+        return this.channel
     }
 }
