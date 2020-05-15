@@ -1,25 +1,52 @@
 <template>
-    <div class="material">
+    <div>
         <router-view></router-view>
+        <alert-container :alerts="alerts" @close="closeAlert($event)"></alert-container>
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator'
+    import { Component, Vue, Prop } from 'vue-property-decorator'
     import ProjectsContainer from '@/components/ProjectsContainer.vue'
     import StringInput from '@/components/form/StringInput.vue'
+    import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { ProjectEntity } from '@/lib/log-outsourced'
+    import { AlertContract, SimpleAlert } from '../components/alert'
+    import { ObservableList, ListChange } from '@wildebeest/observe-changes'
+    import { Broadcast, Closable } from '../lib/broadcast'
+import { Channel } from '../lib/broadcast/Channel'
     @Component({
         components: {
             ProjectsContainer,
-            StringInput
+            StringInput,
+            AlertContainer
         }
     })
     export default class App extends Vue {
-        public projects: Array<ProjectEntity> = [
-            new ProjectEntity('001', 'one'),
-            new ProjectEntity('002', 'two')
-        ]
+        @Prop() public alertsProperty!: ObservableList<AlertContract>
+        @Prop() public channel!: Channel
+
+        public alerts: Array<AlertContract> = []
+        private closables: Array<Closable> = []
+
+        public closeAlert (alert: AlertContract): void {
+            this.channel.dispatch({
+                event: 'alert.close',
+                data: alert
+            })
+        }
+
+        public mounted (): void {
+            this.alertsProperty.addListenerAndCall((change: ListChange<AlertContract>) => {
+                this.alerts = this.alertsProperty.all()
+            })
+        }
+
+        public beforeDestroy (): void {
+            for (const closable of this.closables) {
+                closable.close()
+            }
+        }
     }
 </script>
 
@@ -32,4 +59,5 @@
 @import "../assets/scss/form.scss";
 @import "../assets/scss/composition.scss";
 @import "../assets/scss/text.scss";
+@import "../assets/scss/alert.scss";
 </style>

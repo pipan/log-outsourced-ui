@@ -1,4 +1,3 @@
-import { Service } from '../service/Service'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
@@ -7,20 +6,17 @@ import Index from '@/views/Index.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
-import { Context } from '../Context'
-import { Broadcast, Closable } from '@/lib/broadcast'
-import { RouteChangeListener } from './listeners/RouteChangeListener'
+import { Listenable, Closable } from '@/lib/broadcast'
+import { Listener } from '@/lib/broadcast/Listener'
+import { Channel } from '@/lib/broadcast/Channel'
+import { Framework } from '@/lib/framework'
+import { VueEventAdapter } from './VueEventAdapter'
+import { PropertyChange } from '@wildebeest/observe-changes'
 
-export class GuiService implements Service {
-    private broadcast!: Broadcast
-    private vue: Vue | null = null
-    private closables: Array<Closable> = []
+export class VueApplication implements Listenable {
+    private channel: Channel = new Channel()
 
-    public constructor (context: Context) {
-        this.broadcast = context.broadcast()
-    }
-
-    public start (): void {
+    public constructor (framework: Framework) {
         Vue.use(VueRouter)
         Vue.config.productionTip = false
 
@@ -33,12 +29,12 @@ export class GuiService implements Service {
                         {
                             path: '',
                             component: Index,
-                            props: { broadcast: this.broadcast }
+                            props: { channel: this.channel }
                         },
                         {
                             path: 'create',
                             component: ProjectCreate,
-                            props: { broadcast: this.broadcast }
+                            props: { channel: this.channel }
                         }
                     ]
                 },
@@ -56,25 +52,27 @@ export class GuiService implements Service {
             mode: 'history'
         })
 
-        this.closables.push(
-            this.broadcast.channel('route.change')
-                .addListener(new RouteChangeListener(router))
-        )
+        this.channel.addListener(new VueEventAdapter(framework))
+        framework.getObservable('scene').addListener((change: PropertyChange<string>) => {
+            router.push(change.next())
+        })
 
-        this.vue = new Vue({
+        new Vue({
             router,
-            render: h => h(App)
+            render: h => h(App, {
+                props: {
+                    alertsProperty: framework.getObservable('alerts'),
+                    channel: this.channel
+                }
+            })
         }).$mount('#app')
     }
 
-    public stop (): void {
-        for (const closable of this.closables) {
-            closable.close()
-        }
-        if (this.vue == null) {
-            return
-        }
-        this.vue.$destroy()
-        this.vue = null
+    public addListener (listener: Listener): Closable {
+        return this.channel.addListener(listener)
+    }
+
+    public removeListener (listener: Listener): void {
+        this.channel.removeListener(listener)
     }
 }
