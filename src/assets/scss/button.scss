@@ -12,20 +12,16 @@
         transform: scale(0.9);
     }
 
+    &:hover {
+        background-color: var(--btn-hover-bg);
+    }
+
     &--primary {
         color: var(--primary);
-
-        &:hover {
-            background-color: var(--bg-level-bottom);
-        }
     }
 
     &--secondary {
         color: var(--fg);
-
-        &:hover {
-            background-color: var(--bg-level-bottom);
-        }
     }
 
     &--forward {
@@ -35,6 +31,7 @@
         opacity: 0.8;
 
         &:hover {
+            background-color: var(--primary);
             opacity: 1;
         }
     }

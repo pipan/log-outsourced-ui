@@ -24,6 +24,7 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import { Broadcast } from '../lib/broadcast'
     import StringInput from '@/components/form/StringInput.vue'
+    import { Channel } from '../lib/broadcast/Channel'
 
     @Component({
         components: {
@@ -31,13 +32,12 @@
         }
     })
     export default class ProjectCreate extends Vue {
-        @Prop() readonly broadcast!: Broadcast
+        @Prop() readonly channel!: Channel
         public name = ''
         public nameError = ''
 
         public cancel (): void {
-            this.broadcast.channel('project.create.cancel')
-                .dispatch()
+            this.channel.dispatch({ event: 'project.create@close' })
         }
 
         public save (): void {
@@ -45,8 +45,7 @@
                 this.nameError = 'required'
                 return
             }
-            this.broadcast.channel('project.save')
-                .dispatch()
+            this.channel.dispatch({ event: 'project.create@save' })
         }
 
         public onNameChange (name: string): void {
