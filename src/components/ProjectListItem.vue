@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ProjectEntity } from '@/lib/log-outsourced'
+    import { ProjectEntity } from '@/lib/log-outsourced-api'
 
     @Component
     export default class ProjectListItem extends Vue {

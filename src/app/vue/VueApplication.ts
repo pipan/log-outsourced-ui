@@ -14,9 +14,11 @@ import { VueEventAdapter } from './VueEventAdapter'
 import { PropertyChange } from '@wildebeest/observe-changes'
 
 export class VueApplication implements Listenable {
-    private channel: Channel = new Channel()
+    private channel: Channel
 
     public constructor (framework: Framework) {
+        this.channel = framework.getChannel()
+
         Vue.use(VueRouter)
         Vue.config.productionTip = false
 
@@ -29,12 +31,18 @@ export class VueApplication implements Listenable {
                         {
                             path: '',
                             component: Index,
-                            props: { channel: this.channel }
+                            props: {
+                                channel: this.channel,
+                                projectsProperty: framework.getObservable('projects')
+                            }
                         },
                         {
                             path: 'create',
                             component: ProjectCreate,
-                            props: { channel: this.channel }
+                            props: {
+                                channel: this.channel,
+                                modelProperty: framework.getObservable('projectCreate')
+                            }
                         }
                     ]
                 },
@@ -52,7 +60,6 @@ export class VueApplication implements Listenable {
             mode: 'history'
         })
 
-        this.channel.addListener(new VueEventAdapter(framework))
         framework.getObservable('scene').addListener((change: PropertyChange<string>) => {
             router.push(change.next())
         })

@@ -10,7 +10,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ProjectEntity } from '@/lib/log-outsourced'
 
     @Component
     export default class StringInput extends Vue {
