@@ -1,5 +1,5 @@
 import { Controller } from '@/lib/framework'
-import { ObservableList } from '@wildebeest/observe-changes'
+import { ObservableList, ObservableProperty } from '@wildebeest/observe-changes'
 import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
 import { Channel } from '@/lib/broadcast/Channel'
 
@@ -25,6 +25,7 @@ export class ProjectCreateController implements Controller {
                         type: 'success'
                     }
                 })
+                this.channel.dispatch({ event: 'project.create@reset' })
                 this.channel.dispatch({
                     event: 'scene@change',
                     data: '/'

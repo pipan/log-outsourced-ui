@@ -7,7 +7,7 @@
                     <string-input
                         id="name"
                         label="Name"
-                        :value="name"
+                        :value="model.name"
                         :error="nameError"
                         @change="onNameChange($event)"></string-input>
                 </div>
@@ -24,6 +24,7 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringInput from '@/components/form/StringInput.vue'
     import { Channel } from '@/lib/broadcast/Channel'
+    import { ObservableProperty, PropertyChange, Closable } from '@wildebeest/observe-changes'
 
     @Component({
         components: {
@@ -32,28 +33,49 @@
     })
     export default class ProjectCreate extends Vue {
         @Prop() readonly channel!: Channel
-        public name = ''
+        @Prop() readonly modelProperty!: ObservableProperty<any>
+
         public nameError = ''
+        public model: any = {}
+        private closables: Array<Closable> = []
+
+        public mounted (): void {
+            this.closables.push(
+                this.modelProperty.addListenerAndCall(
+                    this.onModelPropertyChange.bind(this)
+                )
+            )
+        }
+
+        public beforeDestry (): void {
+            for (const closable of this.closables) {
+                closable.close()
+            }
+        }
 
         public cancel (): void {
             this.channel.dispatch({ event: 'project.create@close' })
         }
 
+        private onModelPropertyChange (change: PropertyChange<any>): void {
+            this.model = change.next()
+        }
+
         public save (): void {
-            if (this.name === '') {
+            if (this.model?.name === '') {
                 this.nameError = 'required'
                 return
             }
             this.channel.dispatch({
                 event: 'project@create',
                 data: {
-                    name: this.name
+                    name: this.model.name
                 }
             })
         }
 
         public onNameChange (name: string): void {
-            this.name = name
+            this.model.name = name
             this.nameError = ''
         }
     }

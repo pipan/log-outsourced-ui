@@ -39,7 +39,10 @@ export class VueApplication implements Listenable {
                         {
                             path: 'create',
                             component: ProjectCreate,
-                            props: { channel: this.channel }
+                            props: {
+                                channel: this.channel,
+                                modelProperty: framework.getObservable('projectCreate')
+                            }
                         }
                     ]
                 },
