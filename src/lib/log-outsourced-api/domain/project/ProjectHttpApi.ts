@@ -47,4 +47,29 @@ export class ProjectHttpApi implements ProjectApi {
             .then(response => response.json())
             .then(data => this.readAdapter.adapt(data))
     }
+
+    public update (project: ProjectEntity): Promise<ProjectEntity> {
+        return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: project.getName()
+            })
+        })
+            .then(response => response.json())
+            .then(data => this.readAdapter.adapt(data))
+    }
+
+    public generate (uuid: string): Promise<ProjectEntity> {
+        return fetch(this.host + '/api/v1/projects/' + uuid + '/generate', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => this.readAdapter.adapt(data))
+    }
 }
