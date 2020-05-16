@@ -26,6 +26,8 @@
                     this.projects = this.projectsProperty.all()
                 })
             )
+
+            this.channel.dispatch({ event: 'project@load.all' })
         }
 
         public beforeDestroy (): void {
@@ -36,7 +38,7 @@
 
         public open (project: ProjectEntity): void {
             this.channel.dispatch({
-                event: 'project@delete',
+                event: 'project@open',
                 data: project
             })
         }

@@ -1,17 +1,17 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, { Route } from 'vue-router'
 import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
+import ListenerCreate from '@/views/ListenerCreate.vue'
 import { Listenable, Closable } from '@/lib/broadcast'
 import { Listener } from '@/lib/broadcast/Listener'
 import { Channel } from '@/lib/broadcast/Channel'
 import { Framework } from '@/lib/framework'
-import { VueEventAdapter } from './VueEventAdapter'
-import { PropertyChange } from '@wildebeest/observe-changes'
+import { PropertyChange, SimpleObservableProperty } from '@wildebeest/observe-changes'
 
 export class VueApplication implements Listenable {
     private channel: Channel
@@ -41,7 +41,7 @@ export class VueApplication implements Listenable {
                             component: ProjectCreate,
                             props: {
                                 channel: this.channel,
-                                modelProperty: framework.getObservable('projectCreate')
+                                modelProperty: framework.getObservable('project.create')
                             }
                         }
                     ]
@@ -49,10 +49,27 @@ export class VueApplication implements Listenable {
                 {
                     path: '/project',
                     component: ProjectLayout,
+                    props: {
+                        channel: this.channel,
+                        projectProperty: framework.getObservable('project.active'),
+                        apiProperty: framework.getObservable('api')
+                    },
                     children: [
                         {
+                            path: 'listener/create',
+                            component: ListenerCreate,
+                            props: {
+                                channel: this.channel,
+                                modelProperty: framework.getObservable('listener.create')
+                            }
+                        },
+                        {
                             path: ':uuid',
-                            component: ProjectDetail
+                            component: ProjectDetail,
+                            props: {
+                                channel: this.channel,
+                                activeProject: framework.getObservable('project.active')
+                            }
                         }
                     ]
                 }
@@ -61,7 +78,17 @@ export class VueApplication implements Listenable {
         })
 
         framework.getObservable('scene').addListener((change: PropertyChange<string>) => {
+            if (router.currentRoute.path === change.next()) {
+                return
+            }
             router.push(change.next())
+        })
+
+        router.afterEach((to: Route, from: Route) => {
+            this.channel.dispatch({
+                event: 'scene@change',
+                data: to.path
+            })
         })
 
         new Vue({
