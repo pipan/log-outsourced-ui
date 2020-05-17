@@ -4,19 +4,23 @@
             <form @submit.prevent="save()">
                 <header class="card__header">Create Rule</header>
                 <div class="card__body">
-                    <string-input
-                        id="name"
-                        label="Name"
-                        :value="model.name"
-                        :error="nameError"
-                        @change="onNameChange($event)"></string-input>
-                    <select-input
-                        id="handler"
-                        label="Handler"
-                        :value="'one'"
-                        :error="''"
-                        :options="['one', {label: 'two'}]"
-                        @change="onHandlerChange($event)"></select-input>
+                    <div>
+                        <string-field
+                            id="name"
+                            label="Name"
+                            :value="model.name"
+                            :error="nameError"
+                            @change="onNameChange($event)"></string-field>
+                        <select-field
+                            id="handler"
+                            label="Handler"
+                            :value="model.handler"
+                            :error="''"
+                            :options="handlerOptions"
+                            @change="onHandlerChange($event)"></select-field>
+                    </div>
+                    <h3 class="top-l">Database</h3>
+                    <form-builder class="top-m" :fields="fields"></form-builder>
                 </div>
                 <footer class="card__footer">
                     <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -29,29 +33,91 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringInput from '@/components/form/StringInput.vue'
-    import SelectInput from '@/components/form/SelectInput.vue'
+    import StringField from '@/components/form/StringField.vue'
+    import SelectField from '@/components/form/SelectField.vue'
+    import FormBuilder from '@/components/form/FormBuilder.vue'
     import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableProperty, PropertyChange, Closable } from '@wildebeest/observe-changes'
+    import { ObservableProperty, PropertyChange, Closable, ObservableList, ListChange } from '@wildebeest/observe-changes'
+    import { HandlerEntity, ProjectEntity } from '../lib/log-outsourced-api'
 
     @Component({
         components: {
-            StringInput,
-            SelectInput
+            StringField,
+            SelectField,
+            FormBuilder
         }
     })
     export default class ListenerCreate extends Vue {
         @Prop() readonly channel!: Channel
         @Prop() readonly modelProperty!: ObservableProperty<any>
+        @Prop() readonly handlersProperty!: ObservableList<HandlerEntity>
+        @Prop() readonly activeProjectProperty!: ObservableProperty<ProjectEntity>
 
         public nameError = ''
         public model: any = {}
+        protected handlers: Array<HandlerEntity> = []
+        public handlerOptions: Array<any> = []
         private closables: Array<Closable> = []
+        public fields: Array<any> = [
+            {
+                type: 'string',
+                props: {
+                    id: 'host',
+                    label: 'Host',
+                    value: 'localhost'
+                }
+            },
+            {
+                type: 'number',
+                props: {
+                    id: 'port',
+                    label: 'Port',
+                    value: 3306
+                }
+            },
+            {
+                type: 'string',
+                props: {
+                    id: 'database',
+                    label: 'Database',
+                    value: 'ovaldo'
+                }
+            },
+            {
+                type: 'string',
+                props: {
+                    id: 'uesr',
+                    label: 'User',
+                    value: 'user'
+                }
+            },
+            {
+                type: 'password',
+                props: {
+                    id: 'password',
+                    label: 'Password'
+                }
+            },
+            {
+                type: 'string',
+                props: {
+                    id: 'table',
+                    label: 'Table',
+                    value: 'logs'
+                }
+            }
+        ]
 
         public mounted (): void {
             this.closables.push(
                 this.modelProperty.addListenerAndCall(
                     this.onModelPropertyChange.bind(this)
+                )
+            )
+
+            this.closables.push(
+                this.handlersProperty.addListenerAndCall(
+                    this.onHandlersPropertyChange.bind(this)
                 )
             )
         }
@@ -70,6 +136,17 @@
             this.model = change.next()
         }
 
+        private onHandlersPropertyChange (): void {
+            const options: Array<any> = []
+            for (const handler of this.handlersProperty.all()) {
+                options.push({
+                    label: handler.getName(),
+                    value: handler
+                })
+            }
+            this.handlerOptions = options
+        }
+
         public save (): void {
             if (this.model?.name === '') {
                 this.nameError = 'required'
@@ -78,7 +155,8 @@
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
-                    name: this.model.name
+                    name: this.model.name,
+                    projectUuid: this.activeProjectProperty.get().getUuid()
                 }
             })
         }

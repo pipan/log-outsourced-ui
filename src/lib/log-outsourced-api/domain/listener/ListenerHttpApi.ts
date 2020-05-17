@@ -19,7 +19,7 @@ export class ListenerHttpApi implements ListenerApi {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                projectId: listener.getProjecId(),
+                project_uuid: listener.getProjecUuid(),
                 name: listener.getName()
             })
         })
@@ -34,7 +34,7 @@ export class ListenerHttpApi implements ListenerApi {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                projectId: listener.getProjecId(),
+                project_uuid: listener.getProjecUuid(),
                 name: listener.getName()
             })
         })

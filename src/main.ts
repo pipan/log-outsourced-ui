@@ -16,7 +16,7 @@ const framework: ModularFramework = new ModularFramework([
     new AlertModule(),
     new ProjectModule(httpApi.projects()),
     new HandlerModule(httpApi.handlers()),
-    new ListenerModule(),
+    new ListenerModule(httpApi.listeners()),
     new ApiModule(host)
 ])
 
