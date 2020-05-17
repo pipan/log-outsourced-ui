@@ -24,6 +24,10 @@
         color: var(--fg);
     }
 
+    &--square {
+        padding: var(--unit-s);
+    }
+
     &--forward {
         background-color: var(--primary);
         color: var(--bg-level-top);

@@ -11,15 +11,13 @@ import { OutsideEventListener } from './listener/OutsideEventListener'
 
 export class ModularFramework implements Framework {
     private broadcast: Broadcast = new SimpleBroadcast()
-    private channel: Channel = new Channel()
     private context: Context = new SimpleContext()
 
     public constructor (modules: Array<Module> = []) {
-        this.context.observables().add('channel', this.channel)
         this.context.controllers().addListener(
             this.onControllersChange.bind(this)
         )
-        this.channel.addListener(
+        this.context.channel().addListener(
             new OutsideEventListener(this)
         )
 
@@ -50,6 +48,6 @@ export class ModularFramework implements Framework {
     }
 
     public getChannel (): Channel {
-        return this.channel
+        return this.context.channel()
     }
 }

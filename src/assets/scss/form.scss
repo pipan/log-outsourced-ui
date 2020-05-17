@@ -1,14 +1,80 @@
+select {
+    font: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--fg) 50%),
+        linear-gradient(135deg, var(--fg) 50%, transparent 50%),
+        linear-gradient(to right, var(--fg), var(--fg));
+    background-position:
+        calc(100% - 20px) calc(1em),
+        calc(100% - 15px) calc(1em),
+        calc(100% - 2.5em) 0.5em;
+    background-size:
+        5px 5px,
+        5px 5px,
+        1px 1.2em;
+    background-repeat: no-repeat;
+}
+
+select:focus {
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--primary) 50%),
+        linear-gradient(135deg, var(--primary) 50%, transparent 50%),
+        linear-gradient(to right, var(--primary), var(--primary));
+}
+
+input {
+    font: inherit;
+}
+
+.checkbox {
+    position: relative;
+
+    input[type="checkbox"] {
+        opacity: 0;
+        position: absolute;
+    }
+
+    &__box {
+        display: block;
+        border: 1px solid var(--fg);
+        border-radius: var(--corner-radius);
+        padding: var(--unit-s);
+        cursor: pointer;
+    
+        &::after {
+            width: 16px;
+            height: 16px;
+            content: '';
+            font-family: 'Material Icons';
+            font-size: 16px;
+            display: block;
+            line-height: 1;
+        }
+    }
+    
+    input[type="checkbox"]:checked + &__box::after {
+        content: 'check';
+    }
+    
+    input[type="checkbox"]:focus + &__box {
+        border-color: var(--primary);
+    }
+}
+
 .field {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: var(--unit-s) 0px;
+    margin-top: var(--unit-m);
 
     &__label {
         display: block;
         box-sizing: border-box;
         width: 50%;
-        padding: 0px var(--unit-m);
+        padding-right: var(--unit-m);
         color: var(--fg);
         cursor: pointer;
     }
@@ -42,5 +108,9 @@
         .field__input {
             border-color: var(--error);
         }
+    }
+
+    &:first-of-type {
+        margin-top: 0px;
     }
 }

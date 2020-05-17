@@ -4,6 +4,17 @@
 .material-icons.md-48 { font-size: 48px; }
 
 .text {
+    &-m {
+        font-size: var(--h2);
+    }
+
+    &-ellipsis {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        line-height: 1.3em;
+    }
+
     &--error {
         color: var(--error);
     }
