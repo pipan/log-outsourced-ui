@@ -1,5 +1,5 @@
 <template>
-    <input :id="id" class="field__input" type="number" :value="value" @input="change($event)" :placeholder="placeholder" />
+    <input :id="id" class="field__input" type="number" :value="value" @input="change($event.target.value)" :placeholder="placeholder" />
 </template>
 
 <script lang="ts">

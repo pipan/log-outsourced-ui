@@ -21,6 +21,10 @@ export class Channel implements Listenable, Dispatchable {
     }
 
     public dispatch (data?: any): void {
+        if (this.listeners.length === 0) {
+            console.warn('dispatching data on an empty channel')
+            return
+        }
         for (const listener of this.listeners) {
             listener.handle(data)
         }

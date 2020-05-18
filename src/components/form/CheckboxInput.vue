@@ -1,6 +1,6 @@
 <template>
     <label :for="id" class="checkbox">
-        <input :id="id" class="field__input" type="checkbox" :checked="checked" @change="$emit('change', $event)" />
+        <input :id="id" class="field__input" type="checkbox" :checked="checked" @change="$emit('change', $event.target.checked)" />
         <span class="checkbox__box"></span>
     </label>
 </template>

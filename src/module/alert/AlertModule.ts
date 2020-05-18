@@ -17,7 +17,7 @@ export class AlertModule implements Module {
             new MapEntry('alert@remove', new AlertRemoveController(alerts))
         ])
 
-        const autohideService: AlertAutohideService = new AlertAutohideService(3000, alerts, context.observables().get('channel'))
+        const autohideService: AlertAutohideService = new AlertAutohideService(3000, alerts, context.channel())
         autohideService.start()
     }
 }

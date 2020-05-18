@@ -1,14 +1,14 @@
 import { Channel } from './Channel'
-import { Broadcast } from './Broadcast'
+import { Broadcaster } from './Broadcaster'
 
-export class SimpleBroadcast implements Broadcast {
+export class SimpleBroadcaster implements Broadcaster {
     private channels!: Map<string, Channel>
 
     public constructor () {
         this.channels = new Map()
     }
 
-    public channel (name: string): Channel {
+    public getChannel (name: string): Channel {
         if (!this.channels.has(name)) {
             this.channels.set(name, new Channel())
         }
