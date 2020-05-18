@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <project-list-item v-for="item of items" :key="item.getUuid()" :project="item" @open="open($event)"></project-list-item>
+        <project-list-item v-for="item of items" :key="item.getUuid()" :project="item" @open="open($event)" @delete="$emit('delete', $event)"></project-list-item>
     </div>
 </template>
 

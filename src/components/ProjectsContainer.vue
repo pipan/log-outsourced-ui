@@ -6,7 +6,7 @@
                 <i class="material-icons md-18">add</i>
             </button>
         </div>
-        <project-list class="flex" v-bind:items="projects" @open="open($event)"></project-list>
+        <project-list class="flex" v-bind:items="projects" @open="open($event)" @delete="$emit('delete', $event)"></project-list>
     </section>
 </template>
 

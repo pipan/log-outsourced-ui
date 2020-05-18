@@ -60,4 +60,5 @@
 @import "../assets/scss/composition.scss";
 @import "../assets/scss/text.scss";
 @import "../assets/scss/alert.scss";
+@import "../assets/scss/contextmenu.scss";
 </style>

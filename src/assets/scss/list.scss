@@ -1,5 +1,6 @@
 .list {
     &__item {
+        position: relative;
         border-radius: var(--corner-radius);
         background-color: var(--bg-level-middle);
         margin-top: var(--unit-m);
@@ -14,7 +15,16 @@
         }
 
         &__top {
+            // display: flex;
+            // flex-direction: row;
+            // align-items: center;
             padding: var(--unit-m);
+        }
+
+        &__more {
+            position: absolute;
+            right: var(--unit-s);
+            top: var(--unit-s);
         }
 
         &__bottom {

@@ -1,3 +1,7 @@
+button {
+    font-size: inherit;
+}
+
 .btn {
     border: none;
     border-radius: var(--corner-radius);
@@ -26,6 +30,11 @@
 
     &--square {
         padding: var(--unit-s);
+    }
+
+    &--circle {
+        border-radius: 100%;
+        padding: var(--unit-half);
     }
 
     &--forward {
