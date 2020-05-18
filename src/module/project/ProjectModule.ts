@@ -10,12 +10,15 @@ import { ProjectCreateController } from './controller/ProjectCreateController'
 import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
 import { ProjectDeleteController } from './controller/ProjectDeleteController'
 import { ProjectCreateResetController } from './controller/ProjectCreateResetController'
+import { ValidatorBuilder } from '@/lib/validator'
 
 export class ProjectModule implements Module {
     private projectApi: ProjectApi
+    private validatorBuilder: ValidatorBuilder
 
-    public constructor (projectApi: ProjectApi) {
+    public constructor (projectApi: ProjectApi, validatorBuilder: ValidatorBuilder) {
         this.projectApi = projectApi
+        this.validatorBuilder = validatorBuilder
     }
 
     public install (context: Context): void {
@@ -34,7 +37,7 @@ export class ProjectModule implements Module {
             new MapEntry('project.create@close', new ProjectCreateCloseController(scene)),
             new MapEntry('project.create@reset', new ProjectCreateResetController(projectCreate)),
             new MapEntry('project@open', new ProjectOpenController(projectActive, channel)),
-            new MapEntry('project@create', new ProjectCreateController(projects, channel, this.projectApi)),
+            new MapEntry('project@create', new ProjectCreateController(this.validatorBuilder, projects, channel, this.projectApi, projectCreate)),
             new MapEntry('project@load.all', new ProjectLoadAllController(projects, this.projectApi, channel)),
             new MapEntry('project@delete', new ProjectDeleteController(this.projectApi, channel, projects))
         ])

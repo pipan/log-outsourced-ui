@@ -1,5 +1,6 @@
 .list {
     &__item {
+        position: relative;
         border-radius: var(--corner-radius);
         background-color: var(--bg-level-middle);
         margin-top: var(--unit-m);
@@ -15,6 +16,7 @@
 
         &__top {
             padding: var(--unit-m);
+            font-size: 1.2em;
         }
 
         &__bottom {

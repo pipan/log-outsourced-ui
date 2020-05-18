@@ -1,4 +1,4 @@
-import { Broadcast, SimpleBroadcast } from '../broadcast'
+import { Broadcaster, SimpleBroadcaster } from '../broadcast'
 import { Module } from './module/Module'
 import { Framework } from './Framework'
 import { ControllerListener } from './controller/ControllerListener'
@@ -10,7 +10,7 @@ import { Channel } from '../broadcast/Channel'
 import { OutsideEventListener } from './listener/OutsideEventListener'
 
 export class ModularFramework implements Framework {
-    private broadcast: Broadcast = new SimpleBroadcast()
+    private broadcast: Broadcaster = new SimpleBroadcaster()
     private context: Context = new SimpleContext()
 
     public constructor (modules: Array<Module> = []) {
@@ -29,7 +29,7 @@ export class ModularFramework implements Framework {
     private onControllersChange (change: MapChange<string, Controller>): void {
         for (const entity of change.inserted()) {
             // TODO: check if channel has listener then print error / warning
-            this.broadcast.channel(entity.getKey())
+            this.broadcast.getChannel(entity.getKey())
                 .addListener(new ControllerListener(entity.getValue()))
         }
     }
@@ -39,7 +39,7 @@ export class ModularFramework implements Framework {
     }
 
     public process (event: string, data?: any): void {
-        this.broadcast.channel(event)
+        this.broadcast.getChannel(event)
             .dispatch(data)
     }
 

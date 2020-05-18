@@ -1,5 +1,5 @@
 <template>
-    <select :id="id" class="field__input" :selected="value" @change="$mit('change', $event)">
+    <select :id="id" class="field__input" :selected="value" @change="$mit('change', $event.target.value)">
         <option v-for="(option, index) of options" :key="index"  :value="option.value || option">{{ option.label || option }}</option>
     </select>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <projects-container :projects="projects" @open="open($event)" @create="create()"></projects-container>
+    <projects-container :projects="projects" @open="open($event)" @create="create()" @delete="deleteProject($event)"></projects-container>
 </template>
 
 <script lang="ts">
@@ -45,6 +45,13 @@
 
         public create (): void {
             this.channel.dispatch({ event: 'project.create@open' })
+        }
+
+        public deleteProject (project: ProjectEntity): void {
+            this.channel.dispatch({
+                event: 'project@delete',
+                data: project
+            })
         }
     }
 </script>

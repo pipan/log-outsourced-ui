@@ -4,12 +4,13 @@
             <form @submit.prevent="save()">
                 <header class="card__header">Create Project</header>
                 <div class="card__body">
-                    <string-input
+                    <string-field
+                        v-if="model.name"
                         id="name"
                         label="Name"
-                        :value="model.name"
-                        :error="nameError"
-                        @change="onNameChange($event)"></string-input>
+                        :value="model.name.value"
+                        :error="model.name.error"
+                        @change="onNameChange($event)"></string-field>
                 </div>
                 <footer class="card__footer">
                     <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -22,21 +23,21 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringInput from '@/components/form/StringInput.vue'
+    import StringField from '@/components/form/StringField.vue'
     import { Channel } from '@/lib/broadcast/Channel'
     import { ObservableProperty, PropertyChange, Closable } from '@wildebeest/observe-changes'
+    import { FormField } from '../lib/form'
 
     @Component({
         components: {
-            StringInput
+            StringField
         }
     })
     export default class ProjectCreate extends Vue {
         @Prop() readonly channel!: Channel
         @Prop() readonly modelProperty!: ObservableProperty<any>
 
-        public nameError = ''
-        public model: any = {}
+        public model: { [key: string]: FormField } = {}
         private closables: Array<Closable> = []
 
         public mounted (): void {
@@ -62,21 +63,16 @@
         }
 
         public save (): void {
-            if (this.model?.name === '') {
-                this.nameError = 'required'
-                return
-            }
             this.channel.dispatch({
                 event: 'project@create',
                 data: {
-                    name: this.model.name
+                    name: this.model.name.get()
                 }
             })
         }
 
         public onNameChange (name: string): void {
-            this.model.name = name
-            this.nameError = ''
+            this.model.name.set(name)
         }
     }
 </script>
