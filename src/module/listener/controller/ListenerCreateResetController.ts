@@ -1,5 +1,6 @@
 import { Controller } from '@/lib/framework'
 import { ObservableProperty } from '@wildebeest/observe-changes'
+import { FormField } from '@/lib/form'
 
 export class ListenerCreateResetController implements Controller {
     private createProperty: ObservableProperty<any>
@@ -10,7 +11,8 @@ export class ListenerCreateResetController implements Controller {
 
     public action (data?: any): void {
         this.createProperty.set({
-            name: ''
+            name: new FormField(''),
+            handler: new FormField('')
         })
     }
 }
