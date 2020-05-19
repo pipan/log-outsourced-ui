@@ -11,7 +11,11 @@ import { Listenable, Closable } from '@/lib/broadcast'
 import { Listener } from '@/lib/broadcast/Listener'
 import { Channel } from '@/lib/broadcast/Channel'
 import { Framework } from '@/lib/framework'
-import { PropertyChange, SimpleObservableProperty } from '@wildebeest/observe-changes'
+import { PropertyChange } from '@wildebeest/observe-changes'
+import { ProjectDetailResolver } from './resolver/ProjectDetailResolver'
+import { ProjectListResolver } from './resolver/ProjectListResolver'
+import { Resolver } from './resolver/Resolver'
+import { SceneChangeResolver, EventResolver } from './resolver/EventResolver'
 
 export class VueApplication implements Listenable {
     private channel: Channel
@@ -30,6 +34,7 @@ export class VueApplication implements Listenable {
                     children: [
                         {
                             path: '',
+                            name: 'index',
                             component: Index,
                             props: {
                                 channel: this.channel,
@@ -38,6 +43,7 @@ export class VueApplication implements Listenable {
                         },
                         {
                             path: 'create',
+                            name: 'project.create',
                             component: ProjectCreate,
                             props: {
                                 channel: this.channel,
@@ -57,6 +63,7 @@ export class VueApplication implements Listenable {
                     children: [
                         {
                             path: 'listener/create',
+                            name: 'listener.create',
                             component: ListenerCreate,
                             props: {
                                 channel: this.channel,
@@ -68,10 +75,12 @@ export class VueApplication implements Listenable {
                         },
                         {
                             path: ':uuid',
+                            name: 'project.view',
                             component: ProjectDetail,
                             props: {
                                 channel: this.channel,
-                                activeProject: framework.getObservable('project.active')
+                                activeProject: framework.getObservable('project.active'),
+                                listenersProperty: framework.getObservable('listeners')
                             }
                         }
                     ]
@@ -103,6 +112,18 @@ export class VueApplication implements Listenable {
                 }
             })
         }).$mount('#app')
+
+        const resolvers: { [key: string]: Resolver } = {
+            'project.view': new ProjectDetailResolver(framework.getChannel()),
+            index: new ProjectListResolver(framework.getChannel()),
+            'project.create': new EventResolver(framework.getChannel(), 'project.create@close'),
+            'listener.create': new EventResolver(framework.getChannel(), 'project@all')
+        }
+
+        const currentRouteName: string = router.currentRoute.name || ''
+        if (resolvers[currentRouteName]) {
+            resolvers[currentRouteName].resolve(router.currentRoute.params)
+        }
     }
 
     public addListener (listener: Listener): Closable {

@@ -2,14 +2,18 @@ import { ProjectApi } from './ProjectApi'
 import { ProjectEntity } from './ProjectEntity'
 import { ProjectReadAdapter } from './ProjectReadAdapter'
 import { AdapterHelper, Adapter } from '@/lib/adapter'
+import { ListenerEntity } from '../listener/ListenerEntity'
+import { ListenerReadAdapter } from '../listener/ListenerReadAdapter'
 
 export class ProjectHttpApi implements ProjectApi {
     private host: string
     private readAdapter: Adapter<any, ProjectEntity>
+    private listenerReadAdapter: Adapter<any, ListenerEntity>
 
     public constructor (host: string) {
         this.host = host
         this.readAdapter = new ProjectReadAdapter()
+        this.listenerReadAdapter = new ListenerReadAdapter()
     }
 
     public all (): Promise<Array<ProjectEntity>> {
@@ -21,10 +25,16 @@ export class ProjectHttpApi implements ProjectApi {
             })
     }
 
-    public view (uuid: string): Promise<ProjectEntity> {
+    public view (uuid: string): Promise<{project: ProjectEntity; listeners: Array<ListenerEntity>}> {
         return fetch(this.host + '/api/v1/projects/' + uuid)
             .then(response => response.json())
-            .then(data => this.readAdapter.adapt(data))
+            .then((data: any) => {
+                const listAdapter: Adapter<Array<any>, Array<ListenerEntity>> = AdapterHelper.listOf(this.listenerReadAdapter)
+                return {
+                    project: this.readAdapter.adapt(data.project),
+                    listeners: listAdapter.adapt(data.listeners)
+                }
+            })
     }
 
     public delete (project: ProjectEntity): Promise<void> {

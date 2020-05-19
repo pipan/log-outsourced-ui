@@ -15,13 +15,17 @@ export class ProjectOpenController implements Controller {
         this.projectApi = projectApi
     }
 
-    public action (data?: any): void {
-        this.projectApi.view(data.getUuid())
-            .then((project: ProjectEntity) => {
-                this.active.set(project)
+    public action (uuid: string): void {
+        this.projectApi.view(uuid)
+            .then((result: any) => {
+                this.active.set(result.project)
+                this.channel.dispatch({
+                    event: 'listener@set.all',
+                    data: result.listeners
+                })
                 this.channel.dispatch({
                     event: 'scene@change',
-                    data: '/project/' + project.getUuid()
+                    data: '/project/' + result.project.getUuid()
                 })
             })
             .catch((error: any) => {
