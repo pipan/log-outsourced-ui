@@ -13,6 +13,7 @@ export class ListenerHttpApi implements ListenerApi {
     }
 
     public create (listener: ListenerEntity): Promise<ListenerEntity> {
+        console.log('api create', listener)
         return fetch(this.host + '/api/v1/listeners', {
             method: 'POST',
             headers: {

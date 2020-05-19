@@ -12,6 +12,7 @@ export class ListenerEntity {
         this.name = name
         this.rules = rules
         this.handlerSlug = handlerSlug
+        this.handlerValues = handlerValues
     }
 
     public getUuid (): string {

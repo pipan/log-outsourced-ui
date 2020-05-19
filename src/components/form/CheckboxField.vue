@@ -1,6 +1,6 @@
 <template>
     <field :id="_uid" :label="label" :error="error">
-        <checkbox-input :id="_uid" :checked="checked" @change="$emit('change', $event)"></checkbox-input>
+        <checkbox-input :id="_uid" :checked="value" @change="$emit('change', $event)"></checkbox-input>
     </field>
 </template>
 
@@ -18,7 +18,7 @@
     export default class CheckboxField extends Vue {
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly error!: string;
-        @Prop({ default: false }) readonly checked!: boolean;
+        @Prop({ default: false }) readonly value!: boolean;
     }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
     <section class="material__container">
         <div class="card">
-            <form @submit.prevent="save()">
+            <form @submit.prevent="save()" autocomplete="off">
                 <header class="card__header">Create Rule</header>
                 <div class="card__body">
                     <div>
@@ -107,6 +107,11 @@
         }
 
         public save (): void {
+            const handlerValues: any = {}
+            for (const field of this.fields) {
+                handlerValues[field.id] = field.props.value
+            }
+
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
@@ -114,7 +119,7 @@
                     projectUuid: this.activeProjectProperty.get().getUuid(),
                     handler: {
                         slug: this.model.handler.get()?.getSlug(),
-                        values: {}
+                        values: handlerValues
                     }
                 }
             })

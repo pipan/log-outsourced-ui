@@ -16,9 +16,11 @@ export class HandlerFormService implements Service {
             for (const handler of change.inserted()) {
                 const meta: any = handler.getMeta()
                 const fields: Array<any> = []
-                for (const fieldSchema of meta.schema) {
+                for (const fieldSchemaKey in meta.schema) {
+                    const fieldSchema: any = meta.schema[fieldSchemaKey]
                     fields.push({
                         type: fieldSchema.type,
+                        id: fieldSchemaKey,
                         props: {
                             label: fieldSchema.name,
                             value: fieldSchema.default || '',
