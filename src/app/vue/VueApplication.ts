@@ -63,7 +63,7 @@ export class VueApplication implements Listenable {
                                 modelProperty: framework.getObservable('listener.create'),
                                 handlersProperty: framework.getObservable('handlers'),
                                 activeProjectProperty: framework.getObservable('project.active'),
-                                handlerSchemaProperty: framework.getObservable('handler.form')
+                                handlerSchemaProperty: framework.getObservable('handler.form.schema')
                             }
                         },
                         {

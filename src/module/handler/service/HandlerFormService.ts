@@ -20,7 +20,6 @@ export class HandlerFormService implements Service {
                     fields.push({
                         type: fieldSchema.type,
                         props: {
-                            id: '',
                             label: fieldSchema.name,
                             value: fieldSchema.default || '',
                             error: ''
@@ -33,6 +32,6 @@ export class HandlerFormService implements Service {
     }
 
     public stop (): void {
-        console.log('stop')
+        console.log('TODO stop')
     }
 }

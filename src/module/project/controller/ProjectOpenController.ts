@@ -13,7 +13,6 @@ export class ProjectOpenController implements Controller {
     }
 
     public action (data?: any): void {
-        console.log('open', data)
         this.active.set(data)
         this.channel.dispatch({
             event: 'scene@change',

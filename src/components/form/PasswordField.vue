@@ -1,6 +1,6 @@
 <template>
-    <field :id="id" :label="label" :error="error">
-        <password-input :id="id" :placeholder="placeholder" :value="value" @change="$emit('change', $event)"></password-input>
+    <field :id="_uid" :label="label" :error="error">
+        <password-input :id="_uid" :placeholder="placeholder" :value="value" @change="$emit('change', $event)"></password-input>
     </field>
 </template>
 
@@ -16,7 +16,6 @@
         }
     })
     export default class PasswordField extends Vue {
-        @Prop({ default: '' }) readonly id!: string;
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly placeholder!: string;
         @Prop({ default: '' }) readonly error!: string;

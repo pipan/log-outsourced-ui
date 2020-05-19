@@ -18,7 +18,7 @@ export class HandlerModule implements Module {
         const handlerForms: ObservableMap<string, any> = new SimpleObservableMap()
 
         context.observables().add('handlers', handlers)
-        context.observables().add('handler.form', handlerForms)
+        context.observables().add('handler.form.schema', handlerForms)
 
         context.controllers().addList([
             new MapEntry('handler@load.all', new HandlerLoadAllController(this.handlerApi, handlers))

@@ -7,21 +7,19 @@
                     <div>
                         <string-field
                             v-if="model.name"
-                            id="name"
                             label="Name"
                             :value="model.name.get()"
                             :error="model.name.getError()"
                             @change="onNameChange($event)"></string-field>
                         <select-field
                             v-if="model.handler"
-                            id="handler"
                             label="Handler"
                             :value="model.handler.get()"
                             :error="model.handler.getError()"
                             :options="handlerOptions"
                             @change="onHandlerChange($event)"></select-field>
                     </div>
-                    <h3 class="top-l">Database</h3>
+                    <h3 class="top-l" v-if="fields.length > 0">{{ model.handler.get().getName() }} Settings</h3>
                     <form-builder class="top-m" :fields="fields"></form-builder>
                 </div>
                 <footer class="card__footer">
@@ -74,9 +72,15 @@
                     this.onHandlersPropertyChange.bind(this)
                 )
             )
+
+            if (this.model.handler.get()) {
+                this.fields = this.handlerSchemaProperty.get(
+                    this.model.handler.get().getSlug()
+                )
+            }
         }
 
-        public beforeDestry (): void {
+        public beforeDestroy (): void {
             for (const closable of this.closables) {
                 closable.close()
             }
@@ -94,8 +98,9 @@
             const options: Array<any> = []
             for (const handler of this.handlersProperty.all()) {
                 options.push({
+                    id: handler.getSlug(),
                     label: handler.getName(),
-                    value: handler.getSlug()
+                    value: handler
                 })
             }
             this.handlerOptions = options
@@ -105,8 +110,12 @@
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
-                    name: this.model.name,
-                    projectUuid: this.activeProjectProperty.get().getUuid()
+                    name: this.model.name.get(),
+                    projectUuid: this.activeProjectProperty.get().getUuid(),
+                    handler: {
+                        slug: this.model.handler.get()?.getSlug(),
+                        values: {}
+                    }
                 }
             })
         }
@@ -115,9 +124,9 @@
             this.model.name.set(name)
         }
 
-        public onHandlerChange (value: any): void {
-            this.fields = this.handlerSchemaProperty.get(value)
-            console.log(value)
+        public onHandlerChange (value: HandlerEntity): void {
+            this.model.handler.set(value)
+            this.fields = this.handlerSchemaProperty.get(value.getSlug())
         }
     }
 </script>

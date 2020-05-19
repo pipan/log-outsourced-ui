@@ -22,7 +22,7 @@ export class ListenerModule implements Module {
         context.controllers().addList([
             new MapEntry('listener.create@open', new ListenerCreateOpenController(context.channel())),
             new MapEntry('listener.create@close', new ListenerCreateCloseController(context.channel(), context.observables().get('project.active'))),
-            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty)),
+            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty, context.observables().get('handlers'))),
             new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel()))
         ])
 
