@@ -13,7 +13,7 @@ export class ListenerCreateController implements Controller {
     }
 
     public action (data?: any): void {
-        const listener: ListenerEntity = new ListenerEntity('', data.projectUuid, data.name, [], {})
+        const listener: ListenerEntity = new ListenerEntity('', data.projectUuid, data.name, [], data.handler.slug, data.handler.values)
         this.listenerApi.create(listener)
             .then((listener: ListenerEntity) => {
                 console.log('success', listener)

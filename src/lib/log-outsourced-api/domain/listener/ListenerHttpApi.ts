@@ -13,6 +13,7 @@ export class ListenerHttpApi implements ListenerApi {
     }
 
     public create (listener: ListenerEntity): Promise<ListenerEntity> {
+        console.log('api create', listener)
         return fetch(this.host + '/api/v1/listeners', {
             method: 'POST',
             headers: {
@@ -20,7 +21,9 @@ export class ListenerHttpApi implements ListenerApi {
             },
             body: JSON.stringify({
                 project_uuid: listener.getProjecUuid(),
-                name: listener.getName()
+                name: listener.getName(),
+                handler_slug: listener.getHandlerSlug(),
+                handler_values: listener.getHandlerValues()
             })
         })
             .then(response => response.json())

@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-for="(field, index) of fields">
-            <component :is="getComponentByType(field.type)" v-bind="field.props" :key="index"></component>
+            <component :is="getComponentByType(field.type)" v-bind="field.props" :key="index" @change="field.props.value = $event"></component>
         </template>
     </div>
 </template>

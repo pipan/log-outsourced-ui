@@ -1,6 +1,6 @@
 <template>
-    <field :id="id" :label="label" :error="error">
-        <select-input :id="id" :options="options" :value="value" @change="$emit('change', $event)"></select-input>
+    <field :id="_uid" :label="label" :error="error">
+        <select-input :id="_uid" :options="options" :value="value" @change="$emit('change', $event)"></select-input>
     </field>
 </template>
 
@@ -16,7 +16,6 @@
         }
     })
     export default class SelectField extends Vue {
-        @Prop({ default: '' }) readonly id!: string;
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly error!: string;
         @Prop({ default: '' }) readonly value!: string;

@@ -1,5 +1,5 @@
 <template>
-    <input :id="id" class="field__input" type="number" :value="value" @input="change($event.target.value)" :placeholder="placeholder" />
+    <input :id="id" class="field__input" type="number" :value="value" @input="$emit('change', $event.target.value)" :placeholder="placeholder" />
 </template>
 
 <script lang="ts">
@@ -10,11 +10,6 @@
         @Prop({ default: '' }) readonly id!: string;
         @Prop({ default: '' }) readonly placeholder!: string;
         @Prop({ default: '' }) readonly value!: string;
-
-        public change (event: any): void {
-            this.$emit('input', event.target.value)
-            this.$emit('change', event.target.value)
-        }
     }
 </script>
 

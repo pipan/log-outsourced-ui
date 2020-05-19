@@ -1,25 +1,25 @@
 <template>
     <section class="material__container">
         <div class="card">
-            <form @submit.prevent="save()">
+            <form @submit.prevent="save()" autocomplete="off">
                 <header class="card__header">Create Rule</header>
                 <div class="card__body">
                     <div>
                         <string-field
-                            id="name"
+                            v-if="model.name"
                             label="Name"
-                            :value="model.name"
-                            :error="nameError"
+                            :value="model.name.get()"
+                            :error="model.name.getError()"
                             @change="onNameChange($event)"></string-field>
                         <select-field
-                            id="handler"
+                            v-if="model.handler"
                             label="Handler"
-                            :value="model.handler"
-                            :error="''"
+                            :value="model.handler.get()"
+                            :error="model.handler.getError()"
                             :options="handlerOptions"
                             @change="onHandlerChange($event)"></select-field>
                     </div>
-                    <h3 class="top-l">Database</h3>
+                    <h3 class="top-l" v-if="fields.length > 0">{{ model.handler.get().getName() }} Settings</h3>
                     <form-builder class="top-m" :fields="fields"></form-builder>
                 </div>
                 <footer class="card__footer">
@@ -37,7 +37,7 @@
     import SelectField from '@/components/form/SelectField.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableProperty, PropertyChange, Closable, ObservableList, ListChange } from '@wildebeest/observe-changes'
+    import { ObservableProperty, PropertyChange, Closable, ObservableList, ListChange, ObservableMap } from '@wildebeest/observe-changes'
     import { HandlerEntity, ProjectEntity } from '../lib/log-outsourced-api'
 
     @Component({
@@ -52,61 +52,13 @@
         @Prop() readonly modelProperty!: ObservableProperty<any>
         @Prop() readonly handlersProperty!: ObservableList<HandlerEntity>
         @Prop() readonly activeProjectProperty!: ObservableProperty<ProjectEntity>
+        @Prop() readonly handlerSchemaProperty!: ObservableMap<string, any>
 
-        public nameError = ''
         public model: any = {}
         protected handlers: Array<HandlerEntity> = []
         public handlerOptions: Array<any> = []
         private closables: Array<Closable> = []
-        public fields: Array<any> = [
-            {
-                type: 'string',
-                props: {
-                    id: 'host',
-                    label: 'Host',
-                    value: 'localhost'
-                }
-            },
-            {
-                type: 'number',
-                props: {
-                    id: 'port',
-                    label: 'Port',
-                    value: 3306
-                }
-            },
-            {
-                type: 'string',
-                props: {
-                    id: 'database',
-                    label: 'Database',
-                    value: 'ovaldo'
-                }
-            },
-            {
-                type: 'string',
-                props: {
-                    id: 'uesr',
-                    label: 'User',
-                    value: 'user'
-                }
-            },
-            {
-                type: 'password',
-                props: {
-                    id: 'password',
-                    label: 'Password'
-                }
-            },
-            {
-                type: 'string',
-                props: {
-                    id: 'table',
-                    label: 'Table',
-                    value: 'logs'
-                }
-            }
-        ]
+        public fields: Array<any> = []
 
         public mounted (): void {
             this.closables.push(
@@ -120,9 +72,15 @@
                     this.onHandlersPropertyChange.bind(this)
                 )
             )
+
+            if (this.model.handler.get()) {
+                this.fields = this.handlerSchemaProperty.get(
+                    this.model.handler.get().getSlug()
+                )
+            }
         }
 
-        public beforeDestry (): void {
+        public beforeDestroy (): void {
             for (const closable of this.closables) {
                 closable.close()
             }
@@ -140,6 +98,7 @@
             const options: Array<any> = []
             for (const handler of this.handlersProperty.all()) {
                 options.push({
+                    id: handler.getSlug(),
                     label: handler.getName(),
                     value: handler
                 })
@@ -148,26 +107,31 @@
         }
 
         public save (): void {
-            if (this.model?.name === '') {
-                this.nameError = 'required'
-                return
+            const handlerValues: any = {}
+            for (const field of this.fields) {
+                handlerValues[field.id] = field.props.value
             }
+
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
-                    name: this.model.name,
-                    projectUuid: this.activeProjectProperty.get().getUuid()
+                    name: this.model.name.get(),
+                    projectUuid: this.activeProjectProperty.get().getUuid(),
+                    handler: {
+                        slug: this.model.handler.get()?.getSlug(),
+                        values: handlerValues
+                    }
                 }
             })
         }
 
         public onNameChange (name: string): void {
-            this.model.name = name
-            this.nameError = ''
+            this.model.name.set(name)
         }
 
-        public onHandlerChange (value: string): void {
-            console.log('change', value)
+        public onHandlerChange (value: HandlerEntity): void {
+            this.model.handler.set(value)
+            this.fields = this.handlerSchemaProperty.get(value.getSlug())
         }
     }
 </script>

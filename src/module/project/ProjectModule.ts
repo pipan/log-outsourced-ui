@@ -11,6 +11,7 @@ import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
 import { ProjectDeleteController } from './controller/ProjectDeleteController'
 import { ProjectCreateResetController } from './controller/ProjectCreateResetController'
 import { ValidatorBuilder } from '@/lib/validator'
+import { ActiveProjectFreshService } from './service/ActiveProjectFreshService'
 
 export class ProjectModule implements Module {
     private projectApi: ProjectApi
@@ -36,11 +37,14 @@ export class ProjectModule implements Module {
             new MapEntry('project.create@open', new ProjectCreateOpenController(scene)),
             new MapEntry('project.create@close', new ProjectCreateCloseController(scene)),
             new MapEntry('project.create@reset', new ProjectCreateResetController(projectCreate)),
-            new MapEntry('project@open', new ProjectOpenController(projectActive, channel)),
+            new MapEntry('project@open', new ProjectOpenController(projectActive, channel, this.projectApi)),
             new MapEntry('project@create', new ProjectCreateController(this.validatorBuilder, projects, channel, this.projectApi, projectCreate)),
             new MapEntry('project@load.all', new ProjectLoadAllController(projects, this.projectApi, channel)),
             new MapEntry('project@delete', new ProjectDeleteController(this.projectApi, channel, projects))
         ])
+
+        // const activeProjectFreshService: ActiveProjectFreshService = new ActiveProjectFreshService(projects, projectActive, context.channel())
+        // activeProjectFreshService.start()
 
         channel.dispatch({ event: 'project.create@reset' })
     }

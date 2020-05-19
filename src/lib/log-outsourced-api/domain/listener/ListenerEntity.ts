@@ -3,14 +3,16 @@ export class ListenerEntity {
     protected projectUuid: string
     protected name: string
     protected rules: any
-    protected handler: any
+    protected handlerSlug: string
+    protected handlerValues: any
 
-    public constructor (uuid: string, projectUuid: string, name: string, rules: any, handler: any) {
+    public constructor (uuid: string, projectUuid: string, name: string, rules: any, handlerSlug: string, handlerValues: any) {
         this.uuid = uuid
         this.projectUuid = projectUuid
         this.name = name
         this.rules = rules
-        this.handler = handler
+        this.handlerSlug = handlerSlug
+        this.handlerValues = handlerValues
     }
 
     public getUuid (): string {
@@ -29,7 +31,11 @@ export class ListenerEntity {
         return this.rules
     }
 
-    public getHandler (): any {
-        return this.handler
+    public getHandlerSlug (): string {
+        return this.handlerSlug
+    }
+
+    public getHandlerValues (): any {
+        return this.handlerValues
     }
 }
