@@ -1,13 +1,13 @@
 <template>
     <div class="list">
-        <listener-list-item v-for="item of items" :key="item.getUuid()" :listener="item" @open="open($event)"></listener-list-item>
+        <listener-list-item v-for="item of items" :key="item.getUuid()" :item="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)"></listener-list-item>
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ListenerEntity } from '@/lib/log-outsourced-api'
     import ListenerListItem from './ListenerListItem.vue'
+    import { ListenerEntity } from '../../../lib/log-outsourced-api'
 
     @Component({
         components: {
@@ -15,11 +15,7 @@
         }
     })
     export default class ListenerList extends Vue {
-        @Prop() readonly items!: Array<ListenerEntity>;
-
-        public open (listener: ListenerEntity): void {
-            this.$emit('open', listener)
-        }
+        @Prop() readonly items!: Array<ListenerEntity>
     }
 </script>
 

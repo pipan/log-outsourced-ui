@@ -5,6 +5,7 @@ import { ObservableList, SimpleObservableList, MapEntry, ObservableMap, SimpleOb
 import { HandlerEntity } from '@/lib/log-outsourced-api'
 import { HandlerLoadAllController } from './controller/HandlerLoadAllController'
 import { HandlerFormService } from './service/HandlerFormService'
+import { HandlerFormResetController } from './controller/HandlerFormResetController'
 
 export class HandlerModule implements Module {
     protected handlerApi: HandlerApi
@@ -21,7 +22,8 @@ export class HandlerModule implements Module {
         context.observables().add('handler.form.schema', handlerForms)
 
         context.controllers().addList([
-            new MapEntry('handler@load.all', new HandlerLoadAllController(this.handlerApi, handlers))
+            new MapEntry('handler@load.all', new HandlerLoadAllController(this.handlerApi, handlers)),
+            new MapEntry('handler.form@reset', new HandlerFormResetController(handlers, handlerForms))
         ])
 
         const formService: HandlerFormService = new HandlerFormService(handlers, handlerForms)

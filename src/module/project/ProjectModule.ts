@@ -12,6 +12,7 @@ import { ProjectDeleteController } from './controller/ProjectDeleteController'
 import { ProjectCreateResetController } from './controller/ProjectCreateResetController'
 import { ValidatorBuilder } from '@/lib/validator'
 import { ActiveProjectFreshService } from './service/ActiveProjectFreshService'
+import { ProjectCloseController } from './controller/ProjectCloseController'
 
 export class ProjectModule implements Module {
     private projectApi: ProjectApi
@@ -35,9 +36,11 @@ export class ProjectModule implements Module {
 
         context.controllers().addList([
             new MapEntry('project.create@open', new ProjectCreateOpenController(scene)),
-            new MapEntry('project.create@close', new ProjectCreateCloseController(scene)),
+            new MapEntry('project.create@close', new ProjectCreateCloseController(channel)),
             new MapEntry('project.create@reset', new ProjectCreateResetController(projectCreate)),
             new MapEntry('project@open', new ProjectOpenController(projectActive, channel, this.projectApi)),
+            new MapEntry('project@close', new ProjectCloseController(channel, projectActive)),
+            new MapEntry('project@all', new ProjectCloseController(channel, projectActive)),
             new MapEntry('project@create', new ProjectCreateController(this.validatorBuilder, projects, channel, this.projectApi, projectCreate)),
             new MapEntry('project@load.all', new ProjectLoadAllController(projects, this.projectApi, channel)),
             new MapEntry('project@delete', new ProjectDeleteController(this.projectApi, channel, projects))

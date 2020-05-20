@@ -8,7 +8,8 @@ export class ListenerReadAdapter implements Adapter<any, ListenerEntity> {
             item.projectId,
             item.name,
             item.rules,
-            item.handler
+            item.handlerSlug,
+            item.handlerValues
         )
     }
 }
