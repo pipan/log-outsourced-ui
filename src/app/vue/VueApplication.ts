@@ -15,7 +15,7 @@ import { PropertyChange } from '@wildebeest/observe-changes'
 import { ProjectDetailResolver } from './resolver/ProjectDetailResolver'
 import { ProjectListResolver } from './resolver/ProjectListResolver'
 import { Resolver } from './resolver/Resolver'
-import { SceneChangeResolver, EventResolver } from './resolver/EventResolver'
+import { EventResolver } from './resolver/EventResolver'
 
 export class VueApplication implements Listenable {
     private channel: Channel

@@ -7,6 +7,7 @@ import { ListenerCreateResetController } from './controller/ListenerCreateResetC
 import { ListenerCreateController } from './controller/ListenerCreateController'
 import { ListenerApi, ListenerEntity } from '@/lib/log-outsourced-api'
 import { ListenerSetAllController } from './controller/ListenerSetAllController'
+import { ListenerDeleteController } from './controller/ListenerDeleteController'
 
 export class ListenerModule implements Module {
     private listenerApi: ListenerApi
@@ -26,8 +27,9 @@ export class ListenerModule implements Module {
             new MapEntry('listener@set.all', new ListenerSetAllController(listeners)),
             new MapEntry('listener.create@open', new ListenerCreateOpenController(context.channel())),
             new MapEntry('listener.create@close', new ListenerCreateCloseController(context.channel(), context.observables().get('project.active'))),
-            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty, context.observables().get('handlers'))),
-            new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel()))
+            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty, context.observables().get('handlers'), context.channel())),
+            new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel(), listeners, context.observables().get('project.active'))),
+            new MapEntry('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, context.channel()))
         ])
 
         context.channel().dispatch({ event: 'listener.create@reset' })
