@@ -11,6 +11,12 @@
                             :value="model.name.get()"
                             :error="model.name.getError()"
                             @change="onNameChange($event)"></string-field>
+                        <string-field
+                            v-if="model.rules"
+                            label="Log Levels"
+                            :value="model.rules.get()"
+                            :error="model.rules.getError()"
+                            @change="onRulesChange($event)"></string-field>
                         <select-field
                             v-if="model.handler"
                             label="Handler"
@@ -117,6 +123,7 @@
                 data: {
                     name: this.model.name.get(),
                     projectUuid: this.activeProjectProperty.get().getUuid(),
+                    rules: this.model.rules.get().split(','),
                     handler: {
                         slug: this.model.handler.get()?.getSlug(),
                         values: handlerValues
@@ -127,6 +134,10 @@
 
         public onNameChange (name: string): void {
             this.model.name.set(name)
+        }
+
+        public onRulesChange (rules: string): void {
+            this.model.rules.set(rules)
         }
 
         public onHandlerChange (value: HandlerEntity): void {

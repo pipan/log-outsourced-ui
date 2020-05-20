@@ -21,6 +21,7 @@ export class ListenerHttpApi implements ListenerApi {
             body: JSON.stringify({
                 project_uuid: listener.getProjecUuid(),
                 name: listener.getName(),
+                rules: listener.getRules(),
                 handler_slug: listener.getHandlerSlug(),
                 handler_values: listener.getHandlerValues()
             })

@@ -18,6 +18,7 @@ export class ListenerCreateResetController implements Controller {
     public action (data?: any): void {
         this.createProperty.set({
             name: new FormField(''),
+            rules: new FormField(''),
             handler: new FormField(this.handlers.get(0) || undefined)
         })
 
