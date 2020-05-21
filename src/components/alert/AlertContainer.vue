@@ -15,7 +15,7 @@
         }
     })
     export default class AlertContainer extends Vue {
-        @Prop({ default: [] }) readonly alerts!: Array<AlertContract>
+        @Prop({ default: () => [] }) readonly alerts!: Array<AlertContract>
 
         public close (alert: any): void {
             this.$emit('close', alert)

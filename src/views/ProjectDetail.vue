@@ -7,12 +7,16 @@
             </button>
         </div>
         <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)"></listener-list>
+        <div v-if="listener">
+            Rule detail
+        </div>
     </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import { Channel } from '../lib/broadcast/Channel'
+    import { ViewRepository } from './ViewRepository'
     import { ObservableProperty, Closable, PropertyChange, ObservableList, ListChange } from '@wildebeest/observe-changes'
     import { ProjectEntity, ListenerEntity } from '../lib/log-outsourced-api'
     import ListenerList from '../components/domain/listener/ListenerList.vue'
@@ -24,31 +28,27 @@
     })
     export default class ProjectDetail extends Vue {
         @Prop() readonly channel!: Channel
-        @Prop() readonly activeProject!: ObservableProperty<ProjectEntity>
-        @Prop() readonly listenersProperty!: ObservableList<ListenerEntity>
+        @Prop() readonly projectProperty!: ObservableProperty<ProjectEntity>
+        @Prop() readonly listenerList!: ObservableList<ListenerEntity>
+        @Prop() readonly listenerProperty!: ObservableProperty<ListenerEntity>
 
         public project: ProjectEntity | null = null
         public listeners: Array<ListenerEntity> = []
-        private closables: Array<Closable> = []
+        public listener: ListenerEntity | null = null
+        private repo!: ViewRepository
 
-        public mounted (): void {
-            this.closables.push(
-                this.activeProject.addListenerAndCall(
-                    this.onActiveProjectChange.bind(this)
-                )
-            )
-
-            this.closables.push(
-                this.listenersProperty.addListenerAndCall(
-                    this.onListenersChange.bind(this)
-                )
-            )
+        public created (): void {
+            this.repo = new ViewRepository(this)
         }
 
         public beforeDestroy (): void {
-            for (const closable of this.closables) {
-                closable.close()
-            }
+            this.repo.unbindAll()
+        }
+
+        public mounted (): void {
+            this.repo.bindProperty('project', this.projectProperty)
+            this.repo.bindList('listeners', this.listenerList)
+            this.repo.bindProperty('listener', this.listenerProperty)
         }
 
         public create (): void {
@@ -67,14 +67,6 @@
                 event: 'listener@delete',
                 data: listener
             })
-        }
-
-        private onActiveProjectChange (change: PropertyChange<ProjectEntity>): void {
-            this.project = change.next()
-        }
-
-        private onListenersChange (): void {
-            this.listeners = this.listenersProperty.all()
         }
     }
 </script>

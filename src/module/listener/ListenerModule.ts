@@ -19,8 +19,10 @@ export class ListenerModule implements Module {
     public install (context: Context): void {
         const createProperty: ObservableProperty<any> = new SimpleObservableProperty()
         const listeners: ObservableList<ListenerEntity> = new SimpleObservableList()
+        const listenerActive: ObservableProperty<ListenerEntity> = new SimpleObservableProperty()
 
         context.observables().add('listeners', listeners)
+        context.observables().add('listener.active', listenerActive)
         context.observables().add('listener.create', createProperty)
 
         context.controllers().addList([

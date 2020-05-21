@@ -1,51 +1,48 @@
 <template>
     <div>
         <router-view></router-view>
-        <alert-container :alerts="alerts" @close="closeAlert($event)"></alert-container>
+        <alert-container :alerts="this.alerts" @close="closeAlert($event)"></alert-container>
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import ProjectsContainer from '@/components/ProjectsContainer.vue'
     import StringInput from '@/components/form/StringInput.vue'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { AlertContract } from '../components/alert'
-    import { ObservableList, Closable } from '@wildebeest/observe-changes'
+    import { ObservableList } from '@wildebeest/observe-changes'
     import { Channel } from '../lib/broadcast/Channel'
+    import { ViewRepository } from './ViewRepository'
     @Component({
         components: {
-            ProjectsContainer,
             StringInput,
             AlertContainer
         }
     })
     export default class App extends Vue {
-        @Prop() public alertsProperty!: ObservableList<AlertContract>
+        @Prop() public alertList!: ObservableList<AlertContract>
         @Prop() public channel!: Channel
 
         public alerts: Array<AlertContract> = []
-        private closables: Array<Closable> = []
+        public repo!: ViewRepository
+
+        public created (): void {
+            this.repo = new ViewRepository(this)
+        }
+
+        public beforeDestroy (): void {
+            this.repo.unbindAll()
+        }
+
+        public mounted (): void {
+            this.repo.bindList('alerts', this.alertList)
+        }
 
         public closeAlert (alert: AlertContract): void {
             this.channel.dispatch({
                 event: 'alert@remove',
                 data: alert
             })
-        }
-
-        public mounted (): void {
-            this.closables.push(
-                this.alertsProperty.addListenerAndCall(() => {
-                    this.alerts = this.alertsProperty.all()
-                })
-            )
-        }
-
-        public beforeDestroy (): void {
-            for (const closable of this.closables) {
-                closable.close()
-            }
         }
     }
 </script>

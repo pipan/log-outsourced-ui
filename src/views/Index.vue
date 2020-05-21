@@ -1,37 +1,44 @@
 <template>
-    <projects-container :projects="projects" @open="open($event)" @create="create()" @delete="deleteProject($event)"></projects-container>
+    <section class="material__container">
+        <div class="flexbox-row center bottom-m">
+            <h2 class="text-m flex">Projects</h2>
+            <button class="btn btn--forward left-m" @click="create()">
+                <i class="material-icons md-18">add</i>
+            </button>
+        </div>
+        <project-list class="flex" v-bind:items="this.projects" @open="open($event)" @delete="deleteProject($event)"></project-list>
+    </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import ProjectsContainer from '@/components/ProjectsContainer.vue'
+    import ProjectList from '@/components/ProjectList.vue'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
     import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableList, Closable } from '@wildebeest/observe-changes'
+    import { ObservableList } from '@wildebeest/observe-changes'
+    import { ViewRepository } from './ViewRepository'
     @Component({
         components: {
-            ProjectsContainer
+            ProjectList
         }
     })
     export default class Index extends Vue {
         @Prop() readonly channel!: Channel
-        @Prop() public projectsProperty!: ObservableList<ProjectEntity>
+        @Prop() public projectList!: ObservableList<ProjectEntity>
 
         public projects: Array<ProjectEntity> = []
-        private closables: Array<Closable> = []
+        public repo!: ViewRepository
 
-        public mounted (): void {
-            this.closables.push(
-                this.projectsProperty.addListenerAndCall(() => {
-                    this.projects = this.projectsProperty.all()
-                })
-            )
+        public created (): void {
+            this.repo = new ViewRepository(this)
         }
 
         public beforeDestroy (): void {
-            for (const closable of this.closables) {
-                closable.close()
-            }
+            this.repo.unbindAll()
+        }
+
+        public mounted (): void {
+            this.repo.bindList('projects', this.projectList)
         }
 
         public open (project: ProjectEntity): void {
