@@ -45,6 +45,7 @@
     import { Channel } from '@/lib/broadcast/Channel'
     import { ObservableProperty, PropertyChange, Closable, ObservableList, ListChange, ObservableMap } from '@wildebeest/observe-changes'
     import { HandlerEntity, ProjectEntity } from '../lib/log-outsourced-api'
+    import { ViewRepository } from './ViewRepository'
 
     @Component({
         components: {
@@ -57,21 +58,28 @@
         @Prop() readonly channel!: Channel
         @Prop() readonly modelProperty!: ObservableProperty<any>
         @Prop() readonly handlersProperty!: ObservableList<HandlerEntity>
-        @Prop() readonly activeProjectProperty!: ObservableProperty<ProjectEntity>
+        @Prop() readonly projectProperty!: ObservableProperty<ProjectEntity>
         @Prop() readonly handlerSchemaProperty!: ObservableMap<string, any>
 
         public model: any = {}
-        protected handlers: Array<HandlerEntity> = []
         public handlerOptions: Array<any> = []
         private closables: Array<Closable> = []
         public fields: Array<any> = []
+        private repo!: ViewRepository
+
+        public created (): void {
+            this.repo = new ViewRepository(this)
+        }
+
+        public beforeDestroy (): void {
+            this.repo.unbindAll()
+            for (const closable of this.closables) {
+                closable.close()
+            }
+        }
 
         public mounted (): void {
-            this.closables.push(
-                this.modelProperty.addListenerAndCall(
-                    this.onModelPropertyChange.bind(this)
-                )
-            )
+            this.repo.bindProperty('model', this.modelProperty)
 
             this.closables.push(
                 this.handlersProperty.addListenerAndCall(
@@ -86,18 +94,8 @@
             }
         }
 
-        public beforeDestroy (): void {
-            for (const closable of this.closables) {
-                closable.close()
-            }
-        }
-
         public cancel (): void {
             this.channel.dispatch({ event: 'listener.create@close' })
-        }
-
-        private onModelPropertyChange (change: PropertyChange<any>): void {
-            this.model = change.next()
         }
 
         private onHandlersPropertyChange (): void {
@@ -122,7 +120,7 @@
                 event: 'listener@create',
                 data: {
                     name: this.model.name.get(),
-                    projectUuid: this.activeProjectProperty.get().getUuid(),
+                    projectUuid: this.projectProperty.get().getUuid(),
                     rules: this.model.rules.get().split(','),
                     handler: {
                         slug: this.model.handler.get()?.getSlug(),

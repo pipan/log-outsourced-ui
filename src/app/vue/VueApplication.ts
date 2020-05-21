@@ -38,7 +38,7 @@ export class VueApplication implements Listenable {
                             component: Index,
                             props: {
                                 channel: this.channel,
-                                projectsProperty: framework.getObservable('projects')
+                                projectList: framework.getObservable('projects')
                             }
                         },
                         {
@@ -69,7 +69,7 @@ export class VueApplication implements Listenable {
                                 channel: this.channel,
                                 modelProperty: framework.getObservable('listener.create'),
                                 handlersProperty: framework.getObservable('handlers'),
-                                activeProjectProperty: framework.getObservable('project.active'),
+                                projectProperty: framework.getObservable('project.active'),
                                 handlerSchemaProperty: framework.getObservable('handler.form.schema')
                             }
                         },
@@ -79,8 +79,9 @@ export class VueApplication implements Listenable {
                             component: ProjectDetail,
                             props: {
                                 channel: this.channel,
-                                activeProject: framework.getObservable('project.active'),
-                                listenersProperty: framework.getObservable('listeners')
+                                projectProperty: framework.getObservable('project.active'),
+                                listenerList: framework.getObservable('listeners'),
+                                listenerProperty: framework.getObservable('listener.active')
                             }
                         }
                     ]
@@ -107,8 +108,8 @@ export class VueApplication implements Listenable {
             router,
             render: h => h(App, {
                 props: {
-                    alertsProperty: framework.getObservable('alerts'),
-                    channel: this.channel
+                    channel: this.channel,
+                    alertList: framework.getObservable('alerts')
                 }
             })
         }).$mount('#app')

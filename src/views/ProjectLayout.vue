@@ -18,6 +18,7 @@
     import { ProjectEntity } from '@/lib/log-outsourced-api'
     import { ObservableProperty, PropertyChange } from '@wildebeest/observe-changes'
     import { Channel } from '../lib/broadcast/Channel'
+    import { ViewRepository } from './ViewRepository'
     @Component
     export default class ProjectLayout extends Vue {
         @Prop() projectProperty!: ObservableProperty<ProjectEntity>
@@ -26,26 +27,27 @@
 
         public project: ProjectEntity | null = null
         public api: any | null = null
+        private repo!: ViewRepository
+
+        public created (): void {
+            this.repo = new ViewRepository(this)
+        }
+
+        public beforeDestroy (): void {
+            this.repo.unbindAll()
+        }
 
         public mounted (): void {
-            this.projectProperty.addListenerAndCall(
-                this.onProjectPropertyChange
-            )
+            this.repo.bindProperty('api', this.apiProperty)
+            this.repo.bindProperty('project', this.projectProperty)
+        }
 
-            this.apiProperty.addListenerAndCall((change: PropertyChange<any>) => {
-                this.api = change.next()
-            })
+        public cancel (): void {
+            this.channel.dispatch({ event: 'project.create@close' })
         }
 
         public back (): void {
-            this.channel.dispatch({
-                event: 'scene@change',
-                data: '/'
-            })
-        }
-
-        private onProjectPropertyChange (change: PropertyChange<ProjectEntity>): void {
-            this.project = change.next()
+            this.channel.dispatch({ event: 'project@close' })
         }
     }
 </script>

@@ -27,6 +27,7 @@
     import { Channel } from '@/lib/broadcast/Channel'
     import { ObservableProperty, PropertyChange, Closable } from '@wildebeest/observe-changes'
     import { FormField } from '../lib/form'
+    import { ViewRepository } from './ViewRepository'
 
     @Component({
         components: {
@@ -38,20 +39,18 @@
         @Prop() readonly modelProperty!: ObservableProperty<any>
 
         public model: { [key: string]: FormField } = {}
-        private closables: Array<Closable> = []
+        public repo!: ViewRepository
 
-        public mounted (): void {
-            this.closables.push(
-                this.modelProperty.addListenerAndCall(
-                    this.onModelPropertyChange.bind(this)
-                )
-            )
+        public created (): void {
+            this.repo = new ViewRepository(this)
         }
 
-        public beforeDestry (): void {
-            for (const closable of this.closables) {
-                closable.close()
-            }
+        public beforeDestroy (): void {
+            this.repo.unbindAll()
+        }
+
+        public mounted (): void {
+            this.repo.bindProperty('model', this.modelProperty)
         }
 
         public cancel (): void {
