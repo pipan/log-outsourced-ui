@@ -23,7 +23,7 @@ export class ListenerCreateController implements Controller {
             .then((listener: ListenerEntity) => {
                 this.listeners.add(listener)
                 this.channel.dispatch(
-                    AlertHelper.successEvent('Rule has been created')
+                    AlertHelper.infoEvent('Rule has been created')
                 )
                 this.channel.dispatch({
                     event: 'scene@change',
@@ -32,7 +32,7 @@ export class ListenerCreateController implements Controller {
                 this.channel.dispatch({ event: 'listener.create@reset' })
             })
             .catch((error: any) => {
-                console.log(error)
+                console.error(error)
                 this.channel.dispatch(
                     AlertHelper.errorEvent('Cannot create rule')
                 )

@@ -23,6 +23,19 @@ export class VueApplication implements Listenable {
     public constructor (framework: Framework) {
         this.channel = framework.getChannel()
 
+        const shared: any = {
+            projects: framework.getObservable('projects'),
+            projectActive: framework.getObservable('project.active'),
+            projectCreate: framework.getObservable('project.create'),
+            listeners: framework.getObservable('listeners'),
+            listenerActive: framework.getObservable('listener.active'),
+            listenerCreate: framework.getObservable('listener.create'),
+            listenerEdit: framework.getObservable('listener.edit'),
+            handlers: framework.getObservable('handlers'),
+            handlerFormSchema: framework.getObservable('handler.form.schema'),
+            handlerFormOptions: framework.getObservable('handler.form.options')
+        }
+
         Vue.use(VueRouter)
         Vue.config.productionTip = false
 
@@ -67,10 +80,7 @@ export class VueApplication implements Listenable {
                             component: ListenerCreate,
                             props: {
                                 channel: this.channel,
-                                modelProperty: framework.getObservable('listener.create'),
-                                handlersProperty: framework.getObservable('handlers'),
-                                projectProperty: framework.getObservable('project.active'),
-                                handlerSchemaProperty: framework.getObservable('handler.form.schema')
+                                shared: shared
                             }
                         },
                         {
@@ -79,9 +89,16 @@ export class VueApplication implements Listenable {
                             component: ProjectDetail,
                             props: {
                                 channel: this.channel,
-                                projectProperty: framework.getObservable('project.active'),
-                                listenerList: framework.getObservable('listeners'),
-                                listenerProperty: framework.getObservable('listener.active')
+                                shared: shared
+                            }
+                        },
+                        {
+                            path: ':uuid/:listenerUuid',
+                            name: 'project.view.listener',
+                            component: ProjectDetail,
+                            props: {
+                                channel: this.channel,
+                                shared: shared
                             }
                         }
                     ]
@@ -115,7 +132,8 @@ export class VueApplication implements Listenable {
         }).$mount('#app')
 
         const resolvers: { [key: string]: Resolver } = {
-            'project.view': new ProjectDetailResolver(framework.getChannel()),
+            'project.view': new ProjectDetailResolver(framework.getChannel(), framework.getObservable('listeners')),
+            'project.view.listener': new ProjectDetailResolver(framework.getChannel(), framework.getObservable('listeners')),
             index: new ProjectListResolver(framework.getChannel()),
             'project.create': new EventResolver(framework.getChannel(), 'project.create@close'),
             'listener.create': new EventResolver(framework.getChannel(), 'project@all')
