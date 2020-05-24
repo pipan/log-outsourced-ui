@@ -1,26 +1,25 @@
 <template>
     <field :id="_uid" :label="label" :error="error">
-        <checkbox-input :id="_uid" :checked="value" @change="$emit('change', $event)"></checkbox-input>
+        <select-checkbox-input :options="options" :value="value" @change="$emit('change', $event)"></select-checkbox-input>
     </field>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import CheckboxInput from './CheckboxInput.vue'
+    import SelectCheckboxInput from './SelectCheckboxInput.vue'
     import Field from './Field.vue'
 
     @Component({
         components: {
             Field,
-            CheckboxInput
+            SelectCheckboxInput
         }
     })
-    export default class CheckboxField extends Vue {
+    export default class SelectCheckboxField extends Vue {
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly error!: string;
-        @Prop({ default: false }) readonly value!: boolean;
-        @Prop({ default: true }) readonly trueValue!: any;
-        @Prop({ default: false }) readonly falseValue!: any;
+        @Prop({ default: () => [] }) readonly options!: Array<any>;
+        @Prop({ default: () => [] }) readonly value!: Array<any>;
     }
 </script>
 

@@ -20,7 +20,7 @@ export class ListenerDeleteController implements Controller {
             .then(() => {
                 this.listners.remove(listener)
                 this.channel.dispatch(
-                    AlertHelper.successEvent('Rule has been removed')
+                    AlertHelper.infoEvent('Rule has been removed')
                 )
             })
             .catch((error: any) => {

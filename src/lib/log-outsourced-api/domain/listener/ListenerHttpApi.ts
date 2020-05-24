@@ -37,8 +37,10 @@ export class ListenerHttpApi implements ListenerApi {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                project_uuid: listener.getProjecUuid(),
-                name: listener.getName()
+                name: listener.getName(),
+                rules: listener.getRules(),
+                handler_slug: listener.getHandlerSlug(),
+                handler_values: listener.getHandlerValues()
             })
         })
             .then(response => response.json())

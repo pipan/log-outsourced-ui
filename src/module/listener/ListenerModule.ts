@@ -8,6 +8,10 @@ import { ListenerCreateController } from './controller/ListenerCreateController'
 import { ListenerApi, ListenerEntity } from '@/lib/log-outsourced-api'
 import { ListenerSetAllController } from './controller/ListenerSetAllController'
 import { ListenerDeleteController } from './controller/ListenerDeleteController'
+import { ListenerOpenController } from './controller/ListenerOpenController'
+import { ListenerCloseController } from './controller/ListenerCloseController'
+import { EditListenerService } from './service/EditListenerService'
+import { ListenerUpdateController } from './controller/ListenerUpdateController'
 
 export class ListenerModule implements Module {
     private listenerApi: ListenerApi
@@ -20,19 +24,27 @@ export class ListenerModule implements Module {
         const createProperty: ObservableProperty<any> = new SimpleObservableProperty()
         const listeners: ObservableList<ListenerEntity> = new SimpleObservableList()
         const listenerActive: ObservableProperty<ListenerEntity> = new SimpleObservableProperty()
+        const editModel: ObservableProperty<any> = new SimpleObservableProperty()
 
         context.observables().add('listeners', listeners)
         context.observables().add('listener.active', listenerActive)
         context.observables().add('listener.create', createProperty)
+        context.observables().add('listener.edit', editModel)
 
         context.controllers().addList([
             new MapEntry('listener@set.all', new ListenerSetAllController(listeners)),
             new MapEntry('listener.create@open', new ListenerCreateOpenController(context.channel())),
             new MapEntry('listener.create@close', new ListenerCreateCloseController(context.channel(), context.observables().get('project.active'))),
-            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty, context.observables().get('handlers'), context.channel())),
+            new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty)),
             new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel(), listeners, context.observables().get('project.active'))),
-            new MapEntry('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, context.channel()))
+            new MapEntry('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, context.channel())),
+            new MapEntry('listener@open', new ListenerOpenController(listenerActive, context.channel(), context.observables().get('project.active'))),
+            new MapEntry('listener@close', new ListenerCloseController(listenerActive, context.channel(), context.observables().get('project.active'))),
+            new MapEntry('listener@update', new ListenerUpdateController(this.listenerApi, listenerActive, context.channel()))
         ])
+
+        const editListenerService: EditListenerService = new EditListenerService(listenerActive, editModel)
+        editListenerService.start()
 
         context.channel().dispatch({ event: 'listener.create@reset' })
     }

@@ -5,93 +5,86 @@ select {
 
     background-image:
         linear-gradient(45deg, transparent 50%, var(--fg) 50%),
-        linear-gradient(135deg, var(--fg) 50%, transparent 50%),
-        linear-gradient(to right, var(--fg), var(--fg));
+        linear-gradient(135deg, var(--fg) 50%, transparent 50%);
     background-position:
         calc(100% - 20px) calc(1em),
-        calc(100% - 15px) calc(1em),
-        calc(100% - 2.5em) 0.5em;
+        calc(100% - 15px) calc(1em);
     background-size:
         5px 5px,
-        5px 5px,
-        1px 1.2em;
+        5px 5px;
     background-repeat: no-repeat;
 }
 
 select:focus {
     background-image:
         linear-gradient(45deg, transparent 50%, var(--primary) 50%),
-        linear-gradient(135deg, var(--primary) 50%, transparent 50%),
-        linear-gradient(to right, var(--primary), var(--primary));
+        linear-gradient(135deg, var(--primary) 50%, transparent 50%);
 }
 
 input {
     font: inherit;
 }
 
-.checkbox {
+.btn-checkbox {
     position: relative;
+    border: 1px solid var(--bg-level-bottom);
+    background-color: transparent;
+    border-radius: 17px;
+    color: var(--fg);
+    padding: var(--unit-s) var(--unit-m);
+    cursor: pointer;
+    transition: border-color var(--transition-fast) ease,
+        background-color var(--transition-fast) ease;
 
-    input[type="checkbox"] {
-        opacity: 0;
-        position: absolute;
+    &--checked {
+        border-color: var(--fg);
     }
 
-    &__box {
-        display: block;
-        border: 1px solid var(--fg);
-        border-radius: var(--corner-radius);
-        padding: var(--unit-s);
-        cursor: pointer;
-    
-        &::after {
-            width: 16px;
-            height: 16px;
-            content: '';
-            font-family: 'Material Icons';
-            font-size: 16px;
-            display: block;
-            line-height: 1;
-        }
+    &:hover {
+        background-color: var(--bg-level-bottom);
     }
-    
-    input[type="checkbox"]:checked + &__box::after {
-        content: 'check';
-    }
-    
-    input[type="checkbox"]:focus + &__box {
-        border-color: var(--primary);
-    }
+}
+
+.checkbox-select {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--unit-s);
+    width: 65%;
 }
 
 .field {
     display: flex;
     flex-direction: row;
-    align-items: center;
     margin-top: var(--unit-m);
 
     &__label {
         display: block;
         box-sizing: border-box;
-        width: 50%;
-        padding-right: var(--unit-m);
+        width: 35%;
+        padding: var(--unit-s) var(--unit-m) var(--unit-s) 0px;
         color: var(--fg);
         cursor: pointer;
     }
 
     &__input {
         box-sizing: border-box;
-        width: 50%;
+        width: 65%;
         padding: var(--unit-s) var(--unit-m);
         margin: 0px;
         border: 1px solid var(--fg);
         border-radius: var(--corner-radius);
         background-color: transparent;
         color: var(--fg);
-        transition: border-color var(--transition-fast) ease;
+        transition: border-color var(--transition-fast) ease,
+            background-color var(--transition-fast) ease;
 
         &:focus {
             border-color: var(--primary)
+        }
+
+        &:hover {
+            background-color: var(--bg-level-bottom)
         }
     }
 

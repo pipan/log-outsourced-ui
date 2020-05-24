@@ -1,7 +1,7 @@
 <template>
-    <select :id="id" class="field__input" :selected="value" @change="onChange($event.target.value)">
-        <option v-if="value === ''"></option>
-        <option v-for="(option, index) of options" :key="index"  :value="option.id" :selected="option.value == value">{{ option.label }}</option>
+    <select :id="id" class="field__input" @change="onChange($event.target.value)">
+        <option v-if="value === ''">{{value}}</option>
+        <option v-for="(option, index) of options" :key="index"  :value="option.id || option" :selected="(option.value || option) == value">{{ option.label || option }}</option>
     </select>
 </template>
 
@@ -17,10 +17,10 @@
         public onChange (id: string): void {
             let value: any = null
             for (const option of this.options) {
-                if (option.id !== id) {
+                if ((option.id || option) !== id) {
                     continue
                 }
-                value = option.value
+                value = (option.value || option)
             }
 
             this.$emit('change', value)

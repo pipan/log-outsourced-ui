@@ -43,7 +43,7 @@ export class ProjectCreateController implements Controller {
             .then((project: ProjectEntity) => {
                 this.projects.add(project)
                 this.channel.dispatch(
-                    AlertHelper.successEvent('Project has been created')
+                    AlertHelper.infoEvent('Project has been created')
                 )
                 this.channel.dispatch({
                     event: 'scene@change',

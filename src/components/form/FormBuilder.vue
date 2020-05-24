@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-for="(field, index) of fields">
-            <component :is="getComponentByType(field.type)" v-bind="field.props" :key="index" @change="field.props.value = $event"></component>
+            <component :is="getComponentByType(field.type)" :value="getValue(values[field.id], field.default)" v-bind="field.props" :key="index" @change="values[field.id] = $event"></component>
         </template>
     </div>
 </template>
@@ -17,6 +17,7 @@
     @Component
     export default class FormBuilder extends Vue {
         @Prop({ default: [] }) readonly fields!: Array<any>;
+        @Prop({ default: () => { return {} } }) readonly values!: any;
 
         private componentMap: { [key: string]: any } = {
             string: StringField,
@@ -31,6 +32,13 @@
                 throw Error('Field type not found: ' + type)
             }
             return this.componentMap[type]
+        }
+
+        public getValue (value: any, def: any): any {
+            if (value === undefined) {
+                return def
+            }
+            return value
         }
     }
 </script>
