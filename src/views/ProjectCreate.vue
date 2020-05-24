@@ -36,7 +36,7 @@
     })
     export default class ProjectCreate extends Vue {
         @Prop() readonly channel!: Channel
-        @Prop() readonly modelProperty!: ObservableProperty<any>
+        @Prop() readonly shared!: any
 
         public model: { [key: string]: FormField } = {}
         public repo!: ViewRepository
@@ -50,7 +50,7 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('model', this.modelProperty)
+            this.repo.bindProperty('model', this.shared.projectCreate)
         }
 
         public cancel (): void {

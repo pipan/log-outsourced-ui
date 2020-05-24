@@ -25,18 +25,19 @@ export class ProjectModule implements Module {
     }
 
     public install (context: Context): void {
-        const scene: ObservableProperty<string> = context.observables().get('scene')
         const channel: Channel = context.channel()
         const projects: ObservableList<ProjectEntity> = new SimpleObservableList()
         const projectCreate: ObservableProperty<any> = new SimpleObservableProperty()
         const projectActive: ObservableProperty<ProjectEntity> = new SimpleObservableProperty()
+        const projectActiveUuid: ObservableProperty<string> = new SimpleObservableProperty()
 
         context.observables().add('projects', projects)
         context.observables().add('project.create', projectCreate)
         context.observables().add('project.active', projectActive)
+        context.observables().add('project.active.uuid', projectActiveUuid)
 
         context.controllers().addList([
-            new MapEntry('project.create@open', new ProjectCreateOpenController(scene)),
+            new MapEntry('project.create@open', new ProjectCreateOpenController(channel)),
             new MapEntry('project.create@close', new ProjectCreateCloseController(channel)),
             new MapEntry('project.create@reset', new ProjectCreateResetController(projectCreate)),
             new MapEntry('project@open', new ProjectOpenController(projectActive, channel, this.projectApi)),

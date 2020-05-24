@@ -4,21 +4,21 @@ import { ListenerEntity, ProjectEntity } from '@/lib/log-outsourced-api'
 import { Channel } from '@/lib/broadcast/Channel'
 
 export class ListenerCloseController implements Controller {
-    private listener: ObservableProperty<ListenerEntity>
+    private listenerUuid: ObservableProperty<string>
     private channel: Channel
     private project: ObservableProperty<ProjectEntity>
 
-    public constructor (listener: ObservableProperty<ListenerEntity>, channel: Channel, project: ObservableProperty<ProjectEntity>) {
-        this.listener = listener
+    public constructor (listenerUuid: ObservableProperty<string>, channel: Channel, project: ObservableProperty<ProjectEntity>) {
+        this.listenerUuid = listenerUuid
         this.channel = channel
         this.project = project
     }
 
     public action (data?: any): void {
-        this.listener.set(data)
+        this.listenerUuid.set('')
         this.channel.dispatch({
             event: 'scene@change',
-            data: '/project/' + this.project.get().getUuid()
+            data: '/project?pid=' + this.project.get().getUuid()
         })
     }
 }

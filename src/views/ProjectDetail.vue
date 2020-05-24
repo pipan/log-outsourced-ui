@@ -86,7 +86,7 @@
         public openListener (listener: ListenerEntity): void {
             this.channel.dispatch({
                 event: 'listener@open',
-                data: listener
+                data: listener.getUuid()
             })
         }
 

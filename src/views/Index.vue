@@ -24,13 +24,15 @@
     })
     export default class Index extends Vue {
         @Prop() readonly channel!: Channel
-        @Prop() public projectList!: ObservableList<ProjectEntity>
+        @Prop() public shared!: any
 
         public projects: Array<ProjectEntity> = []
         public repo!: ViewRepository
 
         public created (): void {
             this.repo = new ViewRepository(this)
+
+            this.channel.dispatch({ event: 'project@load.all' })
         }
 
         public beforeDestroy (): void {
@@ -38,7 +40,7 @@
         }
 
         public mounted (): void {
-            this.repo.bindList('projects', this.projectList)
+            this.repo.bindList('projects', this.shared.projects)
         }
 
         public open (project: ProjectEntity): void {

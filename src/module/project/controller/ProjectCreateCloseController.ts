@@ -10,6 +10,9 @@ export class ProjectCreateCloseController implements Controller {
     }
 
     public action (data?: any): void {
-        this.channel.dispatch({ event: 'project@all' })
+        this.channel.dispatch({
+            event: 'scene@change',
+            data: '/'
+        })
     }
 }

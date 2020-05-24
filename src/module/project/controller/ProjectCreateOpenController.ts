@@ -1,14 +1,17 @@
 import { Controller } from '@/lib/framework'
-import { ObservableProperty } from '@wildebeest/observe-changes'
+import { Channel } from '@/lib/broadcast/Channel'
 
 export class ProjectCreateOpenController implements Controller {
-    private scene: ObservableProperty<string>
+    private channel: Channel
 
-    public constructor (scene: ObservableProperty<string>) {
-        this.scene = scene
+    public constructor (channel: Channel) {
+        this.channel = channel
     }
 
     public action (data?: any): void {
-        this.scene.set('/create')
+        this.channel.dispatch({
+            event: 'scene@change',
+            data: '/create'
+        })
     }
 }
