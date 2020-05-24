@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <listener-list-item v-for="item of items" :key="item.getUuid()" :item="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)"></listener-list-item>
+        <listener-list-item v-for="item of items" :key="item.getUuid()" :item="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)" :active="item === active"></listener-list-item>
     </div>
 </template>
 
@@ -16,6 +16,7 @@
     })
     export default class ListenerList extends Vue {
         @Prop() readonly items!: Array<ListenerEntity>
+        @Prop() readonly active!: ListenerEntity
     }
 </script>
 

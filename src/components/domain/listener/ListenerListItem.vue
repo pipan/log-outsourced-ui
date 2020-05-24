@@ -1,5 +1,5 @@
 <template>
-    <div class="list__item">
+    <div class="list__item" :class="{'list__item--active': active}">
         <div class="list__item__top">
             <div>{{ item.getName() }}</div>
         </div>
@@ -27,6 +27,7 @@
     })
     export default class ListenerListItem extends Vue {
         @Prop() readonly item!: ListenerEntity;
+        @Prop({ default: false }) readonly active!: boolean;
 
         open (): void {
             this.$emit('open', this.item)

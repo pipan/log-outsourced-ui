@@ -13,7 +13,7 @@
         @Prop({ default: true }) readonly trueValue!: any;
         @Prop({ default: false }) readonly falseValue!: any;
 
-        public checkedState = false
+        public checkedState = this.checked
 
         public toggle (): void {
             this.onChange(!this.checkedState)

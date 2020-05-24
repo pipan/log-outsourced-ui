@@ -7,7 +7,7 @@
                     <i class="material-icons md-18">add</i>
                 </button>
             </div>
-            <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)"></listener-list>
+            <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)" :active="listener"></listener-list>
         </section>
         <section class="material__container" v-if="editModel">
             <listener-create-card
@@ -16,7 +16,8 @@
             :handler-options="handlerOptions"
             :fields="fields"
             @handlerChange="onHandlerChange($event)"
-            @cancel="closeListener()"></listener-create-card>
+            @cancel="closeListener()"
+            @save="updateListener($event)"></listener-create-card>
         </section>
     </div>
 </template>
@@ -102,6 +103,13 @@
 
         public onHandlerChange (slug: string): void {
             this.fields = this.shared.handlerFormSchema.get(slug)
+        }
+
+        public updateListener (data: any): void {
+            this.channel.dispatch({
+                event: 'listener@update',
+                data: data
+            })
         }
     }
 </script>

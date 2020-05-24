@@ -22,6 +22,10 @@
             if ((option.value || option) === checked) {
                 newValue.push(option.value || option)
             } else {
+                for (const item of this.value) {
+
+                }
+
                 const index: number = newValue.indexOf(option.value || option)
                 if (index < 0) {
                     return

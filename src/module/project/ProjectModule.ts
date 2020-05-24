@@ -13,6 +13,7 @@ import { ProjectCreateResetController } from './controller/ProjectCreateResetCon
 import { ValidatorBuilder } from '@/lib/validator'
 import { ProjectCloseController } from './controller/ProjectCloseController'
 import { ProjectLoadController } from './controller/ProjectLoadController'
+import { ProjectRefreshController } from './controller/ProjectRefreshController'
 
 export class ProjectModule implements Module {
     private projectApi: ProjectApi
@@ -44,7 +45,8 @@ export class ProjectModule implements Module {
             new MapEntry('project@create', new ProjectCreateController(this.validatorBuilder, projects, channel, this.projectApi, projectCreate)),
             new MapEntry('project@load.all', new ProjectLoadAllController(projects, this.projectApi, channel)),
             new MapEntry('project@delete', new ProjectDeleteController(this.projectApi, channel, projects)),
-            new MapEntry('project@load', new ProjectLoadController(projectActive, channel, this.projectApi))
+            new MapEntry('project@load', new ProjectLoadController(projectActive, channel, this.projectApi)),
+            new MapEntry('project@refresh', new ProjectRefreshController(projectActive, channel))
         ])
 
         channel.dispatch({ event: 'project.create@reset' })

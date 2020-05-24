@@ -11,6 +11,7 @@ import { ListenerDeleteController } from './controller/ListenerDeleteController'
 import { ListenerOpenController } from './controller/ListenerOpenController'
 import { ListenerCloseController } from './controller/ListenerCloseController'
 import { EditListenerService } from './service/EditListenerService'
+import { ListenerUpdateController } from './controller/ListenerUpdateController'
 
 export class ListenerModule implements Module {
     private listenerApi: ListenerApi
@@ -38,7 +39,8 @@ export class ListenerModule implements Module {
             new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel(), listeners, context.observables().get('project.active'))),
             new MapEntry('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, context.channel())),
             new MapEntry('listener@open', new ListenerOpenController(listenerActive, context.channel(), context.observables().get('project.active'))),
-            new MapEntry('listener@close', new ListenerCloseController(listenerActive, context.channel(), context.observables().get('project.active')))
+            new MapEntry('listener@close', new ListenerCloseController(listenerActive, context.channel(), context.observables().get('project.active'))),
+            new MapEntry('listener@update', new ListenerUpdateController(this.listenerApi, listenerActive, context.channel()))
         ])
 
         const editListenerService: EditListenerService = new EditListenerService(listenerActive, editModel)
