@@ -23,10 +23,6 @@ export class ProjectOpenController implements Controller {
                     event: 'listener@set.all',
                     data: result.listeners
                 })
-                this.channel.dispatch({
-                    event: 'scene@change',
-                    data: '/project/' + result.project.getUuid()
-                })
             })
             .catch((error: any) => {
                 console.error(error)
@@ -34,5 +30,9 @@ export class ProjectOpenController implements Controller {
                     AlertHelper.errorEvent('Cannot load project data')
                 )
             })
+        this.channel.dispatch({
+            event: 'scene@change',
+            data: '/project?pid=' + uuid
+        })
     }
 }

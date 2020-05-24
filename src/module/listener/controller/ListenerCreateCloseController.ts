@@ -5,17 +5,24 @@ import { ProjectEntity } from '@/lib/log-outsourced-api'
 
 export class ListenerCreateCloseController implements Controller {
     private channel: Channel
-    private activeProject: ObservableProperty<ProjectEntity>
+    private project: ObservableProperty<ProjectEntity>
+    private listnerUuid: ObservableProperty<string>
 
-    public constructor (channel: Channel, activeProject: ObservableProperty<ProjectEntity>) {
+    public constructor (channel: Channel, project: ObservableProperty<ProjectEntity>, listenerUuid: ObservableProperty<string>) {
         this.channel = channel
-        this.activeProject = activeProject
+        this.project = project
+        this.listnerUuid = listenerUuid
     }
 
     public action (data?: any): void {
+        let query: string = 'pid=' + this.project.get().getUuid()
+        if (this.listnerUuid.get() !== '') {
+            query += '&rid=' + this.listnerUuid.get()
+        }
+
         this.channel.dispatch({
             event: 'scene@change',
-            data: '/project/' + this.activeProject.get()?.getUuid()
+            data: '/project?' + query
         })
     }
 }

@@ -21,9 +21,8 @@
     import { ViewRepository } from './ViewRepository'
     @Component
     export default class ProjectLayout extends Vue {
-        @Prop() projectProperty!: ObservableProperty<ProjectEntity>
         @Prop() channel!: Channel
-        @Prop() apiProperty!: ObservableProperty<any>
+        @Prop() shared!: any
 
         public project: ProjectEntity | null = null
         public api: any | null = null
@@ -38,12 +37,8 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('api', this.apiProperty)
-            this.repo.bindProperty('project', this.projectProperty)
-        }
-
-        public cancel (): void {
-            this.channel.dispatch({ event: 'project.create@close' })
+            this.repo.bindProperty('api', this.shared.api)
+            this.repo.bindProperty('project', this.shared.projectActive)
         }
 
         public back (): void {

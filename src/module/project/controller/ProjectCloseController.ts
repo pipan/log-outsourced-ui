@@ -5,16 +5,20 @@ import { ProjectEntity } from '@/lib/log-outsourced-api'
 
 export class ProjectCloseController implements Controller {
     private channel: Channel
-    private activeProject: ObservableProperty<ProjectEntity>
+    private project: ObservableProperty<ProjectEntity | null>
 
-    public constructor (channel: Channel, activeProjec: ObservableProperty<ProjectEntity>) {
+    public constructor (channel: Channel, project: ObservableProperty<ProjectEntity>) {
         this.channel = channel
-        this.activeProject = activeProjec
+        this.project = project
     }
 
-    public action (data?: any): void {
-        this.channel.dispatch({ event: 'project@load.all' })
-        this.channel.dispatch({ event: 'listener@set.all', data: [] })
+    public action (): void {
+        this.project.set(null)
+        this.channel.dispatch({
+            event: 'listener@set.all',
+            data: []
+        })
+
         this.channel.dispatch({
             event: 'scene@change',
             data: '/'

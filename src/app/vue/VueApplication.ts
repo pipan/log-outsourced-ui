@@ -12,10 +12,6 @@ import { Listener } from '@/lib/broadcast/Listener'
 import { Channel } from '@/lib/broadcast/Channel'
 import { Framework } from '@/lib/framework'
 import { PropertyChange } from '@wildebeest/observe-changes'
-import { ProjectDetailResolver } from './resolver/ProjectDetailResolver'
-import { ProjectListResolver } from './resolver/ProjectListResolver'
-import { Resolver } from './resolver/Resolver'
-import { EventResolver } from './resolver/EventResolver'
 
 export class VueApplication implements Listenable {
     private channel: Channel
@@ -24,6 +20,7 @@ export class VueApplication implements Listenable {
         this.channel = framework.getChannel()
 
         const shared: any = {
+            alerts: framework.getObservable('alerts'),
             projects: framework.getObservable('projects'),
             projectActive: framework.getObservable('project.active'),
             projectCreate: framework.getObservable('project.create'),
@@ -33,7 +30,13 @@ export class VueApplication implements Listenable {
             listenerEdit: framework.getObservable('listener.edit'),
             handlers: framework.getObservable('handlers'),
             handlerFormSchema: framework.getObservable('handler.form.schema'),
-            handlerFormOptions: framework.getObservable('handler.form.options')
+            handlerFormOptions: framework.getObservable('handler.form.options'),
+            api: framework.getObservable('api')
+        }
+
+        const props: any = {
+            channel: this.channel,
+            shared: shared
         }
 
         Vue.use(VueRouter)
@@ -47,55 +50,32 @@ export class VueApplication implements Listenable {
                     children: [
                         {
                             path: '',
-                            name: 'index',
                             component: Index,
-                            props: {
-                                channel: this.channel,
-                                projectList: framework.getObservable('projects')
-                            }
+                            props: props
                         },
                         {
                             path: 'create',
-                            name: 'project.create',
                             component: ProjectCreate,
-                            props: {
-                                channel: this.channel,
-                                modelProperty: framework.getObservable('project.create')
-                            }
+                            props: props
                         }
                     ]
                 },
                 {
                     path: '/project',
                     component: ProjectLayout,
-                    props: {
-                        channel: this.channel,
-                        projectProperty: framework.getObservable('project.active'),
-                        apiProperty: framework.getObservable('api')
-                    },
+                    props: props,
                     children: [
                         {
-                            path: 'listener/create',
-                            name: 'listener.create',
+                            path: '',
+                            component: ProjectDetail,
+                            props: {
+                                channel: this.channel,
+                                shared: shared
+                            }
+                        },
+                        {
+                            path: 'rule/create',
                             component: ListenerCreate,
-                            props: {
-                                channel: this.channel,
-                                shared: shared
-                            }
-                        },
-                        {
-                            path: ':uuid',
-                            name: 'project.view',
-                            component: ProjectDetail,
-                            props: {
-                                channel: this.channel,
-                                shared: shared
-                            }
-                        },
-                        {
-                            path: ':uuid/:listenerUuid',
-                            name: 'project.view.listener',
-                            component: ProjectDetail,
                             props: {
                                 channel: this.channel,
                                 shared: shared
@@ -114,13 +94,6 @@ export class VueApplication implements Listenable {
             router.push(change.next())
         })
 
-        router.afterEach((to: Route, from: Route) => {
-            this.channel.dispatch({
-                event: 'scene@change',
-                data: to.path
-            })
-        })
-
         new Vue({
             router,
             render: h => h(App, {
@@ -131,17 +104,17 @@ export class VueApplication implements Listenable {
             })
         }).$mount('#app')
 
-        const resolvers: { [key: string]: Resolver } = {
-            'project.view': new ProjectDetailResolver(framework.getChannel(), framework.getObservable('listeners')),
-            'project.view.listener': new ProjectDetailResolver(framework.getChannel(), framework.getObservable('listeners')),
-            index: new ProjectListResolver(framework.getChannel()),
-            'project.create': new EventResolver(framework.getChannel(), 'project.create@close'),
-            'listener.create': new EventResolver(framework.getChannel(), 'project@all')
+        if (router.currentRoute.query.pid) {
+            this.channel.dispatch({
+                event: 'project@load',
+                data: router.currentRoute.query.pid
+            })
         }
-
-        const currentRouteName: string = router.currentRoute.name || ''
-        if (resolvers[currentRouteName]) {
-            resolvers[currentRouteName].resolve(router.currentRoute.params)
+        if (router.currentRoute.query.rid) {
+            this.channel.dispatch({
+                event: 'listener@active',
+                data: router.currentRoute.query.rid
+            })
         }
     }
 
