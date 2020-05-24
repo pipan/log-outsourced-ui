@@ -40,7 +40,7 @@ export class ListenerModule implements Module {
             new MapEntry('listener.create@open', new ListenerCreateOpenController(context.channel(), context.observables().get('project.active'), listenerActiveUuid)),
             new MapEntry('listener.create@close', new ListenerCreateCloseController(context.channel(), context.observables().get('project.active'), listenerActiveUuid)),
             new MapEntry('listener.create@reset', new ListenerCreateResetController(createProperty)),
-            new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel(), listeners, context.observables().get('project.active'))),
+            new MapEntry('listener@create', new ListenerCreateController(this.listenerApi, context.channel(), listeners, context.observables().get('project.active'), listenerActiveUuid)),
             new MapEntry('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, context.channel())),
             new MapEntry('listener@open', new ListenerOpenController(listenerActiveUuid, context.channel(), context.observables().get('project.active'))),
             new MapEntry('listener@close', new ListenerCloseController(listenerActiveUuid, context.channel(), context.observables().get('project.active'))),

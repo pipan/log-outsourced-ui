@@ -9,12 +9,14 @@ export class ListenerCreateController implements Controller {
     private listeners: ObservableList<ListenerEntity>
     private channel: Channel
     private activeProject: ObservableProperty<ProjectEntity>
+    private listenerUuid: ObservableProperty<string>
 
-    public constructor (listenerApi: ListenerApi, channel: Channel, listeners: ObservableList<ListenerEntity>, activeProject: ObservableProperty<ProjectEntity>) {
+    public constructor (listenerApi: ListenerApi, channel: Channel, listeners: ObservableList<ListenerEntity>, activeProject: ObservableProperty<ProjectEntity>, listenerUuid: ObservableProperty<string>) {
         this.listenerApi = listenerApi
         this.channel = channel
         this.listeners = listeners
         this.activeProject = activeProject
+        this.listenerUuid = listenerUuid
     }
 
     public action (data?: any): void {
@@ -22,12 +24,13 @@ export class ListenerCreateController implements Controller {
         this.listenerApi.create(listener)
             .then((listener: ListenerEntity) => {
                 this.listeners.add(listener)
+                this.listenerUuid.set(listener.getUuid())
                 this.channel.dispatch(
                     AlertHelper.infoEvent('Rule has been created')
                 )
                 this.channel.dispatch({
                     event: 'scene@change',
-                    data: '/project/' + this.activeProject.get().getUuid()
+                    data: '/project?pid=' + this.activeProject.get().getUuid() + '&rid=' + listener.getUuid()
                 })
                 this.channel.dispatch({ event: 'listener.create@reset' })
             })
