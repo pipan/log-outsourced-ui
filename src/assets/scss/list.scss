@@ -15,6 +15,9 @@
         }
 
         &__top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             padding: var(--unit-m);
             font-size: 1.2em;
         }

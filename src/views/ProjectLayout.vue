@@ -4,7 +4,7 @@
             <div class="flexbox-row space-between center flex">
                 <button class="btn btn--secondary btn--square material__header__back" @click="back()"><i class="material-icons md-18">apps</i></button>
                 <div class="material__header__title text-m" v-if="project">{{ project.getName() }}</div>
-                <button v-if="api" class="btn btn--secondary text-ellipsis material__header__url">{{ api.url }}</button>
+                <button v-if="api" class="btn btn--secondary text-ellipsis material__header__url" @click="copyUrl()">{{ api.url }}</button>
             </div>
         </header>
         <div class="material__body">
@@ -19,6 +19,8 @@
     import { ObservableProperty, PropertyChange } from '@wildebeest/observe-changes'
     import { Channel } from '../lib/broadcast/Channel'
     import { ViewRepository } from './ViewRepository'
+    import clipboardCopy from 'clipboard-copy'
+
     @Component
     export default class ProjectLayout extends Vue {
         @Prop() channel!: Channel
@@ -43,6 +45,17 @@
 
         public back (): void {
             this.channel.dispatch({ event: 'project@close' })
+        }
+
+        public copyUrl (): void {
+            clipboardCopy(this.api.url)
+            this.channel.dispatch({
+                event: 'alert@create',
+                data: {
+                    message: 'URL copied to clipboard',
+                    type: 'info'
+                }
+            })
         }
     }
 </script>

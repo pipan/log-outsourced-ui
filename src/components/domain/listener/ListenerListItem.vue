@@ -1,7 +1,7 @@
 <template>
     <div class="list__item" :class="{'list__item--active': active}">
         <div class="list__item__top">
-            <div>{{ item.getName() }}</div>
+            <span class="material-icons md-18">{{handler.getMeta().meta.icon}}</span><div class="left-m">{{ item.getName() }}</div>
         </div>
         <contextmenu>
             <button class="context__menu__item top-s" @click="$emit('delete', item)">Delete</button>
@@ -17,7 +17,7 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ListenerEntity } from '@/lib/log-outsourced-api'
+    import { ListenerEntity, HandlerEntity } from '@/lib/log-outsourced-api'
     import Contextmenu from '../../contextmenu/Contextmenu.vue'
 
     @Component({
@@ -27,6 +27,7 @@
     })
     export default class ListenerListItem extends Vue {
         @Prop() readonly item!: ListenerEntity;
+        @Prop() readonly handler!: HandlerEntity;
         @Prop({ default: false }) readonly active!: boolean;
 
         open (): void {

@@ -1,13 +1,13 @@
 <template>
     <div class="flex flexbox-row">
-        <section class="material__container">
+        <section class="material__container" :class="{'hide-m': listener}">
             <div class="flexbox-row center bottom-m">
                 <h2 class="text-m flex">Rules</h2>
                 <button class="btn btn--forward left-m" @click="create()">
                     <i class="material-icons md-18">add</i>
                 </button>
             </div>
-            <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)" :active="listener"></listener-list>
+            <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)" :active="listener" :handlers="handlers"></listener-list>
         </section>
         <section class="material__container" v-if="editModel">
             <listener-create-card
@@ -47,6 +47,8 @@
         public listener: ListenerEntity | null = null
         public fields: Array<any> = []
         public handlerOptions: Array<any> = []
+        public handlers: Array<HandlerEntity> = []
+
         private repo!: ViewRepository
         private closables: Array<Closable> = []
 
@@ -67,6 +69,7 @@
             this.repo.bindProperty('editModel', this.shared.listenerEdit)
             this.repo.bindProperty('listener', this.shared.listenerActive)
             this.repo.bindList('handlerOptions', this.shared.handlerFormOptions)
+            this.repo.bindList('handlers', this.shared.handlers)
 
             this.closables.push(
                 this.shared.listenerEdit.addListenerAndCall((change: PropertyChange<any>) => {
