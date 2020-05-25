@@ -6,7 +6,6 @@ export class HandlerRreadAdapter implements Adapter<any, HandlerEntity> {
         return new HandlerEntity(
             item.slug,
             item.name,
-            item.configSchema,
             item.meta
         )
     }

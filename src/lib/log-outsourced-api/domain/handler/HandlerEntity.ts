@@ -1,13 +1,11 @@
 export class HandlerEntity {
     protected slug: string
     protected name: string
-    protected configSchema: any
     protected meta: any
 
-    public constructor (slug: string, name: string, configSchema: any, meta: any = {}) {
+    public constructor (slug: string, name: string, meta: any = {}) {
         this.slug = slug
         this.name = name
-        this.configSchema = configSchema
         this.meta = meta
     }
 
@@ -17,10 +15,6 @@ export class HandlerEntity {
 
     public getName (): string {
         return this.name
-    }
-
-    public getConfigSchema (): any {
-        return this.configSchema
     }
 
     public getMeta (): any {
