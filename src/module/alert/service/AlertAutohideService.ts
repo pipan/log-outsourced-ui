@@ -1,15 +1,15 @@
 import { Service } from '@/lib/framework/service/Service'
-import { Closable, ObservableList, ListChange } from '@wildebeest/observe-changes'
 import { AlertContract } from '@/components/alert'
-import { Channel } from '@/lib/broadcast/Channel'
+import { Closable, Channel } from '@wildebeest/observable'
+import { Repository, Change } from '@wildebeest/repository'
 
 export class AlertAutohideService implements Service {
     protected closables: Array<Closable> = []
-    protected alerts: ObservableList<AlertContract>
-    protected channel: Channel
+    protected alerts: Repository<AlertContract>
+    protected channel: Channel<any>
     protected delayMiliseconds: number
 
-    public constructor (delayMmiliseconds: number, alerts: ObservableList<AlertContract>, channel: Channel) {
+    public constructor (delayMmiliseconds: number, alerts: Repository<AlertContract>, channel: Channel<any>) {
         this.alerts = alerts
         this.channel = channel
         this.delayMiliseconds = delayMmiliseconds
@@ -17,7 +17,7 @@ export class AlertAutohideService implements Service {
 
     public start (): void {
         this.closables.push(
-            this.alerts.addListener(
+            this.alerts.connectFn(
                 this.onAlertsChange.bind(this)
             )
         )
@@ -29,7 +29,7 @@ export class AlertAutohideService implements Service {
         }
     }
 
-    private onAlertsChange (change: ListChange<AlertContract>): void {
+    private onAlertsChange (change: Change<AlertContract>): void {
         for (const alert of change.inserted()) {
             setTimeout(() => {
                 this.channel.dispatch({

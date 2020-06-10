@@ -24,10 +24,9 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringField from '@/components/form/StringField.vue'
-    import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableProperty, PropertyChange, Closable } from '@wildebeest/observe-changes'
     import { FormField } from '../lib/form'
     import { ViewRepository } from './ViewRepository'
+    import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
@@ -35,8 +34,8 @@
         }
     })
     export default class ProjectCreate extends Vue {
-        @Prop() readonly channel!: Channel
-        @Prop() readonly shared!: any
+        @Prop() readonly channel!: Channel<any>
+        @Prop() readonly queries!: any
 
         public model: { [key: string]: FormField } = {}
         public repo!: ViewRepository
@@ -50,15 +49,11 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('model', this.shared.projectCreate)
+            this.repo.bindProperty('model', this.queries.projectCreate)
         }
 
         public cancel (): void {
-            this.channel.dispatch({ event: 'project.create@close' })
-        }
-
-        private onModelPropertyChange (change: PropertyChange<any>): void {
-            this.model = change.next()
+            this.$router.push('/')
         }
 
         public save (): void {

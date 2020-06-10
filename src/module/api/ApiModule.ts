@@ -1,7 +1,7 @@
-import { Module } from '@/lib/framework'
+import { Module, PropertyEntity } from '@/lib/framework'
 import { Context } from '@/lib/framework/module/Context'
-import { ObservableProperty, SimpleObservableProperty } from '@wildebeest/observe-changes'
 import { ApiProjectRouteService } from './service/ApiProjectRouteService'
+import { Repository } from '@wildebeest/repository'
 
 export class ApiModule implements Module {
     private host: string
@@ -11,13 +11,10 @@ export class ApiModule implements Module {
     }
 
     public install (context: Context): void {
-        const api: ObservableProperty<any> = new SimpleObservableProperty({
-            url: ''
-        })
+        const properties: Repository<PropertyEntity> = context.repositories().get('properties')!
+        properties.insert(new PropertyEntity('api', undefined))
 
-        context.observables().add('api', api)
-
-        const service: ApiProjectRouteService = new ApiProjectRouteService(api, context.observables().get('project.active'), this.host)
+        const service: ApiProjectRouteService = new ApiProjectRouteService(properties, this.host)
 
         service.start()
     }

@@ -9,27 +9,17 @@
             </div>
             <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)" :active="listener" :handlers="handlers"></listener-list>
         </section>
-        <section class="material__container" v-if="editModel">
-            <listener-create-card
-            :title="listener.getName()"
-            :model="editModel"
-            :handler-options="handlerOptions"
-            :fields="fields"
-            @handlerChange="onHandlerChange($event)"
-            @cancel="closeListener()"
-            @save="updateListener($event)"></listener-create-card>
-        </section>
+        <router-view></router-view>
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { Channel } from '../lib/broadcast/Channel'
     import { ViewRepository } from './ViewRepository'
-    import { ObservableProperty, Closable, PropertyChange, ObservableList, ListChange, ObservableMap } from '@wildebeest/observe-changes'
     import { ProjectEntity, ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
     import ListenerList from '../components/domain/listener/ListenerList.vue'
     import ListenerCreateCard from '../components/domain/listener/ListenerCreateCard.vue'
+    import { Channel, Closable } from '@wildebeest/observable'
 
     @Component({
         components: {
@@ -38,16 +28,13 @@
         }
     })
     export default class ProjectDetail extends Vue {
-        @Prop() readonly channel!: Channel
-        @Prop() readonly shared!: any
+        @Prop() readonly channel!: Channel<any>
+        @Prop() readonly queries!: any
 
         public project: ProjectEntity | null = null
         public listeners: Array<ListenerEntity> = []
-        public editModel: any | null = null
         public listener: ListenerEntity | null = null
-        public fields: Array<any> = []
-        public handlerOptions: Array<any> = []
-        public handlers: Array<HandlerEntity> = []
+        public handlers: Map<string, HandlerEntity> = new Map()
 
         private repo!: ViewRepository
         private closables: Array<Closable> = []
@@ -64,32 +51,26 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('project', this.shared.projectActive)
-            this.repo.bindList('listeners', this.shared.listeners)
-            this.repo.bindProperty('editModel', this.shared.listenerEdit)
-            this.repo.bindProperty('listener', this.shared.listenerActive)
-            this.repo.bindList('handlerOptions', this.shared.handlerFormOptions)
-            this.repo.bindList('handlers', this.shared.handlers)
-
-            this.closables.push(
-                this.shared.listenerEdit.addListenerAndCall((change: PropertyChange<any>) => {
-                    if (!change.next() || !change.next().handler) {
-                        this.fields = []
-                        return
-                    }
-                    this.onHandlerChange(change.next().handler.slug)
-                })
-            )
+            this.repo.bindProperty('project', this.queries.projectActive)
+            this.repo.bindValue('listeners', this.queries.listeners)
+            this.repo.bindProperty('listener', this.queries.listenerActive)
+            this.repo.bindValue('handlers', this.queries.handlers)
         }
 
         public create (): void {
-            this.channel.dispatch({ event: 'listener.create@open' })
+            this.$router.push({
+                path: '/project/rule/create',
+                query: this.$route.query
+            })
         }
 
         public openListener (listener: ListenerEntity): void {
-            this.channel.dispatch({
-                event: 'listener@open',
-                data: listener.getUuid()
+            this.$router.push({
+                path: '/project/rule',
+                query: {
+                    pid: this.$route.query.pid,
+                    rid: listener.identify()
+                }
             })
         }
 
@@ -97,21 +78,6 @@
             this.channel.dispatch({
                 event: 'listener@delete',
                 data: listener
-            })
-        }
-
-        public closeListener (): void {
-            this.channel.dispatch({ event: 'listener@close' })
-        }
-
-        public onHandlerChange (slug: string): void {
-            this.fields = this.shared.handlerFormSchema.get(slug)
-        }
-
-        public updateListener (data: any): void {
-            this.channel.dispatch({
-                event: 'listener@update',
-                data: data
             })
         }
     }

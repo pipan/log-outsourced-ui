@@ -1,9 +1,10 @@
+import { Repository, ObservableMap } from '@wildebeest/repository'
+import { Channel } from '@wildebeest/observable'
 import { Controller } from '../controller/Controller'
-import { ObservableMap } from '@wildebeest/observe-changes'
-import { Channel } from '@/lib/broadcast/Channel'
 
 export interface Context {
-    controllers (): ObservableMap<string, Controller>
-    observables (): ObservableMap<string, any>
-    channel(): Channel
+    controllers (): ObservableMap<string, Controller>;
+    observables (): ObservableMap<string, any>;
+    repositories (): ObservableMap<string, Repository<any>>;
+    channel(): Channel<any>;
 }

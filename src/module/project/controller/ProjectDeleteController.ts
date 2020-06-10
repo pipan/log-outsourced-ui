@@ -1,15 +1,15 @@
 import { Controller } from '@/lib/framework'
 import { ProjectApi, ProjectEntity } from '@/lib/log-outsourced-api'
-import { Channel } from '@/lib/broadcast/Channel'
-import { ObservableList } from '@wildebeest/observe-changes'
 import { AlertHelper } from '@/module/alert'
+import { Channel } from '@wildebeest/observable'
+import { Repository } from '@wildebeest/repository'
 
 export class ProjectDeleteController implements Controller {
     private projectApi: ProjectApi
-    private channel: Channel
-    private projects: ObservableList<ProjectEntity>
+    private channel: Channel<any>
+    private projects: Repository<ProjectEntity>
 
-    public constructor (projectApi: ProjectApi, channel: Channel, projects: ObservableList<ProjectEntity>) {
+    public constructor (projects: Repository<ProjectEntity>, projectApi: ProjectApi, channel: Channel<any>) {
         this.projectApi = projectApi
         this.channel = channel
         this.projects = projects

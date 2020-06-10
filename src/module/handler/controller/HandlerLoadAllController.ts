@@ -1,12 +1,12 @@
 import { Controller } from '@/lib/framework'
 import { HandlerApi, HandlerEntity } from '@/lib/log-outsourced-api'
-import { ObservableList } from '@wildebeest/observe-changes'
+import { Repository } from '@wildebeest/repository'
 
 export class HandlerLoadAllController implements Controller {
     private handlerApi: HandlerApi
-    private handlers: ObservableList<HandlerEntity>
+    private handlers: Repository<HandlerEntity>
 
-    public constructor (handlerApi: HandlerApi, handlers: ObservableList<HandlerEntity>) {
+    public constructor (handlerApi: HandlerApi, handlers: Repository<HandlerEntity>) {
         this.handlerApi = handlerApi
         this.handlers = handlers
     }

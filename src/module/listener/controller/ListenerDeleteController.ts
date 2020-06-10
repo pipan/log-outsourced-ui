@@ -1,15 +1,15 @@
 import { Controller } from '@/lib/framework'
-import { ObservableList } from '@wildebeest/observe-changes'
 import { ListenerEntity, ListenerApi } from '@/lib/log-outsourced-api'
-import { Channel } from '@/lib/broadcast/Channel'
 import { AlertHelper } from '@/module/alert'
+import { Repository } from '@wildebeest/repository'
+import { Channel } from '@wildebeest/observable'
 
 export class ListenerDeleteController implements Controller {
-    private listners: ObservableList<ListenerEntity>
+    private listners: Repository<ListenerEntity>
     private listnerApi: ListenerApi
-    private channel: Channel
+    private channel: Channel<any>
 
-    public constructor (listeners: ObservableList<ListenerEntity>, listenerApi: ListenerApi, channel: Channel) {
+    public constructor (listeners: Repository<ListenerEntity>, listenerApi: ListenerApi, channel: Channel<any>) {
         this.listnerApi = listenerApi
         this.listners = listeners
         this.channel = channel

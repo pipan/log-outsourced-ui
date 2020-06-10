@@ -1,4 +1,6 @@
-export class HandlerEntity {
+import { Identifiable } from '@wildebeest/repository/dist/identify/Identifiable'
+
+export class HandlerEntity implements Identifiable {
     protected slug: string
     protected name: string
     protected meta: any
@@ -7,6 +9,10 @@ export class HandlerEntity {
         this.slug = slug
         this.name = name
         this.meta = meta
+    }
+
+    public identify (): string {
+        return this.slug
     }
 
     public getSlug (): string {

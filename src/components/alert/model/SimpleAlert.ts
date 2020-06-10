@@ -1,10 +1,12 @@
 import { AlertContract } from '../contract/AlertContract'
 
 export class SimpleAlert implements AlertContract {
+    protected id: string
     protected message: string
     protected type: string
 
-    public constructor (message: string, type = '') {
+    public constructor (id: string, message: string, type = '') {
+        this.id = id
         this.message = message
         this.type = type
     }
@@ -15,5 +17,9 @@ export class SimpleAlert implements AlertContract {
 
     public getType (): string {
         return this.type
+    }
+
+    public identify (): string {
+        return this.id
     }
 }

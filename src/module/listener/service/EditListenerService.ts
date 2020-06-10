@@ -1,36 +1,41 @@
-import { Service } from '@/lib/framework'
-import { ObservableProperty, Closable, PropertyChange } from '@wildebeest/observe-changes'
+import { Service, PropertyEntity } from '@/lib/framework'
 import { ListenerEntity } from '@/lib/log-outsourced-api'
+import { Closable } from '@wildebeest/observable'
+import { Repository } from '@wildebeest/repository'
 
 export class EditListenerService implements Service {
-    private openedListener: ObservableProperty<ListenerEntity>
-    private editModel: ObservableProperty<any>
+    private properties: Repository<PropertyEntity>
+    // private editModel: ObservableProperty<any>
     private closables: Array<Closable> = []
     private models: Map<string, any> = new Map()
 
-    public constructor (openedListener: ObservableProperty<ListenerEntity>, editModel: ObservableProperty<any>) {
-        this.openedListener = openedListener
-        this.editModel = editModel
+    public constructor (properties: Repository<PropertyEntity>) {
+        this.properties = properties
+        // this.editModel = editModel
     }
 
     public start (): void {
-        this.closables.push(
-            this.openedListener.addListenerAndCall(
-                this.onOpeenListener.bind(this)
-            )
-        )
+        const query = this.properties.query()
+            .property('listener.active')
+
+        query.connectFn((property: PropertyEntity) => {
+            this.onListenerChange(property.get())
+        })
+
+        this.closables.push(query)
     }
 
-    private onOpeenListener (change: PropertyChange<ListenerEntity>): void {
-        const listener: ListenerEntity | undefined = change.next()
+    private onListenerChange (listener: ListenerEntity): void {
         if (!listener) {
-            this.editModel.set(null)
+            this.properties.insert(
+                new PropertyEntity('listener.edit', undefined)
+            )
             return
         }
 
         if (this.models.has(listener.getUuid())) {
-            this.editModel.set(
-                this.models.get(listener.getUuid())
+            this.properties.insert(
+                new PropertyEntity('listener.edit', this.models.get(listener.getUuid()))
             )
             return
         }
@@ -45,7 +50,9 @@ export class EditListenerService implements Service {
             }
         }
         this.models.set(listener.getUuid(), model)
-        this.editModel.set(model)
+        this.properties.insert(
+            new PropertyEntity('listener.edit', model)
+        )
     }
 
     public stop (): void {

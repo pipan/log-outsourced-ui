@@ -1,7 +1,6 @@
 import { ModularFramework } from './lib/framework'
 import { AlertModule } from './module/alert'
 import { VueApplication } from './app'
-import { SceneModule } from './module/scene'
 import { ProjectModule } from './module/project'
 import { LogOutsourcedApi, LogOutsourcedHttpApi } from './lib/log-outsourced-api'
 import { HandlerModule } from './module/handler'
@@ -18,7 +17,6 @@ validatorBuilder.extend(new BasicValidatorRuleProvide())
 validatorBuilder.extend(new StringRuleProvider())
 
 const framework: ModularFramework = new ModularFramework([
-    new SceneModule(),
     new AlertModule(),
     new ProjectModule(httpApi.projects(), validatorBuilder),
     new HandlerModule(httpApi.handlers()),

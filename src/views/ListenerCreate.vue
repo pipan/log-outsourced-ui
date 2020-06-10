@@ -4,9 +4,7 @@
             v-if="model"
             :title="'Create Rule'"
             :model="model"
-            :fields="fields"
-            :handler-options="handlerOptions"
-            @handlerChange="onHandlerChange($event)"
+            :handlers="handlers"
             @cancel="cancel()"
             @save="save($event)"></listener-create-card>
     </section>
@@ -19,10 +17,9 @@
     import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
     import ListenerCreateCard from '@/components/domain/listener/ListenerCreateCard.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
-    import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableProperty, PropertyChange, Closable, ObservableList, ListChange, ObservableMap } from '@wildebeest/observe-changes'
-    import { HandlerEntity, ProjectEntity } from '../lib/log-outsourced-api'
+    import { HandlerEntity, ProjectEntity, ListenerEntity } from '../lib/log-outsourced-api'
     import { ViewRepository } from './ViewRepository'
+    import { Closable, Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
@@ -34,12 +31,11 @@
         }
     })
     export default class ListenerCreate extends Vue {
-        @Prop() readonly channel!: Channel
-        @Prop() readonly shared!: any
+        @Prop() readonly channel!: Channel<any>
+        @Prop() readonly queries!: any
 
         public model: any | null = null
-        public handlerOptions: Array<any> = []
-        public fields: Array<any> = []
+        public handlers: Array<HandlerEntity> = []
 
         private repo!: ViewRepository
         private closables: Array<Closable> = []
@@ -56,24 +52,29 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('model', this.shared.listenerCreate)
-            this.repo.bindList('handlerOptions', this.shared.handlerFormOptions)
-
-            if (this.model.handler.slug) {
-                this.onHandlerChange(this.model.handler.slug)
-            }
+            this.repo.bindProperty('model', this.queries.listenerCreate)
+            this.repo.bindValue('handlers', this.queries.handlers)
         }
 
         public cancel (): void {
-            this.channel.dispatch({ event: 'listener.create@close' })
+            this.$router.push({
+                path: '/project',
+                query: this.$route.query
+            })
         }
 
         public save (data: any): void {
-            data.projectUuid = this.shared.projectActive.get().getUuid()
+            const routeQuery = this.$route.query
+            data.projectUuid = routeQuery.pid
 
             this.channel.dispatch({
                 event: 'listener@create',
-                data: data
+                data: {
+                    body: data,
+                    success: (listener: ListenerEntity) => {
+                        this.$router.push({ path: '/project', query: { pid: routeQuery.pid, rid: listener.identify() } })
+                    }
+                }
             })
         }
 
@@ -83,10 +84,6 @@
 
         public onRulesChange (rules: string): void {
             this.model.rules.set(rules)
-        }
-
-        public onHandlerChange (slug: string): void {
-            this.fields = this.shared.handlerFormSchema.get(slug)
         }
     }
 </script>

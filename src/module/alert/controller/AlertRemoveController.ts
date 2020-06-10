@@ -1,11 +1,11 @@
 import { Controller } from '@/lib/framework'
-import { ObservableList } from '@wildebeest/observe-changes'
 import { AlertContract } from '@/components/alert'
+import { Repository } from '@wildebeest/repository'
 
 export class AlertRemoveController implements Controller {
-    private repository: ObservableList<AlertContract>
+    private repository: Repository<AlertContract>
 
-    public constructor (repository: ObservableList<AlertContract>) {
+    public constructor (repository: Repository<AlertContract>) {
         this.repository = repository
     }
 

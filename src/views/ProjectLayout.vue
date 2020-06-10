@@ -16,15 +16,14 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import { ObservableProperty, PropertyChange } from '@wildebeest/observe-changes'
-    import { Channel } from '../lib/broadcast/Channel'
     import { ViewRepository } from './ViewRepository'
     import clipboardCopy from 'clipboard-copy'
+    import { Channel } from '@wildebeest/observable'
 
     @Component
     export default class ProjectLayout extends Vue {
-        @Prop() channel!: Channel
-        @Prop() shared!: any
+        @Prop() channel!: Channel<any>
+        @Prop() queries!: any
 
         public project: ProjectEntity | null = null
         public api: any | null = null
@@ -32,19 +31,25 @@
 
         public created (): void {
             this.repo = new ViewRepository(this)
+            this.channel.dispatch({
+                event: 'project@open',
+                data: this.$route.query.pid
+            })
         }
 
         public beforeDestroy (): void {
             this.repo.unbindAll()
+            this.channel.dispatch({ event: 'project@close' })
         }
 
         public mounted (): void {
-            this.repo.bindProperty('api', this.shared.api)
-            this.repo.bindProperty('project', this.shared.projectActive)
+            this.repo.bindProperty('api', this.queries.api)
+            this.repo.bindProperty('project', this.queries.projectActive)
         }
 
         public back (): void {
             this.channel.dispatch({ event: 'project@close' })
+            this.$router.push('/')
         }
 
         public copyUrl (): void {

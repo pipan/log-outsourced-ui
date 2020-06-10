@@ -5,3 +5,5 @@ export { Controller } from './controller/Controller'
 
 export { Service } from './service/Service'
 export { StackService } from './service/StackService'
+
+export {PropertyEntity} from './entity/PropertyEntity'

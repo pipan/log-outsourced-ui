@@ -1,17 +1,20 @@
 import { Controller } from '@/lib/framework/controller/Controller'
 import { SimpleAlert, AlertContract } from '@/components/alert'
-import { ObservableList } from '@wildebeest/observe-changes'
+import { Repository } from '@wildebeest/repository'
+import { Generatable } from '@/lib/generator'
 
 export class AlertCreateController implements Controller {
-    private repository: ObservableList<AlertContract>
+    private repository: Repository<AlertContract>
+    private generator: Generatable<string>
 
-    public constructor (repository: ObservableList<AlertContract>) {
+    public constructor (generator: Generatable<string>, repository: Repository<AlertContract>) {
         this.repository = repository
+        this.generator = generator
     }
 
     public action (data: any): void {
-        this.repository.add(
-            new SimpleAlert(data.message, data.type)
+        this.repository.insert(
+            new SimpleAlert(this.generator.generate(), data.message, data.type)
         )
     }
 }

@@ -1,27 +1,23 @@
-import { Controller } from '@/lib/framework'
-import { Channel } from '@/lib/broadcast/Channel'
-import { ObservableProperty } from '@wildebeest/observe-changes'
-import { ProjectEntity } from '@/lib/log-outsourced-api'
+import { Controller, PropertyEntity } from '@/lib/framework'
+import { Repository } from '@wildebeest/repository'
+import { Channel } from '@wildebeest/observable'
 
 export class ProjectCloseController implements Controller {
-    private channel: Channel
-    private project: ObservableProperty<ProjectEntity | null>
+    private properties: Repository<PropertyEntity>
+    private channel: Channel<any>
 
-    public constructor (channel: Channel, project: ObservableProperty<ProjectEntity>) {
+    public constructor (properties: Repository<PropertyEntity>, channel: Channel<any>) {
+        this.properties = properties
         this.channel = channel
-        this.project = project
     }
 
     public action (): void {
-        this.project.set(null)
         this.channel.dispatch({
             event: 'listener@set.all',
             data: []
         })
-
-        this.channel.dispatch({
-            event: 'scene@change',
-            data: '/'
-        })
+        this.properties.insert(
+            new PropertyEntity('project.active.uuid', undefined)
+        )
     }
 }

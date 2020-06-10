@@ -1,17 +1,19 @@
-import { Controller } from '@/lib/framework'
-import { ObservableProperty } from '@wildebeest/observe-changes'
+import { Controller, PropertyEntity } from '@/lib/framework'
 import { FormField } from '@/lib/form'
+import { Repository } from '@wildebeest/repository'
 
 export class ProjectCreateResetController implements Controller {
-    private projectCreate: ObservableProperty<any>
+    private properties: Repository<PropertyEntity>
 
-    public constructor (projectCreate: ObservableProperty<any>) {
-        this.projectCreate = projectCreate
+    public constructor (properties: Repository<PropertyEntity>) {
+        this.properties = properties
     }
 
     public action (data?: any): void {
-        this.projectCreate.set({
-            name: new FormField('')
-        })
+        this.properties.insert(
+            new PropertyEntity('project.create', {
+                name: new FormField('')
+            })
+        )
     }
 }

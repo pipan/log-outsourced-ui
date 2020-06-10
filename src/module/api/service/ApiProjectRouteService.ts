@@ -1,35 +1,46 @@
-import { Service } from '@/lib/framework'
-import { ObservableProperty, PropertyChange } from '@wildebeest/observe-changes'
+import { Service, PropertyEntity } from '@/lib/framework'
 import { ProjectEntity } from '@/lib/log-outsourced-api'
+import { Repository } from '@wildebeest/repository'
+import { Closable } from '@wildebeest/observable'
 
 export class ApiProjectRouteService implements Service {
-    private api: ObservableProperty<any>
-    private activeProject: ObservableProperty<ProjectEntity>
+    private properties: Repository<PropertyEntity>
     private host: string
+    private closables: Array<Closable>
 
-    public constructor (api: ObservableProperty<any>, activeProject: ObservableProperty<ProjectEntity>, host: string) {
-        this.activeProject = activeProject
-        this.api = api
+    public constructor (properties: Repository<PropertyEntity>, host: string) {
+        this.properties = properties
         this.host = host
+        this.closables = []
     }
 
     public start (): void {
-        // TODO: close
-        this.activeProject.addListenerAndCall(
-            this.onActiveProjectChange.bind(this)
+        const propertyResult = this.properties.query()
+            .property('project.active')
+
+        this.closables.push(
+            propertyResult.connectFn(
+                this.onActiveProjectChange.bind(this)
+            )
         )
+
+        this.closables.push(propertyResult)
     }
 
     public stop (): void {
-        console.log('TODO stop')
+        for (const closable of this.closables) {
+            closable.close()
+        }
     }
 
-    private onActiveProjectChange (change: PropertyChange<ProjectEntity>): void {
-        const project: ProjectEntity = change.next()
-        if (project === null) {
-            this.api.get().url = ''
+    private onActiveProjectChange (projectProperty: PropertyEntity): void {
+        const project: ProjectEntity = projectProperty.get()
+        if (project === undefined) {
+            this.properties.insert(new PropertyEntity('api', undefined))
             return
         }
-        this.api.get().url = this.host + '/logs/' + project.getUuid()
+        this.properties.insert(new PropertyEntity('api', {
+            url: this.host + '/logs/' + project.getUuid()
+        }))
     }
 }
