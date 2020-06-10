@@ -1,14 +1,14 @@
-import { Listener } from '@/lib/broadcast/Listener'
 import { Framework } from '../Framework'
+import { Dispatchable } from '@wildebeest/observable'
 
-export class OutsideEventListener implements Listener {
+export class OutsideEventListener implements Dispatchable<any> {
     private framework: Framework
 
     public constructor (framework: Framework) {
         this.framework = framework
     }
 
-    public handle (data?: any): void {
+    public dispatch (data?: any): void {
         this.framework.process(data.event, data?.data)
     }
 }

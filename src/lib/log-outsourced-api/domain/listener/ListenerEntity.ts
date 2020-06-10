@@ -1,4 +1,6 @@
-export class ListenerEntity {
+import { Identifiable } from '@wildebeest/repository/dist/identify/Identifiable'
+
+export class ListenerEntity implements Identifiable {
     protected uuid: string
     protected projectUuid: string
     protected name: string
@@ -13,6 +15,10 @@ export class ListenerEntity {
         this.rules = rules
         this.handlerSlug = handlerSlug
         this.handlerValues = handlerValues
+    }
+
+    public identify (): string {
+        return this.uuid
     }
 
     public getUuid (): string {

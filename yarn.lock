@@ -497,10 +497,17 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wildebeest/observe-changes@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@wildebeest/observe-changes/-/observe-changes-0.1.2.tgz#b567bc37c570e092f41a20850666637a5c146599"
-  integrity sha512-Hf/+fGK8SjCjLd2so12qzwRXTWdQAOM+Se14qRF5JGHohZ8tHhA/hSq4o6sMC78cYHJyBmEf3LZi0Tq+UwQfZw==
+"@wildebeest/observable@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@wildebeest/observable/-/observable-0.4.2.tgz#aa50b3fa79b58fdc378e4a90bdaad989cfc52341"
+  integrity sha512-fFkJ38BL4icbbx0UzvaQ7XIAU7oKOYpLkdWO1KSvIVYijA+2NUIL7vuICBvmox7yeqFr92ww5qKj/UXmw1mtXg==
+
+"@wildebeest/repository@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@wildebeest/repository/-/repository-0.1.1.tgz#199605ee73ca796109db0294d6242562e4d214ae"
+  integrity sha512-IHiFEypOZ64tS2AggBbMJWrNjoDAboZfFcCeoZZkg0lVyHQ3/F7tjiRFm++igT63fYoSWZEzhv8YkqF6i1AOxQ==
+  dependencies:
+    "@wildebeest/observable" "^0.4.2"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"

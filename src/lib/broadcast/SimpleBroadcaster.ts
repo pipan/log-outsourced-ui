@@ -1,21 +1,29 @@
-import { Channel } from './Channel'
 import { Broadcaster } from './Broadcaster'
+import { Channel, ProxyChannel } from '@wildebeest/observable'
 
-export class SimpleBroadcaster implements Broadcaster {
-    private channels!: Map<string, Channel>
+export class SimpleBroadcaster implements Broadcaster<any> {
+    private channels!: Map<string, Channel<any>>
 
     public constructor () {
         this.channels = new Map()
     }
 
-    public getChannel (name: string): Channel {
+    public getChannel (name: string): Channel<any> {
         if (!this.channels.has(name)) {
-            this.channels.set(name, new Channel())
+            this.channels.set(name, new ProxyChannel())
         }
         return this.channels.get(name)!
     }
 
-    public getChannels (): Map<string, Channel> {
+    public broadcast (name: string, event: any): void {
+        if (!this.channels.has(name)) {
+            console.warn("Cannot broadcast on non existing channel: " + name)
+            return
+        }
+        this.getChannel(name).dispatch(event)
+    }
+
+    public getChannels (): Map<string, Channel<any>> {
         return this.channels
     }
 }

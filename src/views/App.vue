@@ -10,9 +10,9 @@
     import StringInput from '@/components/form/StringInput.vue'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { AlertContract } from '../components/alert'
-    import { ObservableList } from '@wildebeest/observe-changes'
-    import { Channel } from '../lib/broadcast/Channel'
     import { ViewRepository } from './ViewRepository'
+    import { Channel } from '@wildebeest/observable'
+    import { ObservableList } from '@wildebeest/repository'
     @Component({
         components: {
             StringInput,
@@ -20,8 +20,8 @@
         }
     })
     export default class App extends Vue {
-        @Prop() public alertList!: ObservableList<AlertContract>
-        @Prop() public channel!: Channel
+        @Prop() public queries!: any
+        @Prop() public channel!: Channel<any>
 
         public alerts: Array<AlertContract> = []
         public repo!: ViewRepository
@@ -35,7 +35,7 @@
         }
 
         public mounted (): void {
-            this.repo.bindList('alerts', this.alertList)
+            this.repo.bindValue('alerts', this.queries.alerts)
         }
 
         public closeAlert (alert: AlertContract): void {

@@ -1,32 +1,30 @@
-import { Service } from '@/lib/framework'
-import { Closable, ObservableProperty, ObservableList } from '@wildebeest/observe-changes'
+import { Service, PropertyEntity } from '@/lib/framework'
 import { ListenerEntity } from '@/lib/log-outsourced-api'
+import { Closable } from '@wildebeest/observable'
+import { Repository, QueryResult } from '@wildebeest/repository'
 
 export class ListenerActiveUuidService implements Service {
-    private listener: ObservableProperty<ListenerEntity | null>
-    private listeners: ObservableList<ListenerEntity>
-    private uuid: ObservableProperty<string>
-
+    private properties: Repository<PropertyEntity>
+    private listeners: Repository<ListenerEntity>
+    private listenerQuery: QueryResult<ListenerEntity> | null
     private closables: Array<Closable> = []
 
-    public constructor (listener: ObservableProperty<ListenerEntity>, listeners: ObservableList<ListenerEntity>, uuid: ObservableProperty<string>) {
-        this.listener = listener
+    public constructor (listeners: Repository<ListenerEntity>, properties: Repository<PropertyEntity>) {
         this.listeners = listeners
-        this.uuid = uuid
+        this.properties = properties
+        this.listenerQuery = null
     }
 
     public start (): void {
-        this.closables.push(
-            this.listeners.addListener(
-                this.onAnyChange.bind(this)
-            )
-        )
+        const propertiesResult = this.properties.query()
+            .property('listener.active.uuid')
 
         this.closables.push(
-            this.uuid.addListener(
-                this.onAnyChange.bind(this)
+            propertiesResult.connectFn(
+                this.onUuidChange.bind(this)
             )
         )
+        this.closables.push(propertiesResult)
     }
 
     public stop (): void {
@@ -35,18 +33,16 @@ export class ListenerActiveUuidService implements Service {
         }
     }
 
-    private onAnyChange (): void {
-        if (this.uuid.get() === '') {
-            this.listener.set(null)
-            return
+    private onUuidChange (property: PropertyEntity): void {
+        if (this.listenerQuery) {
+            this.listenerQuery.close()
         }
-
-        for (const listener of this.listeners.all()) {
-            if (listener.getUuid() === this.uuid.get()) {
-                this.listener.set(listener)
-                return
-            }
-        }
-        this.listener.set(null)
+        this.listenerQuery = this.listeners.query()
+            .property(property.get())
+        this.listenerQuery.connectFn((entity: ListenerEntity) => {
+            this.properties.insert(
+                new PropertyEntity('listener.active', entity)
+            )
+        })
     }
 }

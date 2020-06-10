@@ -1,7 +1,7 @@
 <template>
     <div class="list__item" :class="{'list__item--active': active}">
         <div class="list__item__top">
-            <span class="material-icons md-18">{{handler.getMeta().meta.icon}}</span><div class="left-m">{{ item.getName() }}</div>
+            <span class="material-icons md-18" v-if="handler">{{handler.getMeta().meta.icon}}</span><div class="left-m">{{ item.getName() }}</div>
         </div>
         <contextmenu>
             <button class="context__menu__item top-s" @click="$emit('delete', item)">Delete</button>

@@ -1,4 +1,6 @@
-import { ObservableProperty, PropertyChange, ObservableList, Closable } from '@wildebeest/observe-changes'
+import { Closable, Connectable } from '@wildebeest/observable'
+import { QueryResult } from '@wildebeest/repository'
+import { PropertyEntity } from '@/lib/framework'
 
 export class ViewRepository {
     public data: any
@@ -8,18 +10,18 @@ export class ViewRepository {
         this.data = data
     }
 
-    public bindProperty (key: string, property: ObservableProperty<any>): void {
+    public bindValue (key: string, channel: Connectable<any>): void {
         this.closables.push(
-            property.addListenerAndCall((change: PropertyChange<any>) => {
-                this.data[key] = change.next()
+            channel.connectFn((value: any) => {
+                this.data[key] = value
             })
         )
     }
 
-    public bindList (key: string, list: ObservableList<any>): void {
+    public bindProperty (key: string, channel: Connectable<PropertyEntity>): void {
         this.closables.push(
-            list.addListenerAndCall(() => {
-                this.data[key] = list.all()
+            channel.connectFn((value: PropertyEntity) => {
+                this.data[key] = value.get()
             })
         )
     }

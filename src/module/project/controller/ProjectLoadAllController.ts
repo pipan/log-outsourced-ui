@@ -1,14 +1,14 @@
 import { Controller } from '@/lib/framework'
-import { ObservableList } from '@wildebeest/observe-changes'
 import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
-import { Channel } from '@/lib/broadcast/Channel'
+import { Repository } from '@wildebeest/repository'
+import { Channel } from '@wildebeest/observable'
 
 export class ProjectLoadAllController implements Controller {
-    private projects: ObservableList<ProjectEntity>
+    private projects: Repository<ProjectEntity>
     private projectApi: ProjectApi
-    private channel: Channel
+    private channel: Channel<any>
 
-    public constructor (projects: ObservableList<ProjectEntity>, projectApi: ProjectApi, channel: Channel) {
+    public constructor (projects: Repository<ProjectEntity>, projectApi: ProjectApi, channel: Channel<any>) {
         this.projectApi = projectApi
         this.projects = projects
         this.channel = channel

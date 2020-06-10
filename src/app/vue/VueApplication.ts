@@ -1,46 +1,61 @@
 import Vue from 'vue'
-import VueRouter, { Route } from 'vue-router'
+import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
+import ListenerDetail from '@/views/ListenerDetail.vue'
 import ListenerCreate from '@/views/ListenerCreate.vue'
-import { Listenable, Closable } from '@/lib/broadcast'
-import { Listener } from '@/lib/broadcast/Listener'
-import { Channel } from '@/lib/broadcast/Channel'
 import { Framework } from '@/lib/framework'
-import { PropertyChange } from '@wildebeest/observe-changes'
+import { Channel } from '@wildebeest/observable'
 
-export class VueApplication implements Listenable {
-    private channel: Channel
+export class VueApplication {
+    private channel: Channel<any>
 
     public constructor (framework: Framework) {
         this.channel = framework.getChannel()
 
-        const shared: any = {
-            alerts: framework.getObservable('alerts'),
-            projects: framework.getObservable('projects'),
-            projectActive: framework.getObservable('project.active'),
-            projectCreate: framework.getObservable('project.create'),
-            listeners: framework.getObservable('listeners'),
-            listenerActive: framework.getObservable('listener.active'),
-            listenerCreate: framework.getObservable('listener.create'),
-            listenerEdit: framework.getObservable('listener.edit'),
-            handlers: framework.getObservable('handlers'),
-            handlerFormSchema: framework.getObservable('handler.form.schema'),
-            handlerFormOptions: framework.getObservable('handler.form.options'),
-            api: framework.getObservable('api')
+        const queries: any = {
+            projects: framework.getRepository('projects')
+                .query()
+                .list(),
+            listeners: framework.getRepository('listeners')
+                .query()
+                .list(),
+            handlers: framework.getRepository('handlers')
+                .query()
+                .map(),
+            alerts: framework.getRepository('alerts')
+                .query()
+                .list(),
+            projectCreate: framework.getRepository('properties')
+                .query()
+                .property('project.create'),
+            projectActive: framework.getRepository('properties')
+                .query()
+                .property('project.active'),
+            listenerCreate: framework.getRepository('properties')
+                .query()
+                .property('listener.create'),
+            listenerEdit: framework.getRepository('properties')
+                .query()
+                .property('listener.edit'),
+            listenerActive: framework.getRepository('properties')
+                .query()
+                .property('listener.active'),
+            api: framework.getRepository('properties')
+                .query()
+                .property('api')
         }
 
         const props: any = {
             channel: this.channel,
-            shared: shared
+            queries: queries
         }
 
         Vue.use(VueRouter)
-        Vue.config.productionTip = false
 
         const router = new VueRouter({
             routes: [
@@ -68,18 +83,19 @@ export class VueApplication implements Listenable {
                         {
                             path: '',
                             component: ProjectDetail,
-                            props: {
-                                channel: this.channel,
-                                shared: shared
-                            }
+                            props: props,
+                            children: [
+                                {
+                                    path: 'rule',
+                                    component: ListenerDetail,
+                                    props: props
+                                }
+                            ]
                         },
                         {
                             path: 'rule/create',
                             component: ListenerCreate,
-                            props: {
-                                channel: this.channel,
-                                shared: shared
-                            }
+                            props: props
                         }
                     ]
                 }
@@ -87,42 +103,11 @@ export class VueApplication implements Listenable {
             mode: 'history'
         })
 
-        framework.getObservable('scene').addListener((change: PropertyChange<string>) => {
-            if (router.currentRoute.path === change.next()) {
-                return
-            }
-            router.push(change.next())
-        })
-
         new Vue({
             router,
             render: h => h(App, {
-                props: {
-                    channel: this.channel,
-                    alertList: framework.getObservable('alerts')
-                }
+                props: props
             })
         }).$mount('#app')
-
-        if (router.currentRoute.query.pid) {
-            this.channel.dispatch({
-                event: 'project@load',
-                data: router.currentRoute.query.pid
-            })
-        }
-        if (router.currentRoute.query.rid) {
-            this.channel.dispatch({
-                event: 'listener@active',
-                data: router.currentRoute.query.rid
-            })
-        }
-    }
-
-    public addListener (listener: Listener): Closable {
-        return this.channel.addListener(listener)
-    }
-
-    public removeListener (listener: Listener): void {
-        this.channel.removeListener(listener)
     }
 }

@@ -1,14 +1,14 @@
-import { Listener } from '@/lib/broadcast/Listener'
 import { Controller } from './Controller'
+import { Dispatchable } from '@wildebeest/observable'
 
-export class ControllerListener implements Listener {
+export class ControllerListener implements Dispatchable<any> {
     private controller: Controller
 
     public constructor (controller: Controller) {
         this.controller = controller
     }
 
-    public handle (data?: any): void {
+    public dispatch (data?: any): void {
         this.controller.action(data)
     }
 }

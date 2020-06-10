@@ -1,16 +1,18 @@
-import { Controller } from '@/lib/framework'
-import { ObservableProperty } from '@wildebeest/observe-changes'
+import { Controller, PropertyEntity } from '@/lib/framework'
 import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
-import { Channel } from '@/lib/broadcast/Channel'
 import { AlertHelper } from '@/module/alert'
+import { Channel } from '@wildebeest/observable'
+import { Repository } from '@wildebeest/repository'
 
 export class ProjectOpenController implements Controller {
-    private active: ObservableProperty<ProjectEntity>
-    private channel: Channel
+    private projects: Repository<ProjectEntity>
+    private properties: Repository<PropertyEntity>
+    private channel: Channel<any>
     private projectApi: ProjectApi
 
-    public constructor (active: ObservableProperty<ProjectEntity>, channel: Channel, projectApi: ProjectApi) {
-        this.active = active
+    public constructor (projects: Repository<ProjectEntity>, properties: Repository<PropertyEntity>, projectApi: ProjectApi, channel: Channel<any>) {
+        this.projects = projects
+        this.properties = properties
         this.channel = channel
         this.projectApi = projectApi
     }
@@ -18,11 +20,14 @@ export class ProjectOpenController implements Controller {
     public action (uuid: string): void {
         this.projectApi.view(uuid)
             .then((result: any) => {
-                this.active.set(result.project)
+                this.projects.insert(result.project)
                 this.channel.dispatch({
                     event: 'listener@set.all',
                     data: result.listeners
                 })
+                this.properties.insert(
+                    new PropertyEntity('project.active.uuid', uuid)
+                )
             })
             .catch((error: any) => {
                 console.error(error)
@@ -30,9 +35,5 @@ export class ProjectOpenController implements Controller {
                     AlertHelper.errorEvent('Cannot load project data')
                 )
             })
-        this.channel.dispatch({
-            event: 'scene@change',
-            data: '/project?pid=' + uuid
-        })
     }
 }

@@ -14,17 +14,16 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import ProjectList from '@/components/ProjectList.vue'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import { Channel } from '@/lib/broadcast/Channel'
-    import { ObservableList } from '@wildebeest/observe-changes'
     import { ViewRepository } from './ViewRepository'
+    import { Channel } from '@wildebeest/observable'
     @Component({
         components: {
             ProjectList
         }
     })
     export default class Index extends Vue {
-        @Prop() readonly channel!: Channel
-        @Prop() public shared!: any
+        @Prop() readonly channel!: Channel<any>
+        @Prop() public queries!: any
 
         public projects: Array<ProjectEntity> = []
         public repo!: ViewRepository
@@ -40,18 +39,15 @@
         }
 
         public mounted (): void {
-            this.repo.bindList('projects', this.shared.projects)
+            this.repo.bindValue('projects', this.queries.projects)
         }
 
         public open (project: ProjectEntity): void {
-            this.channel.dispatch({
-                event: 'project@open',
-                data: project.getUuid()
-            })
+            this.$router.push('/project?pid=' + project.identify())
         }
 
         public create (): void {
-            this.channel.dispatch({ event: 'project.create@open' })
+            this.$router.push('/create')
         }
 
         public deleteProject (project: ProjectEntity): void {

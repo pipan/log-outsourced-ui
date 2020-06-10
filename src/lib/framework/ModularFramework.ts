@@ -5,21 +5,24 @@ import { ControllerListener } from './controller/ControllerListener'
 import { Controller } from './controller/Controller'
 import { Context } from './module/Context'
 import { SimpleContext } from './module/SimpleContext'
-import { MapChange } from '@wildebeest/observe-changes'
-import { Channel } from '../broadcast/Channel'
 import { OutsideEventListener } from './listener/OutsideEventListener'
+import { Channel } from '@wildebeest/observable'
+import { MapChange, SimpleRepository, Repository } from '@wildebeest/repository'
+import { Identifiable } from '@wildebeest/repository/dist/identify/Identifiable'
 
 export class ModularFramework implements Framework {
-    private broadcast: Broadcaster = new SimpleBroadcaster()
+    private broadcast: Broadcaster<any> = new SimpleBroadcaster()
     private context: Context = new SimpleContext()
 
     public constructor (modules: Array<Module> = []) {
-        this.context.controllers().addListener(
+        this.context.controllers().connectFn(
             this.onControllersChange.bind(this)
         )
-        this.context.channel().addListener(
+        this.context.channel().connect(
             new OutsideEventListener(this)
         )
+
+        this.context.repositories().insert('properties', new SimpleRepository())
 
         for (const module of modules) {
             this.installModule(module)
@@ -30,7 +33,7 @@ export class ModularFramework implements Framework {
         for (const entity of change.inserted()) {
             // TODO: check if channel has listener then print error / warning
             this.broadcast.getChannel(entity.getKey())
-                .addListener(new ControllerListener(entity.getValue()))
+                .connect(new ControllerListener(entity.getValue()))
         }
     }
 
@@ -47,7 +50,11 @@ export class ModularFramework implements Framework {
         return this.context.observables().get(name)
     }
 
-    public getChannel (): Channel {
+    public getChannel (): Channel<any> {
         return this.context.channel()
+    }
+
+    public getRepository<T extends Identifiable> (name: string): Repository<T> {
+        return this.context.repositories().get(name)!
     }
 }

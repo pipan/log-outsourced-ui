@@ -1,5 +1,6 @@
-import { Channel } from './Channel'
+import { Channel } from '@wildebeest/observable'
 
-export interface Broadcaster {
-    getChannel(name: string): Channel;
+export interface Broadcaster<T> {
+    getChannel(name: string): Channel<T>;
+    broadcast(name: string, event: T): void;
 }

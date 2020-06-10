@@ -17,15 +17,10 @@
     export default class ListenerList extends Vue {
         @Prop() readonly items!: Array<ListenerEntity>
         @Prop() readonly active!: ListenerEntity
-        @Prop() readonly handlers!: Array<HandlerEntity>
+        @Prop() readonly handlers!: Map<string, HandlerEntity>
 
-        public getHandler (slug: string): HandlerEntity | null {
-            for (const handler of this.handlers) {
-                if (handler.getSlug() === slug) {
-                    return handler
-                }
-            }
-            return null
+        public getHandler (slug: string): HandlerEntity | undefined {
+            return this.handlers.get(slug)
         }
     }
 </script>

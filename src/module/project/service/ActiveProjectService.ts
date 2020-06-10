@@ -1,23 +1,30 @@
-import { Service } from '@/lib/framework'
-import { ObservableProperty, Closable, PropertyChange } from '@wildebeest/observe-changes'
+import { Service, PropertyEntity } from '@/lib/framework'
 import { ProjectEntity } from '@/lib/log-outsourced-api'
+import { Closable } from '@wildebeest/observable'
+import { Repository, QueryResult } from '@wildebeest/repository'
 
 export class ActiveProjectService implements Service {
-    private activeProject: ObservableProperty<ProjectEntity | null>
-    private activeProjectUuid: ObservableProperty<string>
+    private properties: Repository<PropertyEntity>
+    private projects: Repository<ProjectEntity>
+    private projectQuery: QueryResult<ProjectEntity> | null
     private closables: Array<Closable> = []
 
-    public constructor (activeProjectUuid: ObservableProperty<string>, activeProject: ObservableProperty<ProjectEntity>) {
-        this.activeProject = activeProject
-        this.activeProjectUuid = activeProjectUuid
+    public constructor (projects: Repository<ProjectEntity>, properties: Repository<PropertyEntity>) {
+        this.projects = projects
+        this.properties = properties
+        this.projectQuery = null
     }
 
     public start (): void {
+        const propertiesResult = this.properties.query()
+            .property('project.active.uuid')
+
         this.closables.push(
-            this.activeProjectUuid.addListener(
-                this.onProjectUuidChange.bind(this)
+            propertiesResult.connectFn(
+                this.onUuidChange.bind(this)
             )
         )
+        this.closables.push(propertiesResult)
     }
 
     public stop (): void {
@@ -26,11 +33,16 @@ export class ActiveProjectService implements Service {
         }
     }
 
-    private onProjectUuidChange (change: PropertyChange<string>): void {
-        if (change.next() === '') {
-            this.activeProject.set(null)
-            return
+    private onUuidChange (property: PropertyEntity): void {
+        if (this.projectQuery) {
+            this.projectQuery.close()
         }
-        
+        this.projectQuery = this.projects.query()
+            .property(property.get())
+        this.projectQuery.connectFn((entity: ProjectEntity) => {
+            this.properties.insert(
+                new PropertyEntity('project.active', entity)
+            )
+        })
     }
 }

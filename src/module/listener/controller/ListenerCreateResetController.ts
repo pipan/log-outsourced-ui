@@ -1,21 +1,21 @@
-import { Controller } from '@/lib/framework'
-import { ObservableProperty } from '@wildebeest/observe-changes'
+import { Controller, PropertyEntity } from '@/lib/framework'
+import { Repository } from '@wildebeest/repository'
 
 export class ListenerCreateResetController implements Controller {
-    private createProperty: ObservableProperty<any>
+    private properties: Repository<PropertyEntity>
 
-    public constructor (createProperty: ObservableProperty<any>) {
-        this.createProperty = createProperty
+    public constructor (properties: Repository<PropertyEntity>) {
+        this.properties = properties
     }
 
     public action (data?: any): void {
-        this.createProperty.set({
+        this.properties.insert(new PropertyEntity('listener.create', {
             name: '',
             rules: [],
             handler: {
                 slug: '',
                 values: {}
             }
-        })
+        }))
     }
 }

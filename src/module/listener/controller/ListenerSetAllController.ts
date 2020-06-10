@@ -1,15 +1,15 @@
 import { Controller } from '@/lib/framework'
 import { ListenerEntity } from '@/lib/log-outsourced-api'
-import { ObservableList } from '@wildebeest/observe-changes'
+import { Repository } from '@wildebeest/repository'
 
 export class ListenerSetAllController implements Controller {
-    private listener: ObservableList<ListenerEntity>
+    private listeners: Repository<ListenerEntity>
 
-    public constructor (listners: ObservableList<ListenerEntity>) {
-        this.listener = listners
+    public constructor (listeners: Repository<ListenerEntity>) {
+        this.listeners = listeners
     }
 
     public action (data: Array<ListenerEntity>): void {
-        this.listener.setAll(data)
+        this.listeners.setAll(data)
     }
 }
