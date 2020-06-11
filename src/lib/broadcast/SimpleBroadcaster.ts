@@ -17,7 +17,7 @@ export class SimpleBroadcaster implements Broadcaster<any> {
 
     public broadcast (name: string, event: any): void {
         if (!this.channels.has(name)) {
-            console.warn("Cannot broadcast on non existing channel: " + name)
+            console.warn('Cannot broadcast on non existing channel: ' + name)
             return
         }
         this.getChannel(name).dispatch(event)

@@ -501,10 +501,10 @@
   resolved "https://registry.yarnpkg.com/@wildebeest/observable/-/observable-0.4.3.tgz#311cd2876924108e57f0ebb9d60919ffecf0d05b"
   integrity sha512-Pb7gYz8z8zus76Md1RAyfcVoCXz/orqr740OF91C4UvcG5qqG5E+qJCaiEZWO78RZ0zYwi0WyLl5KgvLwwUERA==
 
-"@wildebeest/repository@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@wildebeest/repository/-/repository-0.1.1.tgz#199605ee73ca796109db0294d6242562e4d214ae"
-  integrity sha512-IHiFEypOZ64tS2AggBbMJWrNjoDAboZfFcCeoZZkg0lVyHQ3/F7tjiRFm++igT63fYoSWZEzhv8YkqF6i1AOxQ==
+"@wildebeest/repository@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@wildebeest/repository/-/repository-0.1.2.tgz#8de6d4082ad315918b9579372b680bc9a7fd08c2"
+  integrity sha512-5ml894qTmupUQyNhIlLOWa8xovIUtGozF8dOmJssZyb3p1K3UcMJZcx/gh6mNbHTbeT2tMYn99vpsusmvBhabg==
   dependencies:
     "@wildebeest/observable" "^0.4.2"
 

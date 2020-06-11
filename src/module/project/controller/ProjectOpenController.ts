@@ -32,7 +32,7 @@ export class ProjectOpenController implements Controller {
             .catch((error: any) => {
                 console.error(error)
                 this.channel.dispatch(
-                    AlertHelper.errorEvent('Cannot load project data')
+                    AlertHelper.errorEvent(error)
                 )
             })
     }

@@ -28,6 +28,16 @@ button {
         color: var(--fg);
     }
 
+    &--border {
+        color: var(--fg);
+        border: solid 1px var(--fg);
+    }
+
+    &--danger {
+        color: var(--error);
+        border-color: var(--error);
+    }
+
     &--square {
         padding: var(--unit-s);
     }

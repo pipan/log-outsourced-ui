@@ -9,3 +9,6 @@ export { HandlerEntity } from './domain/handler/HandlerEntity'
 
 export { ListenerEntity } from './domain/listener/ListenerEntity'
 export { ListenerApi } from './domain/listener/ListnerApi'
+
+export { ConfigApi } from './domain/config/ConfigApi'
+export { ConfigHttpApi } from './domain/config/ConfigHttpApi'

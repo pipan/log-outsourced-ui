@@ -2,6 +2,11 @@
     position: absolute;
     top: var(--unit-s);
 
+    &--relative {
+        position: relative;
+        top: auto;
+    }
+
     &--right {
         right: var(--unit-s);
     }
@@ -24,7 +29,7 @@
             background-color: transparent;
             border: none;
             color: var(--fg);
-            padding: var(--unit-s) var(--unit-m);
+            padding: var(--unit-m);
             border-radius: var(--corner-radius);
             cursor: pointer;
             white-space: nowrap;

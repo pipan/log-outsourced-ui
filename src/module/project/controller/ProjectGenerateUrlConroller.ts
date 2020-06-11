@@ -4,7 +4,7 @@ import { AlertHelper } from '@/module/alert'
 import { Channel } from '@wildebeest/observable'
 import { Repository } from '@wildebeest/repository'
 
-export class ProjectDeleteController implements Controller {
+export class ProjectGenerateUrlController implements Controller {
     private projectApi: ProjectApi
     private channel: Channel<any>
     private projects: Repository<ProjectEntity>
@@ -15,21 +15,21 @@ export class ProjectDeleteController implements Controller {
         this.projects = projects
     }
 
-    public action (data?: any): void {
-        this.projectApi.delete(data.body)
-            .then(() => {
-                this.projects.remove(data.body)
+    public action (data: any): void {
+        this.projectApi.generate(data.body.identify())
+            .then((project: ProjectEntity) => {
+                this.projects.insert(project)
                 this.channel.dispatch(
-                    AlertHelper.infoEvent('Project has been deleted')
+                    AlertHelper.infoEvent('Url has been regenerated')
                 )
                 if (data.success) {
-                    data.success()
+                    data.success(project)
                 }
             })
             .catch((error: any) => {
                 console.error(error)
                 this.channel.dispatch(
-                    AlertHelper.errorEvent('Cannot delete project')
+                    AlertHelper.errorEvent(error)
                 )
             })
     }

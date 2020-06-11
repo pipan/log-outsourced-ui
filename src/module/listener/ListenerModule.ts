@@ -36,11 +36,10 @@ export class ListenerModule implements Module {
         context.controllers().insert('listener.create@reset', new ListenerCreateResetController(properties))
         context.controllers().insert('listener@create', new ListenerCreateController(listeners, this.listenerApi, channel))
         context.controllers().insert('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, channel))
+        context.controllers().insert('listener@update', new ListenerUpdateController(listeners, this.listenerApi, channel))
 
         context.controllers().insert('listener@open', new ListenerOpenController(properties))
         context.controllers().insert('listener@close', new ListenerCloseController(properties))
-
-        //     new MapEntry('listener@update', new ListenerUpdateController(this.listenerApi, listenerActive, context.channel())),
 
         const editListenerService: EditListenerService = new EditListenerService(properties)
         editListenerService.start()
