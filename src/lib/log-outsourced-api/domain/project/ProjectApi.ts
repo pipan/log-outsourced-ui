@@ -5,7 +5,7 @@ export interface ProjectApi {
     all (): Promise<Array<ProjectEntity>>;
     view (uuid: string): Promise<{project: ProjectEntity; listeners: Array<ListenerEntity>}>;
     create (project: ProjectEntity): Promise<ProjectEntity>;
-    delete (project: ProjectEntity): Promise<void>;
+    delete (project: ProjectEntity): Promise<Response>;
     update (prject: ProjectEntity): Promise<ProjectEntity>;
     generate (uuid: string): Promise<ProjectEntity>;
 }

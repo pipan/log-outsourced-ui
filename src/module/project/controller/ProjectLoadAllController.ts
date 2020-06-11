@@ -2,6 +2,7 @@ import { Controller } from '@/lib/framework'
 import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
 import { Repository } from '@wildebeest/repository'
 import { Channel } from '@wildebeest/observable'
+import { AlertHelper } from '@/module/alert'
 
 export class ProjectLoadAllController implements Controller {
     private projects: Repository<ProjectEntity>
@@ -21,13 +22,9 @@ export class ProjectLoadAllController implements Controller {
             })
             .catch((error: any) => {
                 console.error(error)
-                this.channel.dispatch({
-                    event: 'alert@create',
-                    data: {
-                        message: 'Cannot load projects',
-                        type: 'error'
-                    }
-                })
+                this.channel.dispatch(
+                    AlertHelper.errorEvent(error)
+                )
             })
     }
 }

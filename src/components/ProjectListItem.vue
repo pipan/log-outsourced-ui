@@ -1,12 +1,7 @@
 <template>
     <div class="list__item">
-        <div class="list__item__top">
-            <div>{{ project.getName() }}</div>
-        </div>
-        <contextmenu>
-            <button class="context__menu__item top-s" @click="$emit('delete', project)">Delete</button>
-        </contextmenu>
-        <div class="list__item__bottom flexbox-row end center">
+        <div class="list__item__top flexbox-row">
+            <div class="flex">{{ project.getName() }}</div>
             <button class="btn btn--primary" @click="open()">OPEN</button>
         </div>
     </div>
@@ -15,13 +10,8 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import Contextmenu from './contextmenu/Contextmenu.vue'
 
-    @Component({
-        components: {
-            Contextmenu
-        }
-    })
+    @Component
     export default class ProjectListItem extends Vue {
         @Prop() readonly project!: ProjectEntity;
 

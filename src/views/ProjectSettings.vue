@@ -1,21 +1,21 @@
 <template>
     <section class="material__container">
         <div class="card">
-            <form @submit.prevent="save()">
-                <header class="card__header">Create Project</header>
+            <form @submit.prevent="cancel()">
+                <header class="card__header">Settings</header>
                 <div class="card__body">
-                    {{model.error.name}}
-                    <string-field
-                        v-if="model"
-                        id="name"
-                        label="Name"
-                        :value="model.field.name"
-                        :error="model.error.name"
-                        @change="onNameChange($event)"></string-field>
+                    <button-field
+                        label="Regenerate URL"
+                        text="Generate"
+                        @action="generateUrl()"></button-field>
+                    <button-field
+                        label="Delete project"
+                        text="Delete"
+                        level="danger"
+                        @action="remove()"></button-field>
                 </div>
                 <footer class="card__footer">
                     <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
-                    <button type="submit" class="btn btn--primary">SAVE</button>
                 </footer>
             </form>
         </div>
@@ -24,7 +24,7 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringField from '@/components/form/StringField.vue'
+    import ButtonField from '@/components/form/ButtonField.vue'
     import { FormField } from '../lib/form'
     import { ViewRepository } from './ViewRepository'
     import { Channel } from '@wildebeest/observable'
@@ -32,15 +32,16 @@
 
     @Component({
         components: {
-            StringField
+            ButtonField
         }
     })
-    export default class ProjectCreate extends Vue {
+    export default class ProjectSettings extends Vue {
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly queries!: any
 
-        public model: any = null
-        public repo!: ViewRepository
+        public project: ProjectEntity | null = null
+
+        private repo!: ViewRepository
 
         public created (): void {
             this.repo = new ViewRepository(this)
@@ -51,23 +52,24 @@
         }
 
         public mounted (): void {
-            this.repo.bindProperty('model', this.queries.projectCreate)
+            this.repo.bindProperty('project', this.queries.projectActive)
         }
 
         public cancel (): void {
-            this.$router.push('/')
+            this.$router.push({
+                path: '/project',
+                query: this.$route.query
+            })
         }
 
-        public save (): void {
+        public generateUrl (): void {
             this.channel.dispatch({
-                event: 'project@create',
+                event: 'project@generate',
                 data: {
-                    body: {
-                        name: this.model.field.name
-                    },
+                    body: this.project,
                     success: (project: ProjectEntity) => {
                         this.$router.push({
-                            path: '/project',
+                            path: '/project/settings',
                             query: {
                                 pid: project.identify()
                             }
@@ -77,9 +79,18 @@
             })
         }
 
-        public onNameChange (name: string): void {
-            this.model.field.name = name
-            this.model.error.name = ''
+        public remove (): void {
+            this.channel.dispatch({
+                event: 'project@delete',
+                data: {
+                    body: this.project,
+                    success: () => {
+                        this.$router.push({
+                            path: '/'
+                        })
+                    }
+                }
+            })
         }
     }
 </script>

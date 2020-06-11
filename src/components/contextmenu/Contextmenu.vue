@@ -1,11 +1,11 @@
 <template>
-    <div class="context context--right">
-        <button class="btn btn--secondary btn--circle" type="button" @click="openContextmenu()">
+    <div class="context context--right" :class="{'context--relative': relative}">
+        <button class="btn btn--secondary btn--circle" type="button" @click="open()">
             <i class="material-icons">more_vert</i>
         </button>
         <div class="context__menu" v-if="visible">
             <div class="context__menu__close">
-                <button class="btn btn--secondary btn--circle" type="button" @click="closeContextmenu()">
+                <button class="btn btn--secondary btn--circle" type="button" @click="close()">
                     <i class="material-icons">more_vert</i>
                 </button>
             </div>
@@ -15,17 +15,19 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator'
+    import { Component, Vue, Prop } from 'vue-property-decorator'
 
     @Component
     export default class Contextmenu extends Vue {
+        @Prop({ default: false }) public relative!: boolean
+
         public visible = false
 
-        openContextmenu (): void {
+        public open (): void {
             this.visible = true
         }
 
-        closeContextmenu (): void {
+        public close (): void {
             this.visible = false
         }
     }

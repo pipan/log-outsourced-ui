@@ -4,7 +4,12 @@
             <div class="flexbox-row space-between center flex">
                 <button class="btn btn--secondary btn--square material__header__back" @click="back()"><i class="material-icons md-18">apps</i></button>
                 <div class="material__header__title text-m" v-if="project">{{ project.getName() }}</div>
-                <button v-if="api" class="btn btn--secondary text-ellipsis material__header__url" @click="copyUrl()">{{ api.url }}</button>
+                <diV class="flexbox-row">
+                    <button v-if="api" class="btn btn--secondary text-ellipsis material__header__url right-m" @click="copyUrl()">{{ api.url }}</button>
+                    <contextmenu :relative="true" ref="contextmenu">
+                        <button class="context__menu__item top-s" @click="openSettings()">Settings</button>
+                    </contextmenu>
+                </diV>
             </div>
         </header>
         <div class="material__body">
@@ -14,13 +19,18 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator'
+    import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
     import { ViewRepository } from './ViewRepository'
     import clipboardCopy from 'clipboard-copy'
     import { Channel } from '@wildebeest/observable'
+    import Contextmenu from '../components/contextmenu/Contextmenu.vue'
 
-    @Component
+    @Component({
+        components: {
+            Contextmenu
+        }
+    })
     export default class ProjectLayout extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() queries!: any
@@ -29,12 +39,16 @@
         public api: any | null = null
         private repo!: ViewRepository
 
-        public created (): void {
-            this.repo = new ViewRepository(this)
+        @Watch('$route.query.pid', { immediate: true })
+        public onUuidChange (value: string, oldValue: string): void {
             this.channel.dispatch({
                 event: 'project@open',
-                data: this.$route.query.pid
+                data: value
             })
+        }
+
+        public created (): void {
+            this.repo = new ViewRepository(this)
         }
 
         public beforeDestroy (): void {
@@ -59,6 +73,16 @@
                 data: {
                     message: 'URL copied to clipboard',
                     type: 'info'
+                }
+            })
+        }
+
+        public openSettings (): void {
+            (this.$refs.contextmenu as Contextmenu).close()
+            this.$router.push({
+                path: '/project/settings',
+                query: {
+                    pid: this.$route.query.pid
                 }
             })
         }

@@ -12,7 +12,10 @@ export class ProjectCreateResetController implements Controller {
     public action (data?: any): void {
         this.properties.insert(
             new PropertyEntity('project.create', {
-                name: new FormField('')
+                field: {
+                    name: ''
+                },
+                error: {}
             })
         )
     }

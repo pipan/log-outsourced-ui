@@ -52,16 +52,6 @@
             this.repo.bindProperty('editModel', this.queries.listenerEdit)
             this.repo.bindProperty('listener', this.queries.listenerActive)
             this.repo.bindValue('handlers', this.queries.handlers)
-
-            // this.closables.push(
-            //     this.shared.listenerEdit.addListenerAndCall((change: PropertyChange<any>) => {
-            //         if (!change.next() || !change.next().handler) {
-            //             this.fields = []
-            //             return
-            //         }
-            //         this.onHandlerChange(change.next().handler.slug)
-            //     })
-            // )
         }
 
         public close (): void {
@@ -74,9 +64,13 @@
         }
 
         public update (data: any): void {
+            data.uuid = this.listener!.getUuid()
+            data.projectUuid = this.listener!.getProjecUuid()
             this.channel.dispatch({
                 event: 'listener@update',
-                data: data
+                data: {
+                    body: data
+                }
             })
         }
     }

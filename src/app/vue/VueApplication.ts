@@ -4,6 +4,7 @@ import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
+import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
 import ListenerDetail from '@/views/ListenerDetail.vue'
@@ -23,6 +24,7 @@ export class VueApplication {
                 .list(),
             listeners: framework.getRepository('listeners')
                 .query()
+                .orderBy('getName')
                 .list(),
             handlers: framework.getRepository('handlers')
                 .query()
@@ -95,6 +97,11 @@ export class VueApplication {
                         {
                             path: 'rule/create',
                             component: ListenerCreate,
+                            props: props
+                        },
+                        {
+                            path: 'settings',
+                            component: ProjectSettings,
                             props: props
                         }
                     ]
