@@ -10,6 +10,7 @@ export class SuccessfulStatusFilter {
 
         this.statusMap.set('404', '404 Not found')
         this.statusMap.set('422', '422 Validation error')
+        this.statusMap.set('0', 'No internet connection')
     }
 
     public filter (response: Response): Response | PromiseLike<Response> {

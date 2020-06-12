@@ -4,7 +4,6 @@
             <form @submit.prevent="save()">
                 <header class="card__header">Create Project</header>
                 <div class="card__body">
-                    {{model.error.name}}
                     <string-field
                         v-if="model"
                         id="name"
