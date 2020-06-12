@@ -36,14 +36,14 @@ export class ProjectCreateController implements Controller {
     }
 
     public action (data?: any): void {
-        const model = this.propertyMap.get('project.create')?.get()
-        const validation: Validation = this.validator.validate(data)
-        if (!validation.isValid()) {
-            validation.getErrors().forEach((error: string, field: string) => {
-                model.error[field] = error
-            })
-            return
-        }
+        // const model = this.propertyMap.get('project.create')?.get()
+        // const validation: Validation = this.validator.validate(data)
+        // if (!validation.isValid()) {
+        //     validation.getErrors().forEach((error: string, field: string) => {
+        //         model.error[field] = error
+        //     })
+        //     return
+        // }
 
         this.projectApi.create(new ProjectEntity('', data.body.name))
             .then((project: ProjectEntity) => {
