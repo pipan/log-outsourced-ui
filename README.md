@@ -1,24 +1,15 @@
-# log-outsourced-ui
+# Log Outsourced UI
 
-## Project setup
-```
-yarn install
-```
+User interface for [Log Outsourced API](https://github.com/pipan/log-outsourced-api)
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Installation
 
-### Compiles and minifies for production
-```
-yarn build
-```
+### Download
 
-### Lints and fixes files
-```
-yarn lint
-```
+1. Download the [latest releae]()
+2. Update config.json file. Set __host__ to your outsourced log API
+3. create [virtual host]()
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### NPM
+
+TODO
