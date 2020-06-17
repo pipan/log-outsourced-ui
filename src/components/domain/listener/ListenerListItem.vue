@@ -7,7 +7,7 @@
             <button class="context__menu__item top-s" @click="$emit('delete', item)">Delete</button>
         </contextmenu>
         <div class="list__item__bottom flexbox-row center">
-            <div class="flex text--auxilery">
+            <div class="flex text--auxilery text-ellipsis flexfix">
                 {{ item.getRules().join(', ') }}
             </div>
             <button class="btn btn--primary" @click="open()">EDIT</button>

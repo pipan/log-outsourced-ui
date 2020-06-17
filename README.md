@@ -15,3 +15,11 @@ User interface for [Log Outsourced API](https://github.com/pipan/log-outsourced-
 ### NPM
 
 TODO
+
+## Contribution
+
+1. make changes
+2. create pull request
+3. build production
+4. create zip
+5. create release
