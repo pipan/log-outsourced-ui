@@ -12,6 +12,11 @@
     flex: 1 0 auto;
 }
 
+.flexfix {
+    flex-shrink: 1;
+    min-width: 0px;
+}
+
 .space-between {
     justify-content: space-between;
 }

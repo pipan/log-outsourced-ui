@@ -49,8 +49,11 @@ input {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--unit-s);
     width: 65%;
+
+    &__item {
+        margin: var(--unit-s) var(--unit-s) 0px 0px;
+    }
 }
 
 .field {

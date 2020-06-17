@@ -18,12 +18,12 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: var(--unit-m);
+            padding: var(--unit-s) var(--unit-s) var(--unit-s) var(--unit-m);
             font-size: 1.2em;
         }
 
         &__bottom {
-            padding: 0px var(--unit-m) var(--unit-m) var(--unit-m);
+            padding: var(--unit-s) var(--unit-s) var(--unit-s) var(--unit-m);
         }
     }
 }

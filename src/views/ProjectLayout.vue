@@ -1,11 +1,14 @@
 <template>
     <div>
         <header class="material__header">
-            <div class="flexbox-row space-between center flex">
+            <div class="flexbox-row space-between center flex flexfix">
                 <button class="btn btn--secondary btn--square material__header__back" @click="back()"><i class="material-icons md-18">apps</i></button>
-                <div class="material__header__title text-m" v-if="project">{{ project.getName() }}</div>
+                <div class="material__header__title text-m text-ellipsis" v-if="project">{{ project.getName() }}</div>
                 <diV class="flexbox-row">
-                    <button v-if="api" class="btn btn--secondary text-ellipsis material__header__url right-m" @click="copyUrl()">{{ api.url }}</button>
+                    <button v-if="api" class="btn btn--secondary btn--square text-ellipsis material__header__url right-m" @click="copyUrl()">
+                        <span class="hide-s left-s right-s">{{ api.url }}</span>
+                        <span class="hide show-s material-icons md-18">content_copy</span>
+                    </button>
                     <contextmenu :relative="true" ref="contextmenu">
                         <button class="context__menu__item top-s" @click="openSettings()">Settings</button>
                     </contextmenu>
