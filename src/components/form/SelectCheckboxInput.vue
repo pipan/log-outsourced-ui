@@ -1,6 +1,6 @@
 <template>
     <div class="checkbox-select">
-        <checkbox-input v-for="(option, index) of options" :key="index" :true-value="option.value || option" :text="option.label || option" @change="onChange(option, $event)" :checked="value.indexOf(option.value || option) > -1"></checkbox-input>
+        <checkbox-input class="checkbox-select__item" v-for="(option, index) of options" :key="index" :true-value="option.value || option" :text="option.label || option" @change="onChange(option, $event)" :checked="value.indexOf(option.value || option) > -1"></checkbox-input>
     </div>
 </template>
 
