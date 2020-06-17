@@ -15,7 +15,7 @@
                         @action="remove()"></button-field>
                 </div>
                 <footer class="card__footer">
-                    <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
+                    <button type="button" class="btn btn--secondary" @click="cancel()">CANCEL</button>
                 </footer>
             </form>
         </div>

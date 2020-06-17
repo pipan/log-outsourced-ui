@@ -1,6 +1,6 @@
 <template>
     <field :id="_uid" :label="label">
-        <div class="flex flexbox-row end">
+        <div class="flex flexbox-row end center">
             <button type="button" class="btn btn--border" :class="getClass()" @click="$emit('action', $event)">{{ text }}</button>
         </div>
     </field>
