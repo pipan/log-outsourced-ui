@@ -2,6 +2,8 @@
 
 User interface for [Log Outsourced API](https://github.com/pipan/log-outsourced-api)
 
+[demo](https://log-demo.ovaldo.sk)
+
 ## Installation
 
 ### Download
