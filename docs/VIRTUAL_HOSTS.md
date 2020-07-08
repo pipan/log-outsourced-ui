@@ -14,6 +14,13 @@ This is an example of standard virtual host for this outsourced log application.
     Alias "/.well-known" "/path/to/your/root/public/.well-known"
 
     <Directory "/path/to/your/root/public/current">
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^ index.html [L]
+        </IfModule>
+
         <filesMatch ".(ico|jpg|jpeg|png|svg|gif|js|css|ttf|woff)$">
             Header set Cache-Control "max-age=62208000, public"
         </filesMatch>
