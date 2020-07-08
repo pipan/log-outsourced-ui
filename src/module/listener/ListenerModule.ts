@@ -12,12 +12,16 @@ import { ListenerUpdateController } from './controller/ListenerUpdateController'
 import { ListenerActiveUuidService } from './service/ListenerActiveUuidService'
 import { Channel } from '@wildebeest/observable'
 import { Repository, SimpleRepository } from '@wildebeest/repository'
+import { ListenerTestController } from './controller/ListenerTestController'
+import { LogApi } from '@/lib/log-outsourced-api/domain/log/LogApi'
 
 export class ListenerModule implements Module {
     private listenerApi: ListenerApi
+    private logApi: LogApi
 
-    public constructor (listenerApi: ListenerApi) {
+    public constructor (listenerApi: ListenerApi, logApi: LogApi) {
         this.listenerApi = listenerApi
+        this.logApi = logApi
     }
 
     public install (context: Context): void {
@@ -40,6 +44,8 @@ export class ListenerModule implements Module {
 
         context.controllers().insert('listener@open', new ListenerOpenController(properties))
         context.controllers().insert('listener@close', new ListenerCloseController(properties))
+
+        context.controllers().insert('listener@test', new ListenerTestController(this.logApi, channel))
 
         const editListenerService: EditListenerService = new EditListenerService(properties)
         editListenerService.start()

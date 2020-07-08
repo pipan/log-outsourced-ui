@@ -22,7 +22,7 @@ configApi.load()
             new AlertModule(),
             new ProjectModule(httpApi.projects(), validatorBuilder),
             new HandlerModule(httpApi.handlers()),
-            new ListenerModule(httpApi.listeners()),
+            new ListenerModule(httpApi.listeners(), httpApi.log()),
             new ApiModule(result.host)
         ])
 

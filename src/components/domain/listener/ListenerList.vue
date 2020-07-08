@@ -1,6 +1,13 @@
 <template>
     <div class="list">
-        <listener-list-item v-for="item of items" :key="item.getUuid()" :item="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)" :active="item === active" :handler="getHandler(item.getHandlerSlug())"></listener-list-item>
+        <listener-list-item
+            v-for="item of items" :key="item.getUuid()"
+            :item="item"
+            @open="$emit('open', $event)"
+            @test="$emit('test', $event)"
+            @delete="$emit('delete', $event)"
+            :active="item === active"
+            :handler="getHandler(item.getHandlerSlug())"></listener-list-item>
     </div>
 </template>
 
