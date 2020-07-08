@@ -3,7 +3,8 @@
         <div class="list__item__top">
             <span class="material-icons md-18" v-if="handler">{{handler.getMeta().meta.icon}}</span><div class="left-m">{{ item.getName() }}</div>
         </div>
-        <contextmenu>
+        <contextmenu ref="contextmenu">
+            <button class="context__menu__item top-s" @click="test()">Test</button>
             <button class="context__menu__item top-s" @click="$emit('delete', item)">Delete</button>
         </contextmenu>
         <div class="list__item__bottom flexbox-row center">
@@ -32,6 +33,11 @@
 
         open (): void {
             this.$emit('open', this.item)
+        }
+
+        test (): void {
+            (this.$refs.contextmenu as Contextmenu).close()
+            this.$emit('test', this.item)
         }
     }
 </script>

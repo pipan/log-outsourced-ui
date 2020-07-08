@@ -7,7 +7,13 @@
                     <i class="material-icons md-18">add</i>
                 </button>
             </div>
-            <listener-list :items="listeners" @open="openListener($event)" @delete="deleteListener($event)" :active="listener" :handlers="handlers"></listener-list>
+            <listener-list
+                :items="listeners"
+                @open="openListener($event)"
+                @test="testListener($event)"
+                @delete="deleteListener($event)"
+                :active="listener"
+                :handlers="handlers"></listener-list>
         </section>
         <router-view></router-view>
     </div>
@@ -78,6 +84,16 @@
             this.channel.dispatch({
                 event: 'listener@delete',
                 data: listener
+            })
+        }
+
+        public testListener (listener: ListenerEntity): void {
+            this.channel.dispatch({
+                event: 'listener@test',
+                data: {
+                    project: this.$route.query.pid,
+                    rules: listener.getRules()
+                }
             })
         }
     }
