@@ -9,6 +9,8 @@ import { ConfigApi } from './domain/config/ConfigApi'
 import { ConfigHttpApi } from './domain/config/ConfigHttpApi'
 import { LogApi } from './domain/log/LogApi'
 import { LogHttpApi } from './domain/log/LogHttpApi'
+import { InviteApi } from './domain/invite/InviteApi'
+import { InviteHttpApi } from './domain/invite/InviteHttpApi'
 
 export class LogOutsourcedHttpApi implements LogOutsourcedApi {
     private projectsApi: ProjectApi
@@ -16,6 +18,7 @@ export class LogOutsourcedHttpApi implements LogOutsourcedApi {
     private listenersApi: ListenerApi
     private logApi: LogApi
     private configApi: ConfigApi
+    private inviteApi: InviteApi
 
     public constructor (host: string) {
         this.projectsApi = new ProjectHttpApi(host)
@@ -23,6 +26,7 @@ export class LogOutsourcedHttpApi implements LogOutsourcedApi {
         this.listenersApi = new ListenerHttpApi(host)
         this.logApi = new LogHttpApi(host)
         this.configApi = new ConfigHttpApi()
+        this.inviteApi = new InviteHttpApi(host)
     }
 
     public projects (): ProjectApi {
@@ -43,5 +47,9 @@ export class LogOutsourcedHttpApi implements LogOutsourcedApi {
 
     public config (): ConfigApi {
         return this.configApi
+    }
+
+    public invite (): InviteApi {
+        return this.inviteApi
     }
 }

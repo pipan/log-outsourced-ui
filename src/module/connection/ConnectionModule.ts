@@ -1,7 +1,6 @@
 import { Module } from '@/lib/framework'
 import { Context } from '@/lib/framework/module/Context'
 import { Channel } from '@wildebeest/observable'
-import { Repository } from '@wildebeest/repository'
 import { Storage } from '@/lib/storage'
 import { ConnectionCreateController } from './controller/ConnectionCreateController'
 import { ConnectionDeleteController } from './controller/ConnectionDeleteController'
@@ -10,7 +9,7 @@ import { ConnectionUpdateController } from './controller/ConnectionUpdateControl
 export class ConnectionModule implements Module {
     public install (context: Context): void {
         const channel: Channel<any> = context.channel()
-        const connections: Repository<any> = Storage.createLocalStorageRepository('connections')
+        const connections = Storage.createLocalStorageRepository('connections')
 
         context.repositories().insert('connections', connections)
 

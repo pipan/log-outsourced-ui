@@ -8,11 +8,11 @@
     }
 
     &--right {
-        right: var(--unit-m);
+        right: var(--unit-s);
     }
 
     &--left {
-        left: var(--unit-m);
+        left: var(--unit-s);
     }
 
     &__menu {
@@ -24,12 +24,13 @@
         box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.55);
     
         &__item {
+            $self: &;
             width: 100%;
             text-align: left;
             background-color: transparent;
             border: none;
             color: var(--fg);
-            padding: var(--unit-m);
+            padding: var(--unit-s) var(--unit-m);
             border-radius: var(--corner-radius);
             cursor: pointer;
             white-space: nowrap;

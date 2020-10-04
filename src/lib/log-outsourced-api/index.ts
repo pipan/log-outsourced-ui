@@ -12,3 +12,6 @@ export { ListenerApi } from './domain/listener/ListnerApi'
 
 export { ConfigApi } from './domain/config/ConfigApi'
 export { ConfigHttpApi } from './domain/config/ConfigHttpApi'
+
+export { InviteApi } from './domain/invite/InviteApi'
+export { InviteHttpApi } from './domain/invite/InviteHttpApi'

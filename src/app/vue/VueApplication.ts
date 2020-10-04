@@ -7,6 +7,7 @@ import ConnectionList from '@/views/Connection/ConnectionList.vue'
 import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
 import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
 import ConnectionLogin from '@/views/Connection/ConnectionLogin.vue'
+import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
@@ -23,7 +24,8 @@ export class VueApplication {
         this.channel = framework.getChannel()
 
         const repositories: any = {
-            connection: framework.getRepository('connections')
+            connection: framework.getRepository('connections'),
+            invites: framework.getRepository('invites')
         }
         const queries: any = {
             projects: framework.getRepository('projects')
@@ -91,6 +93,11 @@ export class VueApplication {
                         {
                             path: 'connection/login',
                             component: ConnectionLogin,
+                            props: props
+                        },
+                        {
+                            path: 'connection/invite/:token',
+                            component: ConnectionInvite,
                             props: props
                         }
                     ]
