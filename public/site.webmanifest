@@ -1,19 +1,19 @@
 {
-    "name": "Log Outsourced",
-    "short_name": "Log Outsourced",
+    "name": "Outsourced",
+    "short_name": "Outsourced",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png?v=E6meRQaNxK",
+            "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/android-chrome-512x512.png?v=E6meRQaNxK",
-            "sizes": "512x512",
+            "src": "/android-chrome-384x384.png",
+            "sizes": "384x384",
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#323937",
+    "background_color": "#323937",
     "display": "standalone"
 }

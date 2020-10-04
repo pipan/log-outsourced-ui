@@ -26,7 +26,7 @@ export class ListenerModule implements Module {
 
     public install (context: Context): void {
         const channel: Channel<any> = context.channel()
-        const listeners: Repository<ListenerEntity> = new SimpleRepository()
+        const listeners: Repository<ListenerEntity> = SimpleRepository.createIdentifiable()
 
         context.repositories().insert('listeners', listeners)
 

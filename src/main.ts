@@ -9,6 +9,7 @@ import { ListenerModule } from './module/listener'
 import { ExtendableValidatorBuilder } from './lib/validator'
 import { BasicValidatorRuleProvide } from './lib/validator/basic/BasicValidatorRuleProvider'
 import { StringRuleProvider } from './lib/validator/string/StringRuleProvider'
+import { ConnectionModule } from './module/connection'
 
 const configApi: ConfigApi = new ConfigHttpApi()
 configApi.load()
@@ -20,6 +21,7 @@ configApi.load()
 
         const framework: ModularFramework = new ModularFramework([
             new AlertModule(),
+            new ConnectionModule(),
             new ProjectModule(httpApi.projects(), validatorBuilder),
             new HandlerModule(httpApi.handlers()),
             new ListenerModule(httpApi.listeners(), httpApi.log()),

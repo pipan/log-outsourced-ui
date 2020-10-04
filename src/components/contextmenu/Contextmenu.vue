@@ -1,11 +1,11 @@
 <template>
     <div class="context context--right" :class="{'context--relative': relative}">
-        <button class="btn btn--secondary btn--circle" type="button" @click="open()">
+        <button class="btn btn--secondary btn--circle" type="button" @click="open($event)">
             <i class="material-icons">more_vert</i>
         </button>
         <div class="context__menu" v-if="visible">
             <div class="context__menu__close">
-                <button class="btn btn--secondary btn--circle" type="button" @click="close()">
+                <button class="btn btn--secondary btn--circle" type="button" @click="clickClose($event)">
                     <i class="material-icons">more_vert</i>
                 </button>
             </div>
@@ -23,12 +23,18 @@
 
         public visible = false
 
-        public open (): void {
+        public open (event: any): void {
             this.visible = true
+            event.stopPropagation()
         }
 
         public close (): void {
             this.visible = false
+        }
+
+        public clickClose (event: any): void {
+            this.close()
+            event.stopPropagation()
         }
     }
 </script>

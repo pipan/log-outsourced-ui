@@ -24,7 +24,7 @@ export class ProjectModule implements Module {
 
     public install (context: Context): void {
         const channel: Channel<any> = context.channel()
-        const projects: Repository<ProjectEntity> = new SimpleRepository()
+        const projects: Repository<ProjectEntity> = SimpleRepository.createIdentifiable()
 
         context.repositories().insert('projects', projects)
 
