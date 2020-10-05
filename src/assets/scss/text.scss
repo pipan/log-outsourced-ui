@@ -18,6 +18,10 @@
         line-height: 1.3em;
     }
 
+    &--primary {
+        color: var(--primary)
+    }
+
     &--error {
         color: var(--error);
     }

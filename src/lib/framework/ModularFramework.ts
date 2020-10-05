@@ -22,7 +22,7 @@ export class ModularFramework implements Framework {
             new OutsideEventListener(this)
         )
 
-        this.context.repositories().insert('properties', new SimpleRepository())
+        this.context.repositories().insert('properties', SimpleRepository.createIdentifiable())
 
         for (const module of modules) {
             this.installModule(module)

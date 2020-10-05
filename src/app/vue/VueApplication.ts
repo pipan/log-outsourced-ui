@@ -3,6 +3,12 @@ import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
+import NotFound from '@/views/Error/NotFound.vue'
+import ConnectionList from '@/views/Connection/ConnectionList.vue'
+import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
+import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
+import ConnectionLogin from '@/views/Connection/ConnectionLogin.vue'
+import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
 import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/ProjectLayout.vue'
@@ -18,6 +24,10 @@ export class VueApplication {
     public constructor (framework: Framework) {
         this.channel = framework.getChannel()
 
+        const repositories: any = {
+            connection: framework.getRepository('connections'),
+            invites: framework.getRepository('invites')
+        }
         const queries: any = {
             projects: framework.getRepository('projects')
                 .query()
@@ -54,7 +64,8 @@ export class VueApplication {
 
         const props: any = {
             channel: this.channel,
-            queries: queries
+            queries: queries,
+            repositories: repositories
         }
 
         Vue.use(VueRouter)
@@ -67,12 +78,27 @@ export class VueApplication {
                     children: [
                         {
                             path: '',
-                            component: Index,
+                            component: ConnectionList,
                             props: props
                         },
                         {
-                            path: 'create',
-                            component: ProjectCreate,
+                            path: 'connection/create',
+                            component: ConnectionCreate,
+                            props: props
+                        },
+                        {
+                            path: 'connection/update',
+                            component: ConnectionUpdate,
+                            props: props
+                        },
+                        {
+                            path: 'connection/login',
+                            component: ConnectionLogin,
+                            props: props
+                        },
+                        {
+                            path: 'connection/invite/:token',
+                            component: ConnectionInvite,
                             props: props
                         }
                     ]
@@ -105,6 +131,10 @@ export class VueApplication {
                             props: props
                         }
                     ]
+                },
+                {
+                    path: '*',
+                    component: NotFound
                 }
             ],
             mode: 'history'

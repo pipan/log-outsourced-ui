@@ -1,5 +1,4 @@
 import { Closable, Connectable } from '@wildebeest/observable'
-import { QueryResult } from '@wildebeest/repository'
 import { PropertyEntity } from '@/lib/framework'
 
 export class ViewRepository {

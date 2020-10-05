@@ -62,6 +62,14 @@ h1, h2, h3, h4, h5, h6 {
         padding: var(--unit-s);
     }
 
+    &__actions {
+        box-sizing: border-box;
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        padding: var(--unit-s);
+    }
+
     &__container {
         box-sizing: border-box;
         margin: 0px auto;

@@ -1,6 +1,6 @@
 .context {
     position: absolute;
-    top: var(--unit-s);
+    top: var(--unit-m);
 
     &--relative {
         position: relative;
@@ -17,6 +17,7 @@
 
     &__menu {
         position: absolute;
+        min-width: 120px;
         top: calc(var(--unit-s) * -1);
         background-color: var(--bg-level-top);
         border-radius: var(--corner-radius);
@@ -29,7 +30,7 @@
             background-color: transparent;
             border: none;
             color: var(--fg);
-            padding: var(--unit-m);
+            padding: var(--unit-s) var(--unit-m);
             border-radius: var(--corner-radius);
             cursor: pointer;
             white-space: nowrap;

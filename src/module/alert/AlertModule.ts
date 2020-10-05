@@ -9,7 +9,7 @@ import { IncrementalStringGenerator } from '@/lib/generator'
 
 export class AlertModule implements Module {
     public install (context: Context): void {
-        const alerts: Repository<AlertContract> = new SimpleRepository()
+        const alerts: Repository<AlertContract> = SimpleRepository.createIdentifiable()
 
         context.repositories().insert('alerts', alerts)
 

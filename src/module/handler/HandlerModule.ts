@@ -13,7 +13,7 @@ export class HandlerModule implements Module {
     }
 
     public install (context: Context): void {
-        const handlers: Repository<HandlerEntity> = new SimpleRepository()
+        const handlers: Repository<HandlerEntity> = SimpleRepository.createIdentifiable()
 
         context.repositories().insert('handlers', handlers)
 
