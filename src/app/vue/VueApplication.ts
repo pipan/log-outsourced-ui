@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
+import NotFound from '@/views/Error/NotFound.vue'
 import ConnectionList from '@/views/Connection/ConnectionList.vue'
 import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
 import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
@@ -130,6 +131,10 @@ export class VueApplication {
                             props: props
                         }
                     ]
+                },
+                {
+                    path: '*',
+                    component: NotFound
                 }
             ],
             mode: 'history'

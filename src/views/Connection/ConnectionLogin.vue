@@ -10,7 +10,8 @@
                     <password-field
                         id="password"
                         label="Password"
-                        :value="model.password"></password-field>
+                        :value="model.password"
+                        @change="model.password = $event"></password-field>
                 </div>
                 <footer class="card__footer">
                     <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -37,6 +38,7 @@
     })
     export default class ConnectionLogin extends Vue {
         @Prop() readonly repositories!: any
+        @Prop() readonly channel!: Channel<any>
 
         public model: any = {
             password: ''
@@ -70,7 +72,16 @@
         }
 
         public save (): void {
-            console.log('save')
+            this.channel.dispatch({
+                event: 'auth@access',
+                data: {
+                    host: this.connection.host,
+                    body: {
+                        username: this.connection.username,
+                        password: this.model.password
+                    }
+                }
+            })
         }
     }
 </script>

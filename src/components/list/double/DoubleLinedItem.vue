@@ -4,7 +4,7 @@
             {{ this.text }}
         </div>
         <contextmenu ref="contextmenu" v-if="this.contexts.length > 0">
-            <button class="context__menu__item" :class="{'top-s': index > 0}" v-for="(context, index) of this.contexts" :key="context" @click="emit(context, $event)">{{ context }}</button>
+            <button class="context__menu__item bottom-s" v-for="context of this.contexts" :key="context" @click="emit(context, $event)">{{ context }}</button>
         </contextmenu>
         <div class="list__item__bottom flexbox-row center">
             <div class="flex text--auxilery text-ellipsis flexfix">

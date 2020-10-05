@@ -1,0 +1,12 @@
+.error {
+    margin: auto;
+    text-align: center;
+
+    &__status {
+        font-size: 5em;
+        color: var(--fg);
+        margin: var(--unit-l) 0px;
+        text-shadow: 2px -2px rgba(28,219,207,1),
+            -2px 2px rgba(219,74,28,1);
+    }
+}

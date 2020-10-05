@@ -17,6 +17,7 @@
 
     &__menu {
         position: absolute;
+        min-width: 120px;
         top: calc(var(--unit-s) * -1);
         background-color: var(--bg-level-top);
         border-radius: var(--corner-radius);
@@ -24,7 +25,6 @@
         box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.55);
     
         &__item {
-            $self: &;
             width: 100%;
             text-align: left;
             background-color: transparent;

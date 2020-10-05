@@ -15,3 +15,6 @@ export { ConfigHttpApi } from './domain/config/ConfigHttpApi'
 
 export { InviteApi } from './domain/invite/InviteApi'
 export { InviteHttpApi } from './domain/invite/InviteHttpApi'
+
+export { AuthApi } from './domain/auth/AuthApi'
+export { AuthHttpApi } from './domain/auth/AuthHttpApi'

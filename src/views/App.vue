@@ -58,4 +58,5 @@
 @import "../assets/scss/text.scss";
 @import "../assets/scss/alert.scss";
 @import "../assets/scss/contextmenu.scss";
+@import "../assets/scss/error.scss";
 </style>
