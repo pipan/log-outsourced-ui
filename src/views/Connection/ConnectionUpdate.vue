@@ -39,7 +39,7 @@
         }
 
         private loadConnection (id: string): void {
-            const query = this.repositories.connection.query()
+            const query = this.repositories.connections.query()
                 .property(id)
 
             const connection = query.get()

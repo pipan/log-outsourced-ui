@@ -8,6 +8,8 @@ export class SuccessfulStatusFilter {
         this.statusMap.set('4xx', 'Something is wrong with request data')
         this.statusMap.set('5xx', 'Something is wrong with the server')
 
+        this.statusMap.set('401', 'Unauthorized')
+        this.statusMap.set('403', 'Forbidden')
         this.statusMap.set('404', '404 Not found')
         this.statusMap.set('422', '422 Validation error')
         this.statusMap.set('0', 'No internet connection')

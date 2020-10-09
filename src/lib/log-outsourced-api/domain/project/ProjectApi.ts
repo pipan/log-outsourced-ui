@@ -1,11 +1,8 @@
-import { ProjectEntity } from './ProjectEntity'
-import { ListenerEntity } from '../listener/ListenerEntity'
-
 export interface ProjectApi {
-    all (): Promise<Array<ProjectEntity>>;
-    view (uuid: string): Promise<{project: ProjectEntity; listeners: Array<ListenerEntity>}>;
-    create (project: ProjectEntity): Promise<ProjectEntity>;
-    delete (project: ProjectEntity): Promise<Response>;
-    update (prject: ProjectEntity): Promise<ProjectEntity>;
-    generate (uuid: string): Promise<ProjectEntity>;
+    all (): Promise<any>;
+    view (uuid: string): Promise<any>;
+    create (project: any): Promise<any>;
+    delete (project: any): Promise<Response>;
+    update (prject: any): Promise<any>;
+    generate (uuid: string): Promise<any>;
 }

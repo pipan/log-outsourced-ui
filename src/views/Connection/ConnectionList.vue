@@ -1,12 +1,12 @@
 <template>
     <div class="flex flexbox-row">
         <div class="material__actions">
-            <button class="btn btn--primary btn--square" @click="create()">
+            <button class="btn btn--primary btn--circle" @click="create()">
                 <span class="material-icons">add</span>
             </button>
         </div>
         <section class="material__container">
-            <div v-for="connection of this.connections" :key="connection.name" class="top-s">
+            <div v-for="(connection, index) of this.connections" :key="connection.name" :class="{'top-s': index > 0}">
                 <double-lined-item
                     :text="connection.name"
                     :subtext="connection.username + '@' + connection.host"
@@ -49,7 +49,7 @@
             this.connectionsChannel.connectFn((items: any[]) => {
                 this.connections = items
             })
-            this.watcher.withRepository(this.repositories.connection)
+            this.watcher.withRepository(this.repositories.connections)
                 .withBinding(this.connectionsChannel)
         }
 
@@ -58,7 +58,7 @@
         }
 
         public open (connection: any): void {
-            this.$router.push('/connection/login?id=' + connection.id)
+            this.$router.push('/' + connection.id)
         }
 
         public edit (connection: any): void {

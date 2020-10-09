@@ -2,7 +2,7 @@ import { ModularFramework } from './lib/framework'
 import { AlertModule } from './module/alert'
 import { VueApplication } from './app'
 import { ProjectModule } from './module/project'
-import { LogOutsourcedApi, LogOutsourcedHttpApi, ConfigApi, ConfigHttpApi } from './lib/log-outsourced-api'
+import { OutsourcedApi, LogOutsourcedHttpApi, ConfigApi, ConfigHttpApi } from './lib/log-outsourced-api'
 import { HandlerModule } from './module/handler'
 import { ApiModule } from './module/api'
 import { ListenerModule } from './module/listener'
@@ -12,28 +12,22 @@ import { StringRuleProvider } from './lib/validator/string/StringRuleProvider'
 import { ConnectionModule } from './module/connection'
 import { AdministratorModule } from './module/administrator'
 import { AuthModule } from './module/auth'
+import { EagerObservable } from '@wildebeest/observable'
 
-const configApi: ConfigApi = new ConfigHttpApi()
-configApi.load()
-    .then((result: any) => {
-        const httpApi: LogOutsourcedApi = new LogOutsourcedHttpApi(result.host)
-        const validatorBuilder: ExtendableValidatorBuilder = new ExtendableValidatorBuilder()
-        validatorBuilder.extend(new BasicValidatorRuleProvide())
-        validatorBuilder.extend(new StringRuleProvider())
+const validatorBuilder: ExtendableValidatorBuilder = new ExtendableValidatorBuilder()
+validatorBuilder.extend(new BasicValidatorRuleProvide())
+validatorBuilder.extend(new StringRuleProvider())
 
-        const framework: ModularFramework = new ModularFramework([
-            new AlertModule(),
-            new ConnectionModule(),
-            new AuthModule(),
-            new AdministratorModule(),
-            new ProjectModule(httpApi.projects(), validatorBuilder),
-            new HandlerModule(httpApi.handlers()),
-            new ListenerModule(httpApi.listeners(), httpApi.log()),
-            new ApiModule(result.host)
-        ])
+const api = new EagerObservable<OutsourcedApi>()
 
-        const vue = new VueApplication(framework)
-    })
-    .catch((error) => {
-        console.error('cannot load initial config', error)
-    })
+const framework: ModularFramework = new ModularFramework([
+    new AlertModule(),
+    new AuthModule(api),
+    new ConnectionModule(api),
+    new AdministratorModule(),
+    new ProjectModule(api, validatorBuilder)
+    // new HandlerModule(httpApi.handlers()),
+    // new ListenerModule(httpApi.listeners(), httpApi.log())
+])
+
+const vue = new VueApplication(framework)

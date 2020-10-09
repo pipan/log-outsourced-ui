@@ -1,7 +1,7 @@
 <template>
     <div class="list__item">
         <div class="list__item__top flexbox-row">
-            <div class="flex">{{ project.getName() }}</div>
+            <div class="flex">{{ project.name }}</div>
             <button class="btn btn--primary" @click="open()">OPEN</button>
         </div>
     </div>
@@ -13,7 +13,7 @@
 
     @Component
     export default class ProjectListItem extends Vue {
-        @Prop() readonly project!: ProjectEntity;
+        @Prop() readonly project!: any;
 
         open (): void {
             this.$emit('open', this.project)

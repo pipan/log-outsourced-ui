@@ -1,4 +1,5 @@
 import { InviteApi } from './InviteApi'
+import { HttpFetch } from '../../http/HttpFetch'
 
 export class InviteHttpApi implements InviteApi {
     private host: string
@@ -8,18 +9,13 @@ export class InviteHttpApi implements InviteApi {
     }
 
     public load (token: string): Promise<any> {
-        return fetch(this.host + '/api/v1/administrators/invite/' + token)
-            .then(response => response.json())
+        return HttpFetch.fromUrl(this.host + '/api/v1/administrators/invite/' + token)
+            .get()
     }
 
     public accept (data: any): Promise<any> {
-        return fetch(this.host + '/api/v1/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
+        return HttpFetch.fromUrl(this.host + '/api/v1/register')
+            .withJson(data)
+            .post()
     }
 }

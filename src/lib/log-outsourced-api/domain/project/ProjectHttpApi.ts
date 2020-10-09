@@ -5,30 +5,33 @@ import { AdapterHelper, Adapter } from '@/lib/adapter'
 import { ListenerEntity } from '../listener/ListenerEntity'
 import { ListenerReadAdapter } from '../listener/ListenerReadAdapter'
 import { SuccessfulStatusFilter } from '../../http/SuccessfulStatusFilter'
+import { HttpFetch } from '../../http/HttpFetch'
+import { AuthHttp } from '../auth/AuthHttp'
 
 export class ProjectHttpApi implements ProjectApi {
     private host: string
     private readAdapter: Adapter<any, ProjectEntity>
     private listenerReadAdapter: Adapter<any, ListenerEntity>
     private filter: SuccessfulStatusFilter
+    private authHttp: AuthHttp
 
-    public constructor (host: string) {
+    public constructor (host: string, authHttp: AuthHttp) {
         this.host = host
+        this.authHttp = authHttp
         this.readAdapter = new ProjectReadAdapter()
         this.listenerReadAdapter = new ListenerReadAdapter()
         this.filter = new SuccessfulStatusFilter()
     }
 
-    public all (): Promise<Array<ProjectEntity>> {
-        return fetch(this.host + '/api/v1/projects')
-            .then(this.filter.filter.bind(this.filter))
-            .then((data: any) => {
-                const adapter: Adapter<Array<any>, Array<ProjectEntity>> = AdapterHelper.listOf(this.readAdapter)
-                return adapter.adapt(data)
-            })
+    public all (): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects')
+            .withJson()
+            .withMethod('GET')
+
+        return this.authHttp.send(http)
     }
 
-    public view (uuid: string): Promise<{project: ProjectEntity; listeners: Array<ListenerEntity>}> {
+    public view (uuid: string): Promise<any> {
         return fetch(this.host + '/api/v1/projects/' + uuid)
             .then(this.filter.filter.bind(this.filter))
             .then((data: any) => {
@@ -40,14 +43,14 @@ export class ProjectHttpApi implements ProjectApi {
             })
     }
 
-    public delete (project: ProjectEntity): Promise<Response> {
+    public delete (project: any): Promise<Response> {
         return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
             method: 'DELETE'
         })
             .then(this.filter.filter.bind(this.filter))
     }
 
-    public create (project: ProjectEntity): Promise<ProjectEntity> {
+    public create (project: any): Promise<ProjectEntity> {
         return fetch(this.host + '/api/v1/projects', {
             method: 'POST',
             headers: {
@@ -61,7 +64,7 @@ export class ProjectHttpApi implements ProjectApi {
             .then(data => this.readAdapter.adapt(data))
     }
 
-    public update (project: ProjectEntity): Promise<ProjectEntity> {
+    public update (project: any): Promise<any> {
         return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
             method: 'PUT',
             headers: {
@@ -75,7 +78,7 @@ export class ProjectHttpApi implements ProjectApi {
             .then(data => this.readAdapter.adapt(data))
     }
 
-    public generate (uuid: string): Promise<ProjectEntity> {
+    public generate (uuid: string): Promise<any> {
         return fetch(this.host + '/api/v1/projects/' + uuid + '/generate', {
             method: 'PUT',
             headers: {

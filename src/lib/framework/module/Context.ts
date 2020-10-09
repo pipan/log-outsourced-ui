@@ -1,4 +1,4 @@
-import { Repository, ObservableMap } from '@wildebeest/repository'
+import { Repository, ObservableMap, ObservableProperty } from '@wildebeest/repository'
 import { Channel } from '@wildebeest/observable'
 import { Controller } from '../controller/Controller'
 

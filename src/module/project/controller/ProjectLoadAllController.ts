@@ -1,30 +1,47 @@
 import { Controller } from '@/lib/framework'
-import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { Repository } from '@wildebeest/repository'
-import { Channel } from '@wildebeest/observable'
-import { AlertHelper } from '@/module/alert'
+import { Channel, StatefulChannel } from '@wildebeest/observable'
+import { Action, ChainAction } from '@/lib/action'
+import { UnauthorizedMiddleware, ErrorMiddleware } from '@/lib/log-outsourced-api/http'
 
 export class ProjectLoadAllController implements Controller {
-    private projects: Repository<ProjectEntity>
-    private projectApi: ProjectApi
+    private projects: Repository<any>
+    private api: StatefulChannel<OutsourcedApi>
     private channel: Channel<any>
+    private thenChain: Action<any>
+    private catchChain: Action<any>
 
-    public constructor (projects: Repository<ProjectEntity>, projectApi: ProjectApi, channel: Channel<any>) {
-        this.projectApi = projectApi
+    public constructor (projects: Repository<any>, api: StatefulChannel<OutsourcedApi>, channel: Channel<any>) {
+        this.api = api
         this.projects = projects
         this.channel = channel
+        this.thenChain = new ChainAction([
+            new UnauthorizedMiddleware(this.channel)
+        ])
+        this.catchChain = new ChainAction([
+            new ErrorMiddleware(this.channel)
+        ])
     }
 
     public action (data?: any): void {
-        this.projectApi.all()
-            .then((projects: Array<ProjectEntity>) => {
-                this.projects.setAll(projects)
+        const outsourcedApi = this.api.get()
+        if (!outsourcedApi) {
+            console.error('Cannot load projects: API is not available.')
+            return
+        }
+
+        outsourcedApi.projects().all()
+            .then(this.thenChain.activate.bind(this.thenChain))
+            .then((response: any) => {
+                console.log('project load all', response)
+                if (response.ok) {
+                    this.projects.setAll(response.body.items)
+                }
             })
-            .catch((error: any) => {
-                console.error(error)
-                this.channel.dispatch(
-                    AlertHelper.errorEvent(error)
-                )
+            .catch(this.catchChain.activate.bind(this.catchChain))
+            .catch(() => {
+                this.projects.clear()
             })
     }
 }
