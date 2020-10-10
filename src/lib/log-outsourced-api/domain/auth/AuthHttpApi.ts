@@ -28,7 +28,7 @@ export class AuthHttpApi implements AuthApi {
     public refresh (token: string): Promise<any> {
         return HttpFetch.fromUrl(this.host + '/api/v1/auth/refresh')
             .withJson({
-                token: token
+                refresh_token: token
             })
             .post()
             .then((response: any) => {
