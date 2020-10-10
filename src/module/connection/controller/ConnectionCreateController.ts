@@ -14,11 +14,7 @@ export class ConnectionCreateController implements Controller {
 
     public action (data?: any): void {
         const body = data.body
-        const connections: Array<any> = this.connections.get()
-        let id = 1
-        if (connections.length > 0) {
-            id = parseInt(connections[connections.length - 1].id) + 1
-        }
+        const id = Math.floor(Math.random() * 1000000)
         this.connections.insert({
             id: id + '',
             name: body.name,

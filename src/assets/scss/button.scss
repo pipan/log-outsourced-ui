@@ -45,6 +45,10 @@ button {
 
     &--circle {
         border-radius: 100%;
+        padding: var(--unit-s);
+    }
+
+    &--small {
         padding: var(--unit-half);
     }
 

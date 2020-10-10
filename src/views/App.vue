@@ -7,35 +7,36 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringInput from '@/components/form/StringInput.vue'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { AlertContract } from '../components/alert'
-    import { ViewRepository } from './ViewRepository'
-    import { Channel } from '@wildebeest/observable'
+    import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { ObservableList } from '@wildebeest/repository'
+    import { ListWatcher } from '@/lib/watcher'
+
     @Component({
         components: {
-            StringInput,
             AlertContainer
         }
     })
     export default class App extends Vue {
-        @Prop() public queries!: any
+        @Prop() readonly repositories!: any
         @Prop() public channel!: Channel<any>
 
-        public alerts: Array<AlertContract> = []
-        public repo!: ViewRepository
+        public alerts: Array<any> = []
+        public alertsChannel: Channel<any[]> = new ProxyChannel()
+
+        private watcher: ListWatcher<any> = new ListWatcher()
 
         public created (): void {
-            this.repo = new ViewRepository(this)
+            this.alertsChannel.connectFn((items: any[]) => {
+                this.alerts = items
+            })
+            this.watcher.withRepository(this.repositories.alerts)
+                .withBinding(this.alertsChannel)
         }
 
         public beforeDestroy (): void {
-            this.repo.unbindAll()
-        }
-
-        public mounted (): void {
-            this.repo.bindValue('alerts', this.queries.alerts)
+            this.watcher.stop()
         }
 
         public closeAlert (alert: AlertContract): void {

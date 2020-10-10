@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <project-list-item v-for="item of items" :key="item.getUuid()" :project="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)"></project-list-item>
+        <project-list-item v-for="item of items" :key="item.uuid" :project="item" @open="$emit('open', $event)" @delete="$emit('delete', $event)"></project-list-item>
     </div>
 </template>
 
@@ -15,7 +15,7 @@
         }
     })
     export default class ProjectList extends Vue {
-        @Prop() readonly items!: Array<ProjectEntity>;
+        @Prop() readonly items!: Array<any>;
     }
 </script>
 
