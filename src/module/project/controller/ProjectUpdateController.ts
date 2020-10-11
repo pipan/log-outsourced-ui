@@ -4,7 +4,7 @@ import { AlertHelper } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
 import { Channel, StatefulChannel } from '@wildebeest/observable'
 
-export class ProjectCreateController implements Controller {
+export class ProjectUpdateController implements Controller {
     private projects: Repository<any>
     private channel: Channel<any>
     private api: StatefulChannel<OutsourcedApi>
@@ -22,17 +22,16 @@ export class ProjectCreateController implements Controller {
     public action (data?: any): void {
         const outsourcedApi = this.api.get()
         if (!outsourcedApi) {
-            console.error('Cannot create projects: API is not available.')
+            console.error('Cannot update projects: API is not available.')
             return
         }
 
-        outsourcedApi.projects().create(data.body)
+        outsourcedApi.projects().update(data.body)
             .then((project: any) => {
                 this.projects.insert(project)
                 this.channel.dispatch(
-                    AlertHelper.infoEvent('Project has been created')
+                    AlertHelper.infoEvent('Project has been updated')
                 )
-                // this.channel.dispatch({ event: 'project.create@reset' })
                 if (data.success) {
                     data.success(project)
                 }

@@ -10,6 +10,7 @@
                 :value="item"
                 :contexts="['Edit', 'Delete']"
                 @select="$emit('open', $event)"
+                @edit="edit($event)"
                 @delete="remove($event)">
             </simple-list-item>
         </filtered-list>
@@ -75,6 +76,16 @@
             this.$router.push({
                 name: 'project.create',
                 params: this.$route.params
+            })
+        }
+
+        public edit (project: any): void {
+            this.$router.push({
+                name: 'project.edit',
+                params: this.$route.params,
+                query: {
+                    uuid: project.uuid
+                }
             })
         }
     }

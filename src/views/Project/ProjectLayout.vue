@@ -40,7 +40,7 @@
             })
 
             this.watcher.withRepository(this.repositories.projects)
-                .withBinging(this.projectProperty)
+                .withBinding(this.projectProperty)
         }
 
         public beforeDestroy (): void {

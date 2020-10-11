@@ -1,39 +1,24 @@
 <template>
     <section>
-        <div class="card">
-            <form @submit.prevent="save()">
-                <header class="card__header">Create Project</header>
-                <div class="card__body">
-                    <string-field
-                        v-if="model"
-                        id="name"
-                        label="Name"
-                        :value="model.name"
-                        @change="model.name = $event"></string-field>
-                </div>
-                <footer class="card__footer">
-                    <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
-                    <button type="submit" class="btn btn--primary">SAVE</button>
-                </footer>
-            </form>
-        </div>
+        <project-card
+            title="Create project"
+            @submit="save($event)"
+            @cancel="cancel()"></project-card>
     </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringField from '@/components/form/StringField.vue'
+    import ProjectCard from '@/components/domain/project/ProjectCard.vue'
     import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
-            StringField
+            ProjectCard
         }
     })
     export default class ProjectCreate extends Vue {
         @Prop() readonly channel!: Channel<any>
-
-        public model: any = {}
 
         public cancel (): void {
             this.$router.push({
@@ -42,21 +27,18 @@
             })
         }
 
-        public save (): void {
+        public save (model: any): void {
             this.channel.dispatch({
                 event: 'project@create',
                 data: {
                     body: {
-                        name: this.model.name
+                        name: model.name
                     },
                     success: (project: any) => {
-                        console.log('todo: open project after create')
-                        // this.$router.push({
-                        //     path: '/project',
-                        //     query: {
-                        //         pid: project.identify()
-                        //     }
-                        // })
+                        this.$router.push({
+                            name: 'project.list',
+                            params: this.$route.params
+                        })
                     }
                 }
             })

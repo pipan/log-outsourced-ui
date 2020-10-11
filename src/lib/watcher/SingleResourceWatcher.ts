@@ -37,7 +37,7 @@ export class SingleResourceWatcher<T extends Identifiable> {
         return this.restart()
     }
 
-    public withBinging (binding: Channel<T>): SingleResourceWatcher<T> {
+    public withBinding (binding: Channel<T>): SingleResourceWatcher<T> {
         this.queryWatcher.withBinding(binding)
         return this.restart()
     }

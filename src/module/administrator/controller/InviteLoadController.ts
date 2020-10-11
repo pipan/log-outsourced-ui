@@ -19,9 +19,8 @@ export class InviteLoadController implements Controller {
 
         const inviteApi = new InviteHttpApi(host)
 
-        inviteApi.load(token).then((invite: any) => {
-            console.log('invite', invite)
-            this.invites.insert(invite)
+        inviteApi.load(token).then((response: any) => {
+            this.invites.insert(response.body)
         }).catch((ex) => {
             this.channel.dispatch(
                 AlertHelper.errorEvent('Cannot contact host: ' + host)

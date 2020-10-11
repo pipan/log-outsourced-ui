@@ -11,6 +11,7 @@ import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
 import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
+import ProjectUpdate from '@/views/Project/ProjectUpdate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
@@ -96,6 +97,15 @@ export class VueApplication {
                             component: ProjectCreate,
                             props: props,
                             name: 'project.create',
+                            meta: {
+                                nav: 'project'
+                            }
+                        },
+                        {
+                            path: 'project/edit',
+                            component: ProjectUpdate,
+                            props: props,
+                            name: 'project.edit',
                             meta: {
                                 nav: 'project'
                             }

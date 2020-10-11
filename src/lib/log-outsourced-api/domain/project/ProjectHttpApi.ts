@@ -60,17 +60,13 @@ export class ProjectHttpApi implements ProjectApi {
     }
 
     public update (project: any): Promise<any> {
-        return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: project.getName()
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects/' + project.uuid)
+            .withJson({
+                name: project.name
             })
-        })
-            .then(this.filter.filter.bind(this.filter))
-            .then(data => this.readAdapter.adapt(data))
+            .withMethod('PUT')
+
+        return this.authHttp.send(http)
     }
 
     public generate (uuid: string): Promise<any> {
