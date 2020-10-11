@@ -82,7 +82,7 @@
             })
 
             this.watcher.withRepository(this.repositories.invites)
-                .withBinging(this.invitationProperty)
+                .withBinding(this.invitationProperty)
         }
 
         public cancel (): void {

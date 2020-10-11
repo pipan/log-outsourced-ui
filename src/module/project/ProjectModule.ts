@@ -6,6 +6,7 @@ import { Channel, StatefulChannel } from '@wildebeest/observable'
 import { Repository, SimpleRepository } from '@wildebeest/repository'
 import { ProjectCreateController } from './controller/ProjectCreateController'
 import { ProjectDeleteController } from './controller/ProjectDeleteController'
+import { ProjectUpdateController } from './controller/ProjectUpdateController'
 
 export class ProjectModule implements Module {
     private api: StatefulChannel<OutsourcedApi>
@@ -20,17 +21,14 @@ export class ProjectModule implements Module {
 
         context.repositories().insert('projects', projects)
 
-        // context.controllers().insert('project.create@reset', new ProjectCreateResetController(properties))
         context.controllers().insert('project@load', new ProjectLoadAllController(projects, this.api, channel))
         context.controllers().insert('project@delete', new ProjectDeleteController(projects, this.api, channel))
         context.controllers().insert('project@create', new ProjectCreateController(projects, this.api, channel))
+        context.controllers().insert('project@update', new ProjectUpdateController(projects, this.api, channel))
 
         // context.controllers().insert('project@open', new ProjectOpenController(projects, properties, this.projectApi, channel))
         // context.controllers().insert('project@close', new ProjectCloseController(properties, channel))
         // context.controllers().insert('project@generate', new ProjectGenerateUrlController(projects, this.projectApi, channel))
-
-        // const activeProjectService = new ActiveProjectService(projects, properties)
-        // activeProjectService.start()
 
         channel.dispatch({ event: 'project.create@reset' })
     }

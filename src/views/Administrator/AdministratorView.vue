@@ -12,7 +12,7 @@
                 :contexts="item.invite_token !== '' ? ['Copy invite URL', 'Delete'] : ['Delete']"
                 @select="$emit('open', $event)"
                 @delete="remove($event)"
-                @copy_invite_url="copyInviteUrl()">
+                @copy_invite_url="copyInviteUrl($event)">
             </icon-list-item>
         </filtered-list>
     </section>
@@ -25,6 +25,7 @@
     import IconListItem from '@/components/list/simple/IconListItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
     import clipboardCopy from 'clipboard-copy'
+    import { AlertHelper } from '@/module/alert'
 
     @Component({
         components: {
@@ -35,7 +36,9 @@
     export default class AdministratorView extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() repositories!: any
+        @Prop() properties!: any
 
+        public connection: any
         public admins: any[] = []
 
         public adminProperty: Channel<any> = new ProxyChannel()
@@ -80,7 +83,11 @@
         }
 
         public copyInviteUrl (admin: any): void {
-            console.log('copy invite URL', admin)
+            const connection = this.properties.connection.get()
+            clipboardCopy(location.origin + '/connection/invite/' + admin.invite_token + '?host=' + connection.host)
+            this.channel.dispatch(
+                AlertHelper.infoEvent('Invite URL was copied to clipboard')
+            )
         }
     }
 </script>
