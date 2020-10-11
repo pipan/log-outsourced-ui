@@ -7,14 +7,14 @@
     }
 
     &__footer {
-        padding: var(--unit-m);
+        padding: var(--unit-s) var(--unit-m);
     }
 
     &__item {
         position: relative;
         border-radius: var(--corner-radius);
         background-color: var(--bg-level-middle);
-        padding: var(--unit-m);
+        padding: var(--unit-s) var(--unit-m);
         transition: background-color var(--transition-fast) ease;
         min-height: 24px;
         display: flex;
@@ -40,7 +40,7 @@
         }
 
         &__bottom {
-            padding-top: var(--unit-s);
+            padding-top: var(--unit-half);
         }
     }
 }

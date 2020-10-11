@@ -1,57 +1,38 @@
-import { Controller, PropertyEntity } from '@/lib/framework'
-import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
-import { ValidatorBuilder, Validator } from '@/lib/validator'
-import { Validation } from '@/lib/validator/Validation'
+import { Controller } from '@/lib/framework'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { AlertHelper } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
-import { Channel } from '@wildebeest/observable'
+import { Channel, StatefulChannel } from '@wildebeest/observable'
 
 export class ProjectCreateController implements Controller {
-    private validator: Validator
-    private projects: Repository<ProjectEntity>
-    private propertyMap: Map<string, PropertyEntity>
+    private projects: Repository<any>
     private channel: Channel<any>
-    private projectApi: ProjectApi
+    private api: StatefulChannel<OutsourcedApi>
 
     public constructor (
-        projects: Repository<ProjectEntity>,
-        properties: Repository<any>,
-        projectApi: ProjectApi,
-        channel: Channel<any>,
-        validatorBuilder: ValidatorBuilder
+        projects: Repository<any>,
+        api: StatefulChannel<OutsourcedApi>,
+        channel: Channel<any>
     ) {
         this.projects = projects
         this.channel = channel
-        this.projectApi = projectApi
-        this.propertyMap = new Map()
-
-        this.validator = validatorBuilder.build({
-            name: ['required', 'str.max:255']
-        })
-
-        properties.query().map<string>()
-            .connectFn((map: Map<string, PropertyEntity>) => {
-                this.propertyMap = map
-            })
+        this.api = api
     }
 
     public action (data?: any): void {
-        // const model = this.propertyMap.get('project.create')?.get()
-        // const validation: Validation = this.validator.validate(data)
-        // if (!validation.isValid()) {
-        //     validation.getErrors().forEach((error: string, field: string) => {
-        //         model.error[field] = error
-        //     })
-        //     return
-        // }
+        const outsourcedApi = this.api.get()
+        if (!outsourcedApi) {
+            console.error('Cannot load projects: API is not available.')
+            return
+        }
 
-        this.projectApi.create(new ProjectEntity('', data.body.name))
-            .then((project: ProjectEntity) => {
+        outsourcedApi.projects().create(data.body)
+            .then((project: any) => {
                 this.projects.insert(project)
                 this.channel.dispatch(
                     AlertHelper.infoEvent('Project has been created')
                 )
-                this.channel.dispatch({ event: 'project.create@reset' })
+                // this.channel.dispatch({ event: 'project.create@reset' })
                 if (data.success) {
                     data.success(project)
                 }

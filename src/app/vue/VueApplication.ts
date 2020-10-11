@@ -10,7 +10,7 @@ import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
 import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
 import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
-import ProjectCreate from '@/views/ProjectCreate.vue'
+import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
@@ -84,13 +84,28 @@ export class VueApplication {
                             path: '',
                             component: ProjectList,
                             props: props,
-                            name: 'connection'
+                            name: 'project.list',
+                            meta: {
+                                nav: 'project'
+                            }
+                        },
+                        {
+                            path: 'project/create',
+                            component: ProjectCreate,
+                            props: props,
+                            name: 'project.create',
+                            meta: {
+                                nav: 'project'
+                            }
                         },
                         {
                             path: 'admins',
                             component: AdministratorView,
                             props: props,
-                            name: 'administrators'
+                            name: 'administrator.list',
+                            meta: {
+                                nav: 'administrator'
+                            }
                         }
                     ]
                 },
