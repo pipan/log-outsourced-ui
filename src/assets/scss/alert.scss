@@ -1,7 +1,7 @@
 .alert-container {
     position: fixed;
     right: var(--unit-m);
-    bottom: 72px;
+    bottom: 64px;
     left: var(--unit-m);
     width: auto;
 }
@@ -52,6 +52,7 @@
 @media (min-width: 960px) {
     .alert-container {
         left: auto;
+        bottom: var(--unit-m);
         width: 500px;
     }
 }

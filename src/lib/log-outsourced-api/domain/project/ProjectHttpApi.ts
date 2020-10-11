@@ -44,24 +44,19 @@ export class ProjectHttpApi implements ProjectApi {
     }
 
     public delete (project: any): Promise<Response> {
-        return fetch(this.host + '/api/v1/projects/' + project.getUuid(), {
-            method: 'DELETE'
-        })
-            .then(this.filter.filter.bind(this.filter))
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects/' + project.uuid)
+            .withJson()
+            .withMethod('DELETE')
+
+        return this.authHttp.send(http)
     }
 
-    public create (project: any): Promise<ProjectEntity> {
-        return fetch(this.host + '/api/v1/projects', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: project.getName()
-            })
-        })
-            .then(this.filter.filter.bind(this.filter))
-            .then(data => this.readAdapter.adapt(data))
+    public create (project: any): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects')
+            .withJson(project)
+            .withMethod('POST')
+
+        return this.authHttp.send(http)
     }
 
     public update (project: any): Promise<any> {

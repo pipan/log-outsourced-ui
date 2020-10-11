@@ -9,7 +9,8 @@
                 :text="item.name"
                 :value="item"
                 :contexts="['Edit', 'Delete']"
-                @select="$emit('open', $event)">
+                @select="$emit('open', $event)"
+                @Delete="remove($event)">
             </simple-list-item>
         </filtered-list>
     </section>
@@ -61,8 +62,20 @@
             this.$router.push('/')
         }
 
+        public remove (project: any): void {
+            this.channel.dispatch({
+                event: 'project@delete',
+                data: {
+                    body: project
+                }
+            })
+        }
+
         public create (): void {
-            console.log('create project')
+            this.$router.push({
+                name: 'project.create',
+                params: this.$route.params
+            })
         }
     }
 </script>

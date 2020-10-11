@@ -34,7 +34,6 @@ export class ProjectLoadAllController implements Controller {
         outsourcedApi.projects().all()
             .then(this.thenChain.activate.bind(this.thenChain))
             .then((response: any) => {
-                console.log('project load all', response)
                 if (response.ok) {
                     this.projects.setAll(response.body.items)
                 }

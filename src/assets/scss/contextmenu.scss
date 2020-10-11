@@ -1,6 +1,6 @@
 .context {
     position: absolute;
-    top: calc(var(--unit-half) + var(--unit-s));
+    top: calc(var(--unit-half));
 
     &--relative {
         position: relative;
@@ -8,11 +8,11 @@
     }
 
     &--right {
-        right: calc(var(--unit-half) + var(--unit-s));
+        right: var(--unit-s);
     }
 
     &--left {
-        left: calc(var(--unit-half) + var(--unit-s));
+        left: var(--unit-s);
     }
 
     &__menu {

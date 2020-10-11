@@ -1,22 +1,28 @@
 import { Controller } from '@/lib/framework'
-import { ProjectApi, ProjectEntity } from '@/lib/log-outsourced-api'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { AlertHelper } from '@/module/alert'
-import { Channel } from '@wildebeest/observable'
+import { Channel, StatefulChannel } from '@wildebeest/observable'
 import { Repository } from '@wildebeest/repository'
 
 export class ProjectDeleteController implements Controller {
-    private projectApi: ProjectApi
+    private api: StatefulChannel<OutsourcedApi>
     private channel: Channel<any>
-    private projects: Repository<ProjectEntity>
+    private projects: Repository<any>
 
-    public constructor (projects: Repository<ProjectEntity>, projectApi: ProjectApi, channel: Channel<any>) {
-        this.projectApi = projectApi
+    public constructor (projects: Repository<any>, api: StatefulChannel<OutsourcedApi>, channel: Channel<any>) {
+        this.api = api
         this.channel = channel
         this.projects = projects
     }
 
     public action (data?: any): void {
-        this.projectApi.delete(data.body)
+        const outsourcedApi = this.api.get()
+        if (!outsourcedApi) {
+            console.error('Cannot load projects: API is not available.')
+            return
+        }
+
+        outsourcedApi.projects().delete(data.body)
             .then(() => {
                 this.projects.remove(data.body)
                 this.channel.dispatch(

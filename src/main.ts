@@ -14,9 +14,9 @@ import { AdministratorModule } from './module/administrator'
 import { AuthModule } from './module/auth'
 import { EagerObservable } from '@wildebeest/observable'
 
-const validatorBuilder: ExtendableValidatorBuilder = new ExtendableValidatorBuilder()
-validatorBuilder.extend(new BasicValidatorRuleProvide())
-validatorBuilder.extend(new StringRuleProvider())
+// const validatorBuilder: ExtendableValidatorBuilder = new ExtendableValidatorBuilder()
+// validatorBuilder.extend(new BasicValidatorRuleProvide())
+// validatorBuilder.extend(new StringRuleProvider())
 
 const api = new EagerObservable<OutsourcedApi>()
 
@@ -25,7 +25,7 @@ const framework: ModularFramework = new ModularFramework([
     new AuthModule(api),
     new ConnectionModule(api),
     new AdministratorModule(),
-    new ProjectModule(api, validatorBuilder)
+    new ProjectModule(api)
     // new HandlerModule(httpApi.handlers()),
     // new ListenerModule(httpApi.listeners(), httpApi.log())
 ])
