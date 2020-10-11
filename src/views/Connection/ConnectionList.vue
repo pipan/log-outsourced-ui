@@ -20,7 +20,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import clipboardCopy from 'clipboard-copy'
     import { Channel, Closable, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '../../components/contextmenu/Contextmenu.vue'
     import DoubleLinedItem from '../../components/list/double/DoubleLinedItem.vue'

@@ -1,6 +1,9 @@
 <template>
     <div class="list__item" :class="{'list__item--active': active}" @click="select()">
-        <div>{{ this.text }}</div>
+        <div class="flexbox-row center">
+            <i class="material-icons md-18 right-m">{{ icon }}</i>
+            <div>{{ this.text }}</div>
+        </div>
         <simple-contextmenu
             :items="contexts"
             :value="value"
@@ -18,8 +21,9 @@
             SimpleContextmenu
         }
     })
-    export default class SimpleListItem extends Vue {
+    export default class IconListItem extends Vue {
         @Prop() readonly text!: string
+        @Prop() readonly icon!: string
         @Prop() readonly value!: any
         @Prop({ default: () => [] }) readonly contexts!: Array<string>
         @Prop({ default: false }) readonly active!: boolean

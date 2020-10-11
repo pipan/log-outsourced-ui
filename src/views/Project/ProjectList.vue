@@ -10,7 +10,7 @@
                 :value="item"
                 :contexts="['Edit', 'Delete']"
                 @select="$emit('open', $event)"
-                @Delete="remove($event)">
+                @delete="remove($event)">
             </simple-list-item>
         </filtered-list>
     </section>

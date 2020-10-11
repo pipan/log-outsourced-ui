@@ -12,6 +12,8 @@ import { InviteHttpApi } from './domain/invite/InviteHttpApi'
 import { AuthHttpApi } from './domain/auth/AuthHttpApi'
 import { AuthApi } from './domain/auth/AuthApi'
 import { AuthHttp } from './domain/auth/AuthHttp'
+import { AdministratorApi } from './domain/administrator/AdministratorApi'
+import { AdministratorHttpApi } from './domain/administrator/AdministratorHttpApi'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
@@ -25,6 +27,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
         this.domains = {
             project: new ProjectHttpApi(host, authHttp),
+            administrators: new AdministratorHttpApi(host, authHttp),
             handler: new HandlerHttpApi(host),
             listener: new ListenerHttpApi(host),
             log: new LogHttpApi(host),
@@ -59,5 +62,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
     public auth (): AuthApi {
         return this.domains.auth
+    }
+
+    public administrators (): AdministratorApi {
+        return this.domains.administrators
     }
 }
