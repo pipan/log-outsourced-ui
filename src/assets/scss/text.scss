@@ -4,11 +4,15 @@
 .material-icons.md-48 { font-size: 48px; }
 
 .text {
-    &-m {
+    &-h2 {
         font-size: var(--h2);
     }
-    &-s {
+    &-h3 {
         font-size: var(--h3);
+    }
+
+    &--small {
+        font-size: var(--font-small);
     }
 
     &-ellipsis {

@@ -51,6 +51,7 @@
 <style lang="scss">
 @import "../assets/scss/root.scss";
 @import "../assets/scss/layout.scss";
+@import "../assets/scss/navigation.scss";
 @import "../assets/scss/card.scss";
 @import "../assets/scss/list.scss";
 @import "../assets/scss/button.scss";

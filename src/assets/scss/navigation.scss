@@ -1,0 +1,25 @@
+.nav {
+    &__item {
+        padding: 0px;
+        border-top: solid 1px transparent;
+        border-right: none;
+
+        &--active {
+            border-color: var(--primary);
+        }
+    }
+}
+
+@media (min-width: 1280px) { 
+    .nav {
+        &__item {
+            padding: 0px var(--unit-m);
+            border-top: none;
+            border-right: solid 1px transparent;
+    
+            &--active {    
+                border-color: var(--primary);
+            }
+        }
+    }
+}

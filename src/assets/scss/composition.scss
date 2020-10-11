@@ -56,3 +56,11 @@
     &-m { margin-top: var(--unit-m); }
     &-l { margin-top: var(--unit-l); }
 }
+
+@media (min-width: 1280px) { 
+    .top-lonly {
+        &-s { margin-top: var(--unit-s); }
+        &-m { margin-top: var(--unit-m); }
+        &-l { margin-top: var(--unit-l); }
+    }
+}

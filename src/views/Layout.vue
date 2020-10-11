@@ -1,7 +1,7 @@
 <template>
     <div class="material">
         <header class="material__header">
-            <div class="text-m material__header__title">Outsourced</div>
+            <div class="text-h2 material__header__title">Outsourced</div>
         </header>
         <div class="material__body">
             <router-view></router-view>

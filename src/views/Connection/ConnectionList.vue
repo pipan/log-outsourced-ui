@@ -1,24 +1,21 @@
 <template>
-    <div class="flex flexbox-row">
-        <div class="material__actions">
-            <button class="btn btn--primary btn--circle" @click="create()">
-                <span class="material-icons">add</span>
-            </button>
-        </div>
-        <section class="material__container">
-            <div v-for="(connection, index) of this.connections" :key="connection.name" :class="{'top-s': index > 0}">
-                <double-lined-item
-                    :text="connection.name"
-                    :subtext="connection.username + '@' + connection.host"
-                    :value="connection"
-                    :contexts="['Edit', 'Remove']"
-                    @select="open($event)"
-                    @Edit="edit($event)"
-                    @Remove="remove($event)">
-                </double-lined-item>
-            </div>
-        </section>
-    </div>
+    <section class="material__container">
+        <simple-list
+            title="Connections"
+            @add="create()">
+            <double-lined-item
+                v-for="connection of this.connections"
+                :key="connection.name"
+                :text="connection.name"
+                :subtext="connection.username + '@' + connection.host"
+                :value="connection"
+                :contexts="['Edit', 'Remove']"
+                @select="open($event)"
+                @Edit="edit($event)"
+                @Remove="remove($event)">
+            </double-lined-item>
+        </simple-list>
+    </section>
 </template>
 
 <script lang="ts">
@@ -27,13 +24,15 @@
     import { Channel, Closable, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '../../components/contextmenu/Contextmenu.vue'
     import DoubleLinedItem from '../../components/list/double/DoubleLinedItem.vue'
+    import SimpleList from '../../components/list/simple/SimpleList.vue'
     import { ViewRepository } from '../ViewRepository'
     import { ListWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
             Contextmenu,
-            DoubleLinedItem
+            DoubleLinedItem,
+            SimpleList
         }
     })
     export default class ConnectionList extends Vue {

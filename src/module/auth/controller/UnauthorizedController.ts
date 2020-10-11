@@ -11,8 +11,7 @@ export class UnauthorizedController implements Controller {
     public action (data?: any): void {
         this.auth.dispatch({
             error: {
-                status: 401,
-                message: 'Unauthorized'
+                status: 401
             }
         })
     }

@@ -1,31 +1,36 @@
 <template>
-    <div class="list">
-        <project-list-item
-            v-for="item of projects"
-            :key="item.uuid"
-            :project="item"
-            @open="$emit('open', $event)"
-            @delete="$emit('delete', $event)">
-        </project-list-item>
-    </div>
+    <section>
+        <filtered-list
+            title="Projects"
+            @add="create()">
+            <simple-list-item
+                v-for="item of projects"
+                :key="item.uuid"
+                :text="item.name"
+                :value="item"
+                :contexts="['Edit', 'Delete']"
+                @select="$emit('open', $event)">
+            </simple-list-item>
+        </filtered-list>
+    </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import clipboardCopy from 'clipboard-copy'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
-    import ProjectListItem from '@/components/ProjectListItem.vue'
+    import FilteredList from '@/components/list/filtered/FilteredList.vue'
+    import SimpleListItem from '@/components/list/simple/SimpleListItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
             Contextmenu,
-            ProjectListItem
+            FilteredList,
+            SimpleListItem
         }
     })
-    export default class ProjectLayout extends Vue {
+    export default class ProjectList extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() repositories!: any
 
@@ -54,6 +59,10 @@
 
         public back (): void {
             this.$router.push('/')
+        }
+
+        public create (): void {
+            console.log('create project')
         }
     }
 </script>

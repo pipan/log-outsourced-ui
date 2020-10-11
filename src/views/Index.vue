@@ -1,7 +1,7 @@
 <template>
     <section class="material__container">
         <div class="flexbox-row center bottom-m">
-            <h2 class="text-m flex">Projects</h2>
+            <h2 class="text-h2 flex">Projects</h2>
             <button class="btn btn--forward left-m" @click="create()">
                 <i class="material-icons md-18">add</i>
             </button>

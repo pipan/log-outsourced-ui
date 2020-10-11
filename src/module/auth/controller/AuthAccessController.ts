@@ -24,12 +24,21 @@ export class AuthAccessController implements Controller {
 
         outsourcedApi.auth().access(body)
             .then((response: any) => {
-                this.auth.dispatch({})
-                this.authTokens.insert({
-                    id: body.username + '@' + outsourcedApi.getHost(),
-                    access: response.body.access,
-                    refresh: response.body.refresh
-                })
+                if (response.ok) {
+                    this.auth.dispatch({})
+                    this.authTokens.insert({
+                        id: body.username + '@' + outsourcedApi.getHost(),
+                        access: response.body.access,
+                        refresh: response.body.refresh
+                    })
+                } else if (response.status === 401) {
+                    this.auth.dispatch({
+                        error: {
+                            status: 401,
+                            message: 'Username or password is incorrect'
+                        }
+                    })
+                }
             }).catch((err: any) => {
                 console.log('auth error', err)
             })
