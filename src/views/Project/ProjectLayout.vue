@@ -7,7 +7,6 @@
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import clipboardCopy from 'clipboard-copy'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
     import { SingleResourceWatcher } from '@/lib/watcher'

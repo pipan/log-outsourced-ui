@@ -4,6 +4,7 @@ import { ListenerApi } from './domain/listener/ListnerApi'
 import { LogApi } from './domain/log/LogApi'
 import { InviteApi } from './domain/invite/InviteApi'
 import { AuthApi } from './domain/auth/AuthApi'
+import { AdministratorApi } from './domain/administrator/AdministratorApi'
 
 export interface OutsourcedApi {
     getHost (): string;
@@ -13,4 +14,5 @@ export interface OutsourcedApi {
     log (): LogApi;
     invite (): InviteApi;
     auth (): AuthApi;
+    administrators (): AdministratorApi;
 }

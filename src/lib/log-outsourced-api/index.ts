@@ -1,5 +1,4 @@
 export { OutsourcedApi } from './OutsourcedApi'
-export { LogOutsourcedHttpApi } from './LogOutsourcedHttpApi'
 export { OutsourcedHttpApi } from './OutsourcedHttpApi'
 
 export { ProjectEntity } from './domain/project/ProjectEntity'

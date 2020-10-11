@@ -15,6 +15,7 @@ import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
 import AdministratorView from '@/views/Administrator/AdministratorView.vue'
+import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
 import ListenerDetail from '@/views/ListenerDetail.vue'
 import ListenerCreate from '@/views/ListenerCreate.vue'
 import { Framework } from '@/lib/framework'
@@ -32,6 +33,7 @@ export class VueApplication {
         }
         const repositories: any = {
             projects: framework.getRepository('projects'),
+            administrators: framework.getRepository('administrators'),
             connections: framework.getRepository('connections'),
             invites: framework.getRepository('invites'),
             alerts: framework.getRepository('alerts')
@@ -103,6 +105,15 @@ export class VueApplication {
                             component: AdministratorView,
                             props: props,
                             name: 'administrator.list',
+                            meta: {
+                                nav: 'administrator'
+                            }
+                        },
+                        {
+                            path: 'admins/invite',
+                            component: AdministratorInvite,
+                            props: props,
+                            name: 'administrator.invite',
                             meta: {
                                 nav: 'administrator'
                             }
