@@ -3,9 +3,11 @@
         <header class="material__header">
             <div class="flexbox-row space-between center flex flexfix">
                 <button class="btn btn--secondary btn--circle material__header__back" @click="back()"><i class="material-icons md-18">arrow_back</i></button>
-                <div class="material__header__title text-m text-ellipsis" v-if="connection">{{ connection.name }}</div>
+                <div class="material__header__title text-h2 text-ellipsis" v-if="connection">{{ connection.name }}</div>
             </div>
         </header>
+        <connection-navigation
+         v-if="!connection.error && !auth.error"></connection-navigation>
         <div class="material__body">
             <div class="material__container">
                 <div v-if="!connection.error">
@@ -13,6 +15,7 @@
                     <connection-login
                         v-if="auth.error && auth.error.status == 401"
                         :connection="connection"
+                        :auth="auth"
                         @cancel="back()"
                         @submit="login($event)">
                     </connection-login>
@@ -29,11 +32,10 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import clipboardCopy from 'clipboard-copy'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
     import ErrorStatus from '@/components/error/ErrorStatus.vue'
+    import ConnectionNavigation from '@/components/domain/connection/ConnectionNavigation.vue'
     import ConnectionLogin from '@/components/domain/connection/ConnectionLogin.vue'
     import { PropertyWatcher, SingleResourceWatcher } from '@/lib/watcher'
     import { PropertyChange } from '@wildebeest/repository'
@@ -41,6 +43,7 @@
     @Component({
         components: {
             ConnectionLogin,
+            ConnectionNavigation,
             ErrorStatus
         }
     })

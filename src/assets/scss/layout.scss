@@ -58,16 +58,19 @@ h1, h2, h3, h4, h5, h6 {
         display: flex;
         flex-direction: column;
         top: 66px;
-        width: 100%;
+        left: auto;
+        right: auto;
         padding: var(--unit-s);
     }
 
-    &__actions {
+    &__nav {
         box-sizing: border-box;
         position: fixed;
         display: flex;
         flex-direction: row-reverse;
-        padding: var(--unit-s);
+        justify-content: space-around;
+        padding: 0px;
+        top: auto;
         bottom: 0px;
         left: var(--unit-s);
         right: var(--unit-s);
@@ -97,10 +100,15 @@ h1, h2, h3, h4, h5, h6 {
 
         &__body {
             flex-direction: row;
+            position: absolute;
+            left: 90px;
+            right: 90px;
         }
 
-        &__actions {
+        &__nav {
             flex-direction: column;
+            padding: var(--unit-m) 0px;
+            top: 66px;
             bottom: auto;
             left: auto;
             right: auto;

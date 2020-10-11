@@ -14,6 +14,7 @@ import ProjectCreate from '@/views/ProjectCreate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
+import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import ListenerDetail from '@/views/ListenerDetail.vue'
 import ListenerCreate from '@/views/ListenerCreate.vue'
 import { Framework } from '@/lib/framework'
@@ -82,7 +83,14 @@ export class VueApplication {
                         {
                             path: '',
                             component: ProjectList,
-                            props: props
+                            props: props,
+                            name: 'connection'
+                        },
+                        {
+                            path: 'admins',
+                            component: AdministratorView,
+                            props: props,
+                            name: 'administrators'
                         }
                     ]
                 },

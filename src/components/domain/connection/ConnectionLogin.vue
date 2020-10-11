@@ -10,6 +10,7 @@
                     id="password"
                     label="Password"
                     :value="model.password"
+                    :error="auth.error.message"
                     @change="model.password = $event"></password-field>
             </div>
             <footer class="card__footer">
@@ -33,6 +34,7 @@
     })
     export default class ConnectionLogin extends Vue {
         @Prop() readonly connection!: any
+        @Prop() readonly auth!: any
 
         public model: any = {
             password: ''

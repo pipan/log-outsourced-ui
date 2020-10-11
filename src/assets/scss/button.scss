@@ -64,3 +64,19 @@ button {
         }
     }
 }
+
+@media (max-width: 959px) { 
+    .btn {
+        &-sonly--small {
+            padding: var(--unit-half);
+        }
+    }
+}
+
+@media (max-width: 1279px) and (min-width: 960px) { 
+    .btn {
+        &-monly--small {
+            padding: var(--unit-half);
+        }
+    }
+}

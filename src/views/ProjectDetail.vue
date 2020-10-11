@@ -2,7 +2,7 @@
     <div class="flex flexbox-row">
         <section class="material__container" :class="{'hide-m': listener}">
             <div class="flexbox-row center bottom-m">
-                <h2 class="text-m flex">Rules</h2>
+                <h2 class="text-h2 flex">Rules</h2>
                 <button class="btn btn--forward left-m" @click="create()">
                     <i class="material-icons md-18">add</i>
                 </button>
