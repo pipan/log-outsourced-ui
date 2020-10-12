@@ -39,7 +39,7 @@ export class ProjectOpenController implements Controller {
                         loading: false,
                         error: {
                             status: response.status,
-                            message: response.body.error
+                            message: response.body.message
                         }
                     })
                 } else {
