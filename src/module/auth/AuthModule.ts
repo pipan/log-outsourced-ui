@@ -16,7 +16,11 @@ export class AuthModule implements Module {
 
     public install (context: Context): void {
         const authTokens = SimpleRepository.fromKeyProperty('id')
-        const auth = new EagerObservable({})
+        const auth = new EagerObservable({
+            error: {
+                status: 401
+            }
+        })
 
         context.observables().insert('auth', auth)
         context.repositories().insert('authTokens', authTokens)

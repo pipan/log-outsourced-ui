@@ -4,16 +4,18 @@ import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
 import Index from '@/views/Index.vue'
 import NotFound from '@/views/Error/NotFound.vue'
+import ConnectionGuard from '@/views/Connection/ConnectionGuard.vue'
 import ConnectionLayout from '@/views/Connection/ConnectionLayout.vue'
 import ConnectionList from '@/views/Connection/ConnectionList.vue'
 import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
 import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
 import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
+import ProjectGuard from '@/views/Project/ProjectGuard.vue'
+import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import ProjectUpdate from '@/views/Project/ProjectUpdate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
-import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
 import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
@@ -30,7 +32,8 @@ export class VueApplication {
 
         const properties: any = {
             auth: framework.getObservable('auth'),
-            connection: framework.getObservable('connection')
+            connection: framework.getObservable('connection'),
+            project: framework.getObservable('project')
         }
         const repositories: any = {
             projects: framework.getRepository('projects'),
@@ -80,53 +83,74 @@ export class VueApplication {
                 },
                 {
                     path: '/:connectionId',
-                    component: ConnectionLayout,
+                    component: ConnectionGuard,
                     props: props,
                     children: [
                         {
                             path: '',
-                            component: ProjectList,
+                            component: ConnectionLayout,
                             props: props,
-                            name: 'project.list',
-                            meta: {
-                                nav: 'project'
-                            }
+                            name: 'connection',
+                            children: [
+                                {
+                                    path: '',
+                                    component: ProjectList,
+                                    props: props,
+                                    name: 'project.list',
+                                    meta: {
+                                        nav: 'project'
+                                    }
+                                },
+                                {
+                                    path: 'project/create',
+                                    component: ProjectCreate,
+                                    props: props,
+                                    name: 'project.create',
+                                    meta: {
+                                        nav: 'project'
+                                    }
+                                },
+                                {
+                                    path: 'project/edit',
+                                    component: ProjectUpdate,
+                                    props: props,
+                                    name: 'project.edit',
+                                    meta: {
+                                        nav: 'project'
+                                    }
+                                },
+                                {
+                                    path: 'admins',
+                                    component: AdministratorView,
+                                    props: props,
+                                    name: 'administrator.list',
+                                    meta: {
+                                        nav: 'administrator'
+                                    }
+                                },
+                                {
+                                    path: 'admins/invite',
+                                    component: AdministratorInvite,
+                                    props: props,
+                                    name: 'administrator.invite',
+                                    meta: {
+                                        nav: 'administrator'
+                                    }
+                                }
+                            ]
                         },
                         {
-                            path: 'project/create',
-                            component: ProjectCreate,
+                            path: ':projectUuid',
+                            component: ProjectGuard,
                             props: props,
-                            name: 'project.create',
-                            meta: {
-                                nav: 'project'
-                            }
-                        },
-                        {
-                            path: 'project/edit',
-                            component: ProjectUpdate,
-                            props: props,
-                            name: 'project.edit',
-                            meta: {
-                                nav: 'project'
-                            }
-                        },
-                        {
-                            path: 'admins',
-                            component: AdministratorView,
-                            props: props,
-                            name: 'administrator.list',
-                            meta: {
-                                nav: 'administrator'
-                            }
-                        },
-                        {
-                            path: 'admins/invite',
-                            component: AdministratorInvite,
-                            props: props,
-                            name: 'administrator.invite',
-                            meta: {
-                                nav: 'administrator'
-                            }
+                            children: [
+                                {
+                                    path: '',
+                                    component: ProjectLayout,
+                                    props: props,
+                                    name: 'project'
+                                }
+                            ]
                         }
                     ]
                 },

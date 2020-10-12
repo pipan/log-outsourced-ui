@@ -1,6 +1,6 @@
 <template>
     <div class="nav__item" :class="{'nav__item--active': active}">
-        <button class="btn btn--secondary btn--square btn-sonly--small btn-monly--small" @click="select()">
+        <button class="btn btn--secondary btn--square btn-sonly--small btn-monly--small btn--fullwidth" @click="select()">
             <i class="material-icons">{{ icon }}</i>
             <div class="text text--small top-lonly-s">{{ text }}</div>
         </button>

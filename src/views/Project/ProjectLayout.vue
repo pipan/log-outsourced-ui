@@ -1,6 +1,17 @@
 <template>
     <div>
-        <router-view></router-view>
+        <header class="material__header">
+            <div class="flexbox-row space-between center flex flexfix">
+                <button class="btn btn--secondary btn--circle material__header__back" @click="back()"><i class="material-icons md-18">arrow_back</i></button>
+                <div class="material__header__title text-h2 text-ellipsis" v-if="project">{{ project.name }}</div>
+            </div>
+        </header>
+        <project-navigation></project-navigation>
+        <div class="material__body">
+            <div class="material__container">
+                <router-view></router-view>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -8,12 +19,12 @@
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import { ProjectEntity } from '@/lib/log-outsourced-api'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
+    import ProjectNavigation from '@/components/domain/project/ProjectNavigation.vue'
     import { SingleResourceWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
-            Contextmenu
+            ProjectNavigation
         }
     })
     export default class ProjectLayout extends Vue {
@@ -27,11 +38,8 @@
         private watcher = new SingleResourceWatcher()
 
         @Watch('$route.params.projectUuid', { immediate: true })
-        public onUuidChange (value: string, oldValue: string): void {
-            this.channel.dispatch({
-                event: 'project@open',
-                data: value
-            })
+        public onIdChange (value: string, oldValue: string): void {
+            this.watcher.withId(value)
         }
 
         public created (): void {
@@ -48,7 +56,10 @@
         }
 
         public back (): void {
-            this.$router.push('/')
+            this.$router.push({
+                name: 'project.list',
+                params: this.$route.params
+            })
         }
     }
 </script>

@@ -52,6 +52,10 @@ button {
         padding: var(--unit-half);
     }
 
+    &--fullwidth {
+        width: 100%;
+    }
+
     &--forward {
         background-color: var(--primary);
         color: var(--bg-level-top);

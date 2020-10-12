@@ -9,7 +9,7 @@
                 :text="item.name"
                 :value="item"
                 :contexts="['Edit', 'Delete']"
-                @select="$emit('open', $event)"
+                @select="open($event)"
                 @edit="edit($event)"
                 @delete="remove($event)">
             </simple-list-item>
@@ -61,6 +61,16 @@
 
         public back (): void {
             this.$router.push('/')
+        }
+
+        public open (project: any): void {
+            this.$router.push({
+                name: 'project',
+                params: {
+                    connectionId: this.$route.params.connectionId,
+                    projectUuid: project.uuid
+                }
+            })
         }
 
         public remove (project: any): void {

@@ -1,9 +1,7 @@
 import { ProjectApi } from './ProjectApi'
 import { ProjectEntity } from './ProjectEntity'
 import { ProjectReadAdapter } from './ProjectReadAdapter'
-import { AdapterHelper, Adapter } from '@/lib/adapter'
-import { ListenerEntity } from '../listener/ListenerEntity'
-import { ListenerReadAdapter } from '../listener/ListenerReadAdapter'
+import { Adapter } from '@/lib/adapter'
 import { SuccessfulStatusFilter } from '../../http/SuccessfulStatusFilter'
 import { HttpFetch } from '../../http/HttpFetch'
 import { AuthHttp } from '../auth/AuthHttp'
@@ -11,7 +9,6 @@ import { AuthHttp } from '../auth/AuthHttp'
 export class ProjectHttpApi implements ProjectApi {
     private host: string
     private readAdapter: Adapter<any, ProjectEntity>
-    private listenerReadAdapter: Adapter<any, ListenerEntity>
     private filter: SuccessfulStatusFilter
     private authHttp: AuthHttp
 
@@ -19,7 +16,6 @@ export class ProjectHttpApi implements ProjectApi {
         this.host = host
         this.authHttp = authHttp
         this.readAdapter = new ProjectReadAdapter()
-        this.listenerReadAdapter = new ListenerReadAdapter()
         this.filter = new SuccessfulStatusFilter()
     }
 
@@ -31,16 +27,12 @@ export class ProjectHttpApi implements ProjectApi {
         return this.authHttp.send(http)
     }
 
-    public view (uuid: string): Promise<any> {
-        return fetch(this.host + '/api/v1/projects/' + uuid)
-            .then(this.filter.filter.bind(this.filter))
-            .then((data: any) => {
-                const listAdapter: Adapter<Array<any>, Array<ListenerEntity>> = AdapterHelper.listOf(this.listenerReadAdapter)
-                return {
-                    project: this.readAdapter.adapt(data.project),
-                    listeners: listAdapter.adapt(data.listeners)
-                }
-            })
+    public get (uuid: string): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects/' + uuid)
+            .withJson()
+            .withMethod('GET')
+
+        return this.authHttp.send(http)
     }
 
     public delete (project: any): Promise<Response> {
