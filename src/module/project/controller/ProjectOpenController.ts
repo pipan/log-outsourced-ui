@@ -32,7 +32,6 @@ export class ProjectOpenController implements Controller {
 
         outsourcedApi.projects().get(data)
             .then((response: any) => {
-                console.log('open project', response)
                 if (!response.ok) {
                     this.repo.insert({
                         uuid: data,

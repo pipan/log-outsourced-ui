@@ -7,6 +7,7 @@ import { ConnectionModule } from './module/connection'
 import { AdministratorModule } from './module/administrator'
 import { AuthModule } from './module/auth'
 import { EagerObservable } from '@wildebeest/observable'
+import { UserModule } from './module/user'
 
 // const validatorBuilder: ExtendableValidatorBuilder = new ExtendableValidatorBuilder()
 // validatorBuilder.extend(new BasicValidatorRuleProvide())
@@ -19,7 +20,8 @@ const framework: ModularFramework = new ModularFramework([
     new AuthModule(api),
     new ConnectionModule(api),
     new AdministratorModule(api),
-    new ProjectModule(api)
+    new ProjectModule(api),
+    new UserModule(api)
     // new HandlerModule(httpApi.handlers()),
     // new ListenerModule(httpApi.listeners(), httpApi.log())
 ])

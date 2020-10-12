@@ -1,16 +1,15 @@
 <template>
     <section>
         <filtered-list
-            title="Projects"
+            title="Roles"
             @add="create()">
             <simple-list-item
-                v-for="item of projects"
+                v-for="item of roles"
                 :key="item.uuid"
-                :text="item.name"
+                :text="item.username"
                 :value="item"
-                :contexts="['Edit', 'Delete']"
+                :contexts="['Delete']"
                 @select="open($event)"
-                @edit="edit($event)"
                 @delete="remove($event)">
             </simple-list-item>
         </filtered-list>
@@ -32,66 +31,59 @@
             SimpleListItem
         }
     })
-    export default class ProjectList extends Vue {
+    export default class RoleView extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() repositories!: any
 
-        public projects: any[] = []
+        public roles: any[] = []
 
-        public projectProperty: Channel<any> = new ProxyChannel()
+        public rolesProperty: Channel<any> = new ProxyChannel()
 
         private watcher = new ListWatcher()
 
         public created (): void {
             this.channel.dispatch({
-                event: 'project@load'
+                event: 'user@load'
             })
 
-            this.projectProperty.connectFn((items: any[]) => {
-                this.projects = items
+            this.rolesProperty.connectFn((items: any[]) => {
+                this.roles = items
             })
 
-            this.watcher.withRepository(this.repositories.projects)
-                .withBinding(this.projectProperty)
+            // this.watcher.withRepository(this.repositories.users)
+            //     .withBinding(this.usersProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
         }
 
-        public open (project: any): void {
-            this.$router.push({
-                name: 'user.list',
-                params: {
-                    connectionId: this.$route.params.connectionId,
-                    projectUuid: project.uuid
-                }
-            })
+        public open (role: any): void {
+            console.log('role open', role)
+            // this.$router.push({
+            //     name: 'project',
+            //     params: {
+            //         connectionId: this.$route.params.connectionId,
+            //         projectUuid: project.uuid
+            //     }
+            // })
         }
 
-        public remove (project: any): void {
+        public remove (role: any): void {
+            console.log('role remove', role)
             this.channel.dispatch({
-                event: 'project@delete',
+                event: 'role@delete',
                 data: {
-                    body: project
+                    body: role
                 }
             })
         }
 
         public create (): void {
+            console.log('role create')
             this.$router.push({
-                name: 'project.create',
+                name: 'role.create',
                 params: this.$route.params
-            })
-        }
-
-        public edit (project: any): void {
-            this.$router.push({
-                name: 'project.edit',
-                params: this.$route.params,
-                query: {
-                    uuid: project.uuid
-                }
             })
         }
     }

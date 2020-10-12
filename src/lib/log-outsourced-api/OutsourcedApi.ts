@@ -5,6 +5,7 @@ import { LogApi } from './domain/log/LogApi'
 import { InviteApi } from './domain/invite/InviteApi'
 import { AuthApi } from './domain/auth/AuthApi'
 import { AdministratorApi } from './domain/administrator/AdministratorApi'
+import { UserApi } from './domain/user/UserApi'
 
 export interface OutsourcedApi {
     getHost (): string;
@@ -15,4 +16,5 @@ export interface OutsourcedApi {
     invite (): InviteApi;
     auth (): AuthApi;
     administrators (): AdministratorApi;
+    users (): UserApi;
 }

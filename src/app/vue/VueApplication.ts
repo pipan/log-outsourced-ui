@@ -14,6 +14,10 @@ import ProjectGuard from '@/views/Project/ProjectGuard.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
+import UserView from '@/views/User/UserView.vue'
+import UserCreate from '@/views/User/UserCreate.vue'
+import RoleView from '@/views/Role/RoleView.vue'
+import LoggingView from '@/views/Logging/LoggingView.vue'
 import ProjectUpdate from '@/views/Project/ProjectUpdate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
@@ -38,6 +42,7 @@ export class VueApplication {
         const repositories: any = {
             projects: framework.getRepository('projects'),
             administrators: framework.getRepository('administrators'),
+            users: framework.getRepository('users'),
             connections: framework.getRepository('connections'),
             invites: framework.getRepository('invites'),
             alerts: framework.getRepository('alerts')
@@ -148,7 +153,45 @@ export class VueApplication {
                                     path: '',
                                     component: ProjectLayout,
                                     props: props,
-                                    name: 'project'
+                                    name: 'project',
+                                    children: [
+                                        {
+                                            path: 'user',
+                                            component: UserView,
+                                            props: props,
+                                            name: 'user.list',
+                                            meta: {
+                                                nav: 'user'
+                                            }
+                                        },
+                                        {
+                                            path: 'user/create',
+                                            component: UserCreate,
+                                            props: props,
+                                            name: 'user.create',
+                                            meta: {
+                                                nav: 'user'
+                                            }
+                                        },
+                                        {
+                                            path: 'role',
+                                            component: RoleView,
+                                            props: props,
+                                            name: 'role.list',
+                                            meta: {
+                                                nav: 'role'
+                                            }
+                                        },
+                                        {
+                                            path: 'logging',
+                                            component: LoggingView,
+                                            props: props,
+                                            name: 'logging.list',
+                                            meta: {
+                                                nav: 'logging'
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
