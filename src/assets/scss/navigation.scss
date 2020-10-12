@@ -3,6 +3,7 @@
         padding: 0px;
         border-top: solid 1px transparent;
         border-right: none;
+        flex-grow: 1;
 
         &--active {
             border-color: var(--primary);
@@ -16,6 +17,7 @@
             padding: 0px var(--unit-m);
             border-top: none;
             border-right: solid 1px transparent;
+            flex-grow: auto;
     
             &--active {    
                 border-color: var(--primary);

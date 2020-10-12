@@ -37,9 +37,7 @@
             }
             this.$router.push({
                 name: this.map[navName],
-                params: {
-                    connectionId: this.$route.params.connectionId
-                }
+                params: this.$route.params
             })
         }
     }

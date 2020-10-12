@@ -1,39 +1,50 @@
-import { Controller, PropertyEntity } from '@/lib/framework'
-import { ProjectEntity, ProjectApi } from '@/lib/log-outsourced-api'
-import { AlertHelper } from '@/module/alert'
-import { Channel } from '@wildebeest/observable'
+import { Controller } from '@/lib/framework'
+import { StatefulChannel } from '@wildebeest/observable'
 import { Repository } from '@wildebeest/repository'
 
 export class ProjectOpenController implements Controller {
-    private projects: Repository<ProjectEntity>
-    private properties: Repository<PropertyEntity>
-    private channel: Channel<any>
-    private projectApi: ProjectApi
+    private api: StatefulChannel<any>
+    private repo: Repository<any>
 
-    public constructor (projects: Repository<ProjectEntity>, properties: Repository<PropertyEntity>, projectApi: ProjectApi, channel: Channel<any>) {
-        this.projects = projects
-        this.properties = properties
-        this.channel = channel
-        this.projectApi = projectApi
+    public constructor (repo: Repository<any>, api: StatefulChannel<any>) {
+        this.repo = repo
+        this.api = api
     }
 
-    public action (uuid: string): void {
-        this.projectApi.view(uuid)
-            .then((result: any) => {
-                this.projects.insert(result.project)
-                this.channel.dispatch({
-                    event: 'listener@set.all',
-                    data: result.listeners
-                })
-                this.properties.insert(
-                    new PropertyEntity('project.active.uuid', uuid)
-                )
+    public action (data: string): void {
+        const outsourcedApi = this.api.get()
+        if (!outsourcedApi) {
+            console.error('Cannot get project: API is not available.')
+            return
+        }
+
+        const result = this.repo.query()
+            .property(data)
+
+        const project = result.get()
+        result.close()
+        if (!project) {
+            this.repo.insert({
+                uuid: data,
+                loading: true
             })
-            .catch((error: any) => {
-                console.error(error)
-                this.channel.dispatch(
-                    AlertHelper.errorEvent(error)
-                )
+        }
+
+        outsourcedApi.projects().get(data)
+            .then((response: any) => {
+                console.log('open project', response)
+                if (!response.ok) {
+                    this.repo.insert({
+                        uuid: data,
+                        loading: false,
+                        error: {
+                            status: response.status,
+                            message: response.body.error
+                        }
+                    })
+                } else {
+                    this.repo.insert(response.body)
+                }
             })
     }
 }
