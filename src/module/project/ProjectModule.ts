@@ -30,7 +30,5 @@ export class ProjectModule implements Module {
         context.controllers().insert('project@update', new ProjectUpdateController(projects, this.api, channel))
 
         context.controllers().insert('project@open', new ProjectOpenController(projects, this.api))
-
-        channel.dispatch({ event: 'project.create@reset' })
     }
 }

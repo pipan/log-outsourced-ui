@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-view v-if="!project.error"></router-view>
+        <router-view v-if="!project.error && !project.loading"></router-view>
         <div class="material__body" v-if="project.error">
             <div class="material__container">
                 <error-status

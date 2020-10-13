@@ -28,7 +28,7 @@
         public emit (item: string, event: any): void {
             (this.$refs.contextmenu as Contextmenu).close()
             event.stopPropagation()
-            const snakeCase = item.toLowerCase().replaceAll(' ', '_')
+            const snakeCase = item.toLowerCase().split(' ').join('_')
             this.$emit('select', {
                 name: snakeCase,
                 value: this.value

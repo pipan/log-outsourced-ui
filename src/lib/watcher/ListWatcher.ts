@@ -9,6 +9,7 @@ export class ListWatcher<T extends Identifiable> {
 
     public start (): ListWatcher<T> {
         if (!this.repository) {
+            console.error('List watcher has no repository set')
             return this
         }
 

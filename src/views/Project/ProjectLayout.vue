@@ -9,7 +9,8 @@
         <project-navigation></project-navigation>
         <div class="material__body">
             <div class="material__container">
-                <router-view></router-view>
+                <router-view
+                    :project="project"></router-view>
             </div>
         </div>
     </div>

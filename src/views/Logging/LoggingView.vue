@@ -1,16 +1,15 @@
 <template>
     <section>
         <filtered-list
-            title="Projects"
+            title="Log listeners"
             @add="create()">
             <simple-list-item
-                v-for="item of projects"
+                v-for="item of listeners"
                 :key="item.uuid"
-                :text="item.name"
+                :text="item.username"
                 :value="item"
-                :contexts="['Edit', 'Delete']"
+                :contexts="['Delete']"
                 @select="open($event)"
-                @edit="edit($event)"
                 @delete="remove($event)">
             </simple-list-item>
         </filtered-list>
@@ -32,66 +31,59 @@
             SimpleListItem
         }
     })
-    export default class ProjectList extends Vue {
+    export default class LoggingView extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() repositories!: any
 
-        public projects: any[] = []
+        public listeners: any[] = []
 
-        public projectProperty: Channel<any> = new ProxyChannel()
+        public listenersProperty: Channel<any> = new ProxyChannel()
 
         private watcher = new ListWatcher()
 
         public created (): void {
-            this.channel.dispatch({
-                event: 'project@load'
+            // this.channel.dispatch({
+            //     event: 'user@load'
+            // })
+
+            this.listenersProperty.connectFn((items: any[]) => {
+                this.listeners = items
             })
 
-            this.projectProperty.connectFn((items: any[]) => {
-                this.projects = items
-            })
-
-            this.watcher.withRepository(this.repositories.projects)
-                .withBinding(this.projectProperty)
+            // this.watcher.withRepository(this.repositories.users)
+            //     .withBinding(this.usersProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
         }
 
-        public open (project: any): void {
-            this.$router.push({
-                name: 'user.list',
-                params: {
-                    connectionId: this.$route.params.connectionId,
-                    projectUuid: project.uuid
-                }
-            })
+        public open (listener: any): void {
+            console.log('listener open', listener)
+            // this.$router.push({
+            //     name: 'project',
+            //     params: {
+            //         connectionId: this.$route.params.connectionId,
+            //         projectUuid: project.uuid
+            //     }
+            // })
         }
 
-        public remove (project: any): void {
+        public remove (listener: any): void {
+            console.log('listener remove', listener)
             this.channel.dispatch({
-                event: 'project@delete',
+                event: 'listener@delete',
                 data: {
-                    body: project
+                    body: listener
                 }
             })
         }
 
         public create (): void {
+            console.log('listener create')
             this.$router.push({
-                name: 'project.create',
+                name: 'listener.create',
                 params: this.$route.params
-            })
-        }
-
-        public edit (project: any): void {
-            this.$router.push({
-                name: 'project.edit',
-                params: this.$route.params,
-                query: {
-                    uuid: project.uuid
-                }
             })
         }
     }

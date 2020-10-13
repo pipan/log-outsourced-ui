@@ -1,46 +1,45 @@
 <template>
     <section>
-        <project-card
-            title="Create project"
+        <user-card
+            title="Create user"
             @submit="save($event)"
-            @cancel="cancel()"></project-card>
+            @cancel="cancel()"></user-card>
     </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import ProjectCard from '@/components/domain/project/ProjectCard.vue'
+    import UserCard from '@/components/domain/user/UserCard.vue'
     import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
-            ProjectCard
+            UserCard
         }
     })
-    export default class ProjectCreate extends Vue {
+    export default class UserCreate extends Vue {
         @Prop() readonly channel!: Channel<any>
+        @Prop() readonly project!: any
 
         public cancel (): void {
             this.$router.push({
-                name: 'project.list',
+                name: 'user.list',
                 params: this.$route.params
             })
         }
 
         public save (model: any): void {
             this.channel.dispatch({
-                event: 'project@create',
+                event: 'user@create',
                 data: {
                     body: {
-                        name: model.name
+                        username: model.username,
+                        project_uuid: this.project.uuid
                     },
                     success: (project: any) => {
                         this.$router.push({
                             name: 'user.list',
-                            params: {
-                                connectionId: this.$route.params.connectionId,
-                                projectUuid: project.uuid
-                            }
+                            params: this.$route.params
                         })
                     }
                 }

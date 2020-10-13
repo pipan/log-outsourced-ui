@@ -1,34 +1,28 @@
 import { Controller } from '@/lib/framework'
-import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { AlertHelper } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
-import { Channel, StatefulChannel } from '@wildebeest/observable'
+import { Channel } from '@wildebeest/observable'
+import { CreateHttp } from '@/lib/log-outsourced-api/http'
 
-export class ProjectCreateController implements Controller {
-    private projects: Repository<any>
+export class CreateController implements Controller {
+    private repo: Repository<any>
     private channel: Channel<any>
-    private api: StatefulChannel<OutsourcedApi>
+    private createHttp: CreateHttp
 
     public constructor (
-        projects: Repository<any>,
-        api: StatefulChannel<OutsourcedApi>,
+        repo: Repository<any>,
+        http: CreateHttp,
         channel: Channel<any>
     ) {
-        this.projects = projects
+        this.repo = repo
         this.channel = channel
-        this.api = api
+        this.createHttp = http
     }
 
     public action (data?: any): void {
-        const outsourcedApi = this.api.get()
-        if (!outsourcedApi) {
-            console.error('Cannot create projects: API is not available.')
-            return
-        }
-
-        outsourcedApi.projects().create(data.body)
+        this.createHttp.create(data.body)
             .then((response: any) => {
-                this.projects.insert(response.body)
+                this.repo.insert(response.body)
                 this.channel.dispatch(
                     AlertHelper.infoEvent('Project has been created')
                 )
