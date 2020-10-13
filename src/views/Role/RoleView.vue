@@ -6,7 +6,7 @@
             <simple-list-item
                 v-for="item of roles"
                 :key="item.uuid"
-                :text="item.username"
+                :text="item.name"
                 :value="item"
                 :contexts="['Delete']"
                 @select="open($event)"
@@ -34,6 +34,7 @@
     export default class RoleView extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() repositories!: any
+        @Prop() project!: any
 
         public roles: any[] = []
 
@@ -43,15 +44,16 @@
 
         public created (): void {
             this.channel.dispatch({
-                event: 'user@load'
+                event: 'role@load',
+                data: this.project.uuid
             })
 
             this.rolesProperty.connectFn((items: any[]) => {
                 this.roles = items
             })
 
-            // this.watcher.withRepository(this.repositories.users)
-            //     .withBinding(this.usersProperty)
+            this.watcher.withRepository(this.repositories.roles)
+                .withBinding(this.rolesProperty)
         }
 
         public beforeDestroy (): void {

@@ -16,6 +16,8 @@ import { AdministratorApi } from './domain/administrator/AdministratorApi'
 import { AdministratorHttpApi } from './domain/administrator/AdministratorHttpApi'
 import { UserHttpApi } from './domain/user/UserHttpApi'
 import { UserApi } from './domain/user/UserApi'
+import { RoleHttpApi } from './domain/role/RoleHttpApi'
+import { RoleApi } from './domain/role/RoleApi'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
@@ -31,6 +33,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             project: new ProjectHttpApi(host, authHttp),
             administrators: new AdministratorHttpApi(host, authHttp),
             users: new UserHttpApi(host, authHttp),
+            roles: new RoleHttpApi(host, authHttp),
             handler: new HandlerHttpApi(host),
             listener: new ListenerHttpApi(host),
             log: new LogHttpApi(host),
@@ -73,5 +76,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
     public users (): UserApi {
         return this.domains.users
+    }
+
+    public roles (): RoleApi {
+        return this.domains.roles
     }
 }
