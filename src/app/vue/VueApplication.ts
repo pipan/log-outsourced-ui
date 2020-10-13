@@ -17,6 +17,7 @@ import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import RoleView from '@/views/Role/RoleView.vue'
+import RoleCreate from '@/views/Role/RoleCreate.vue'
 import LoggingView from '@/views/Logging/LoggingView.vue'
 import ProjectUpdate from '@/views/Project/ProjectUpdate.vue'
 import ProjectSettings from '@/views/ProjectSettings.vue'
@@ -43,6 +44,7 @@ export class VueApplication {
             projects: framework.getRepository('projects'),
             administrators: framework.getRepository('administrators'),
             users: framework.getRepository('users'),
+            roles: framework.getRepository('roles'),
             connections: framework.getRepository('connections'),
             invites: framework.getRepository('invites'),
             alerts: framework.getRepository('alerts')
@@ -178,6 +180,15 @@ export class VueApplication {
                                             component: RoleView,
                                             props: props,
                                             name: 'role.list',
+                                            meta: {
+                                                nav: 'role'
+                                            }
+                                        },
+                                        {
+                                            path: 'role/create',
+                                            component: RoleCreate,
+                                            props: props,
+                                            name: 'role.create',
                                             meta: {
                                                 nav: 'role'
                                             }
