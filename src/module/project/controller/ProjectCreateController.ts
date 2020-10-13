@@ -27,14 +27,13 @@ export class ProjectCreateController implements Controller {
         }
 
         outsourcedApi.projects().create(data.body)
-            .then((project: any) => {
-                this.projects.insert(project)
+            .then((response: any) => {
+                this.projects.insert(response.body)
                 this.channel.dispatch(
                     AlertHelper.infoEvent('Project has been created')
                 )
-                // this.channel.dispatch({ event: 'project.create@reset' })
                 if (data.success) {
-                    data.success(project)
+                    data.success(response.body)
                 }
             })
             .catch((error: any) => {

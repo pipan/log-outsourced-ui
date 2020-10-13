@@ -36,8 +36,11 @@
                     },
                     success: (project: any) => {
                         this.$router.push({
-                            name: 'project.list',
-                            params: this.$route.params
+                            name: 'user.list',
+                            params: {
+                                connectionId: this.$route.params.connectionId,
+                                projectUuid: project.uuid
+                            }
                         })
                     }
                 }
