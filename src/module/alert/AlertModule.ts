@@ -1,22 +1,33 @@
-import { Module } from '@/lib/framework'
+import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
 import { AlertCreateController } from './controller/AlertCreateController'
 import { AlertRemoveController } from './controller/AlertRemoveController'
-import { Context } from '@/lib/framework/module/Context'
-import { AlertContract } from '@/components/alert'
-import { AlertAutohideService } from './service/AlertAutohideService'
-import { Repository, SimpleRepository } from '@wildebeest/repository'
-import { IncrementalStringGenerator } from '@/lib/generator'
+import { AutohideAlertable } from './AutohideAlertable'
+import { Alertable } from './Alertable'
 
 export class AlertModule implements Module {
-    public install (context: Context): void {
-        const alerts: Repository<AlertContract> = SimpleRepository.createIdentifiable()
+    private alertable: Alertable
+    private store: Store
 
-        context.repositories().insert('alerts', alerts)
+    constructor () {
+        this.store = (new Store())
+            .withRepository('alerts')
 
-        context.controllers().insert('alert@create', new AlertCreateController(new IncrementalStringGenerator(), alerts))
-        context.controllers().insert('alert@remove', new AlertRemoveController(alerts))
+        this.alertable = new AutohideAlertable(
+            this.store.get('alerts')
+        )
+    }
 
-        const autohideService: AlertAutohideService = new AlertAutohideService(3000, alerts, context.channel())
-        autohideService.start()
+    public getStore (): Store {
+        return this.store
+    }
+
+    public getControllerProvider (store: Store): ControllerProvider {
+        return (new Management())
+            .withAction('alert@create', new AlertCreateController(this.alertable))
+            .withAction('alert@remove', new AlertRemoveController(store.get('alerts')))
+    }
+
+    public getAlertable (): Alertable {
+        return this.alertable
     }
 }

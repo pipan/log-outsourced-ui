@@ -1,5 +1,6 @@
 export { OutsourcedApi } from './OutsourcedApi'
 export { OutsourcedHttpApi } from './OutsourcedHttpApi'
+export { OutsourcedProxyApi } from './OutsourcedProxyApi'
 
 export { ProjectEntity } from './domain/project/ProjectEntity'
 export { ProjectApi } from './domain/project/ProjectApi'

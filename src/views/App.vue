@@ -10,7 +10,6 @@
     import AlertContainer from '@/components/alert/AlertContainer.vue'
     import { AlertContract } from '../components/alert'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ObservableList } from '@wildebeest/repository'
     import { ListWatcher } from '@/lib/watcher'
 
     @Component({
@@ -19,7 +18,7 @@
         }
     })
     export default class App extends Vue {
-        @Prop() readonly repositories!: any
+        @Prop() readonly store!: any
         @Prop() public channel!: Channel<any>
 
         public alerts: Array<any> = []
@@ -31,7 +30,7 @@
             this.alertsChannel.connectFn((items: any[]) => {
                 this.alerts = items
             })
-            this.watcher.withRepository(this.repositories.alerts)
+            this.watcher.withRepository(this.store.alerts)
                 .withBinding(this.alertsChannel)
         }
 

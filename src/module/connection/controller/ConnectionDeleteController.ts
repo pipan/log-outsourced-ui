@@ -1,22 +1,18 @@
 import { Controller } from '@/lib/framework'
-import { AlertHelper } from '@/module/alert'
-import { Channel } from '@wildebeest/observable'
+import { Alertable } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
 
 export class ConnectionDeleteController implements Controller {
     private connections: Repository<any>
-    private channel: Channel<any>
+    private alertable: Alertable
 
-    public constructor (connections: Repository<any>, channel: Channel<any>) {
+    public constructor (connections: Repository<any>, alertable: Alertable) {
         this.connections = connections
-        this.channel = channel
+        this.alertable = alertable
     }
 
     public action (data?: any): void {
         this.connections.remove(data)
-
-        this.channel.dispatch(
-            AlertHelper.infoEvent('Connection has been removed')
-        )
+        this.alertable.info('Connection has been removed')
     }
 }

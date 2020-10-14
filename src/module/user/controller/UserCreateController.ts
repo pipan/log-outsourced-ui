@@ -1,17 +1,17 @@
 import { Controller } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { Repository } from '@wildebeest/repository'
-import { Channel, StatefulChannel } from '@wildebeest/observable'
+import { Channel } from '@wildebeest/observable'
 import { CreateController } from '@/module/CreateController'
 
 export class UserCreateController implements Controller {
     private repo: Repository<any>
     private channel: Channel<any>
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
 
     public constructor (
         repo: Repository<any>,
-        api: StatefulChannel<OutsourcedApi>,
+        api: OutsourcedApi,
         channel: Channel<any>
     ) {
         this.repo = repo
@@ -20,8 +20,8 @@ export class UserCreateController implements Controller {
     }
 
     public action (data?: any): void {
-        const createController = new CreateController(this.repo, this.api.get().users(), this.channel)
+        // const createController = new CreateController(this.repo, this.api.users(), this.channel)
 
-        createController.action(data)
+        // createController.action(data)
     }
 }

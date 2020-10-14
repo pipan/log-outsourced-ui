@@ -1,15 +1,14 @@
 import { Module } from '@/lib/framework'
 import { Context } from '@/lib/framework/module/Context'
 import { SimpleRepository } from '@wildebeest/repository'
-import { StatefulChannel } from '@wildebeest/observable'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { UserLoadController } from './controller/UserLoadController'
 import { UserCreateController } from './controller/UserCreateController'
 
-export class UserModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+export class UserModule {
+    private api: OutsourcedApi
 
-    constructor (api: StatefulChannel<OutsourcedApi>) {
+    constructor (api: OutsourcedApi) {
         this.api = api
     }
 

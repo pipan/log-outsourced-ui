@@ -10,9 +10,9 @@ import { AdministratorInviteController } from './controller/AdministratorInviteC
 import { AdministratorDeleteController } from './controller/AdministratorDeleteController'
 
 export class AdministratorModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
 
-    public constructor (api: StatefulChannel<OutsourcedApi>) {
+    public constructor (api: OutsourcedApi) {
         this.api = api
     }
 

@@ -1,38 +1,47 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
-import { Channel, EagerObservable, StatefulChannel } from '@wildebeest/observable'
+import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
 import { Storage } from '@/lib/storage'
 import { ConnectionCreateController } from './controller/ConnectionCreateController'
 import { ConnectionDeleteController } from './controller/ConnectionDeleteController'
 import { ConnectionUpdateController } from './controller/ConnectionUpdateController'
 import { ConnectionOpenController } from './controller/ConnectionOpenController'
-import { ConnectionCloseController } from './controller/ConnectionCloseController'
-import { OutsourcedApi } from '@/lib/log-outsourced-api'
-import { UnauthorizedController } from '../auth/controller/UnauthorizedController'
-import { ConnectionErrorController } from './controller/ConnectionErrorController'
+import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
+import { Alertable } from '../alert'
 
 export class ConnectionModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedProxyApi
+    private alertable: Alertable
+    private store: Store
 
-    constructor (api: StatefulChannel<OutsourcedApi>) {
+    constructor (alertable: Alertable, api: OutsourcedProxyApi) {
         this.api = api
+        this.alertable = alertable
+        this.store = (new Store())
+            .withItem('connections', Storage.createLocalStorageRepository('connections'))
     }
 
-    public install (context: Context): void {
-        const channel: Channel<any> = context.channel()
-        const connections = Storage.createLocalStorageRepository('connections')
-        const activeConnection = new EagerObservable()
-        const authTokens = context.repositories().get('authTokens')
+    public getStore (): Store {
+        return this.store
+    }
 
-        context.repositories().insert('connections', connections)
-        context.observables().insert('connection', activeConnection)
-
-        context.controllers().insert('connection@create', new ConnectionCreateController(connections, channel))
-        context.controllers().insert('connection@delete', new ConnectionDeleteController(connections, channel))
-        context.controllers().insert('connection@update', new ConnectionUpdateController(connections, channel))
-        context.controllers().insert('connection@open', new ConnectionOpenController(activeConnection, connections, this.api, authTokens))
-        context.controllers().insert('connection@close', new ConnectionCloseController(activeConnection))
-
-        context.controllers().insert('connection@error', new ConnectionErrorController(activeConnection))
+    public getControllerProvider (store: Store): ControllerProvider {
+        const repo = store.get('connections')
+        const authTokens = store.get('authTokens')
+        return (new Management())
+            .withAction(
+                'connection@create',
+                new ConnectionCreateController(repo, this.alertable)
+            )
+            .withAction(
+                'connection@delete',
+                new ConnectionDeleteController(repo, this.alertable)
+            )
+            .withAction(
+                'connection@update',
+                new ConnectionUpdateController(repo, this.alertable)
+            )
+            .withAction(
+                'connection@open',
+                new ConnectionOpenController(repo, this.api, authTokens)
+            )
     }
 }

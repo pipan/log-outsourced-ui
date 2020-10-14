@@ -1,23 +1,17 @@
 import { Controller } from '@/lib/framework'
-import { StatefulChannel } from '@wildebeest/observable'
 import { Repository } from '@wildebeest/repository'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
 
 export class ProjectOpenController implements Controller {
-    private api: StatefulChannel<any>
+    private api: OutsourcedApi
     private repo: Repository<any>
 
-    public constructor (repo: Repository<any>, api: StatefulChannel<any>) {
+    public constructor (repo: Repository<any>, api: OutsourcedApi) {
         this.repo = repo
         this.api = api
     }
 
     public action (data: string): void {
-        const outsourcedApi = this.api.get()
-        if (!outsourcedApi) {
-            console.error('Cannot get project: API is not available.')
-            return
-        }
-
         const result = this.repo.query()
             .property(data)
 
@@ -30,7 +24,7 @@ export class ProjectOpenController implements Controller {
             })
         }
 
-        outsourcedApi.projects().get(data)
+        this.api.projects().get(data)
             .then((response: any) => {
                 if (!response.ok) {
                     this.repo.insert({

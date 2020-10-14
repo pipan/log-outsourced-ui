@@ -1,21 +1,21 @@
 import { Controller } from '@/lib/framework'
 import { Repository } from '@wildebeest/repository'
-import { CreateHttp } from '@/lib/log-outsourced-api/http'
+import { UpdateHttp } from '@/lib/log-outsourced-api/http'
 import { Alertable } from './alert'
 
-export class CreateController implements Controller {
+export class UpdateController implements Controller {
     private repo: Repository<any>
     private alertable: Alertable
-    private httpFactory: () => CreateHttp
+    private httpFactory: () => UpdateHttp
 
-    public constructor (repo: Repository<any>, httpFactory: () => CreateHttp, alertable: Alertable) {
+    public constructor (repo: Repository<any>, httpFactory: () => UpdateHttp, alertable: Alertable) {
         this.repo = repo
         this.alertable = alertable
         this.httpFactory = httpFactory
     }
 
     public action (data?: any): void {
-        this.httpFactory().create(data.body)
+        this.httpFactory().update(data.body)
             .then((response: any) => {
                 this.repo.insert(response.body)
                 this.alertable.success('')

@@ -25,7 +25,6 @@
     import IconListItem from '@/components/list/simple/IconListItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
     import clipboardCopy from 'clipboard-copy'
-    import { AlertHelper } from '@/module/alert'
 
     @Component({
         components: {
@@ -85,9 +84,9 @@
         public copyInviteUrl (admin: any): void {
             const connection = this.properties.connection.get()
             clipboardCopy(location.origin + '/connection/invite/' + admin.invite_token + '?host=' + connection.host)
-            this.channel.dispatch(
-                AlertHelper.infoEvent('Invite URL was copied to clipboard')
-            )
+            // this.channel.dispatch(
+            //     AlertHelper.infoEvent('Invite URL was copied to clipboard')
+            // )
         }
     }
 </script>

@@ -6,7 +6,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { AlertContract } from './contract/AlertContract'
     import Alert from './Alert.vue'
 
     @Component({
@@ -15,7 +14,7 @@
         }
     })
     export default class AlertContainer extends Vue {
-        @Prop({ default: () => [] }) readonly alerts!: Array<AlertContract>
+        @Prop({ default: () => [] }) readonly alerts!: Array<any>
 
         public close (alert: any): void {
             this.$emit('close', alert)

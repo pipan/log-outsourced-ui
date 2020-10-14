@@ -34,10 +34,9 @@
     })
     export default class ProjectList extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
+        @Prop() store!: any
 
         public projects: any[] = []
-
         public projectProperty: Channel<any> = new ProxyChannel()
 
         private watcher = new ListWatcher()
@@ -51,7 +50,7 @@
                 this.projects = items
             })
 
-            this.watcher.withRepository(this.repositories.projects)
+            this.watcher.withRepository(this.store.projects)
                 .withBinding(this.projectProperty)
         }
 

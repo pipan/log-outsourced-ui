@@ -1,16 +1,13 @@
 import { Controller } from '@/lib/framework'
 import { Repository } from '@wildebeest/repository'
-import { StatefulChannel } from '@wildebeest/observable'
-import { OutsourcedApi, OutsourcedHttpApi } from '@/lib/log-outsourced-api'
+import { OutsourcedHttpApi, OutsourcedProxyApi } from '@/lib/log-outsourced-api'
 
 export class ConnectionOpenController implements Controller {
-    private connection: StatefulChannel<any>
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedProxyApi
     private repo: Repository<any>
-    private authTokens: any
+    private authTokens: Repository<any>
 
-    public constructor (connection: StatefulChannel<any>, repo: Repository<any>, api: StatefulChannel<OutsourcedApi>, authTokens: any) {
-        this.connection = connection
+    public constructor (repo: Repository<any>, api: OutsourcedProxyApi, authTokens: Repository<any>) {
         this.repo = repo
         this.api = api
         this.authTokens = authTokens
@@ -20,17 +17,9 @@ export class ConnectionOpenController implements Controller {
         let result = this.repo.query()
             .property(data)
 
-        let connection = result.get()
+        const connection = result.get()
         result.close()
         if (!connection) {
-            connection = {
-                id: data,
-                error: {
-                    status: 404,
-                    message: 'Connection not found'
-                }
-            }
-            this.connection.dispatch(connection)
             return
         }
 
@@ -40,7 +29,6 @@ export class ConnectionOpenController implements Controller {
         const token = result.get() || {}
         result.close()
 
-        this.connection.dispatch(connection)
-        this.api.dispatch(new OutsourcedHttpApi(connection.host, token))
+        this.api.set(new OutsourcedHttpApi(connection.host, token))
     }
 }

@@ -6,10 +6,10 @@ import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { RoleLoadController } from './controller/RoleLoadController'
 import { RoleCreateController } from './controller/RoleCreateController'
 
-export class RoleModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+export class RoleModule {
+    private api: OutsourcedApi
 
-    constructor (api: StatefulChannel<OutsourcedApi>) {
+    constructor (api: OutsourcedApi) {
         this.api = api
     }
 

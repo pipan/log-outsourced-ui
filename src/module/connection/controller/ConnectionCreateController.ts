@@ -1,15 +1,14 @@
 import { Controller } from '@/lib/framework'
-import { AlertHelper } from '@/module/alert'
-import { Channel } from '@wildebeest/observable'
 import { Repository } from '@wildebeest/repository'
+import { Alertable } from '@/module/alert'
 
 export class ConnectionCreateController implements Controller {
     private connections: Repository<any>
-    private channel: Channel<any>
+    private alertable: Alertable
 
-    public constructor (connections: Repository<any>, channel: Channel<any>) {
+    public constructor (connections: Repository<any>, alertable: Alertable) {
         this.connections = connections
-        this.channel = channel
+        this.alertable = alertable
     }
 
     public action (data?: any): void {
@@ -21,12 +20,7 @@ export class ConnectionCreateController implements Controller {
             host: body.host,
             username: body.username
         })
-
-        this.channel.dispatch(
-            AlertHelper.infoEvent('Connection has been created')
-        )
-
-        // this.channel.dispatch({ event: 'listener.create@reset' })
+        this.alertable.info('Connection has been created')
         if (data.success) {
             data.success()
         }
