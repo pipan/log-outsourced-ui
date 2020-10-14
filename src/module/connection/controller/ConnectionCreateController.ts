@@ -1,28 +1,22 @@
 import { Controller } from '@/lib/framework'
-import { Repository } from '@wildebeest/repository'
 import { Alertable } from '@/module/alert'
+import { ConnectionService } from '../ConnectionService'
 
 export class ConnectionCreateController implements Controller {
-    private connections: Repository<any>
     private alertable: Alertable
+    private service: ConnectionService
 
-    public constructor (connections: Repository<any>, alertable: Alertable) {
-        this.connections = connections
+    public constructor (service: ConnectionService, alertable: Alertable) {
+        this.service = service
         this.alertable = alertable
     }
 
     public action (data?: any): void {
         const body = data.body
-        const id = Math.floor(Math.random() * 1000000)
-        this.connections.insert({
-            id: id + '',
-            name: body.name,
-            host: body.host,
-            username: body.username
-        })
+        const connection = this.service.create(body)
         this.alertable.info('Connection has been created')
         if (data.success) {
-            data.success()
+            data.success(connection)
         }
     }
 }

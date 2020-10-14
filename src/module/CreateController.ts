@@ -17,6 +17,9 @@ export class CreateController implements Controller {
     public action (data?: any): void {
         this.httpFactory().create(data.body)
             .then((response: any) => {
+                if (!response.ok) {
+                    return response
+                }
                 this.repo.insert(response.body)
                 this.alertable.success('')
                 if (data.success) {

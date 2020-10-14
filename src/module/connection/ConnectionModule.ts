@@ -6,17 +6,21 @@ import { ConnectionUpdateController } from './controller/ConnectionUpdateControl
 import { ConnectionOpenController } from './controller/ConnectionOpenController'
 import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
 import { Alertable } from '../alert'
+import { ConnectionService } from './ConnectionService'
 
 export class ConnectionModule implements Module {
     private api: OutsourcedProxyApi
     private alertable: Alertable
     private store: Store
+    private service: ConnectionService
 
     constructor (alertable: Alertable, api: OutsourcedProxyApi) {
         this.api = api
         this.alertable = alertable
         this.store = (new Store())
             .withItem('connections', Storage.createLocalStorageRepository('connections'))
+
+        this.service = new ConnectionService(this.store.get('connections'))
     }
 
     public getStore (): Store {
@@ -29,7 +33,7 @@ export class ConnectionModule implements Module {
         return (new Management())
             .withAction(
                 'connection@create',
-                new ConnectionCreateController(repo, this.alertable)
+                new ConnectionCreateController(this.service, this.alertable)
             )
             .withAction(
                 'connection@delete',
@@ -43,5 +47,9 @@ export class ConnectionModule implements Module {
                 'connection@open',
                 new ConnectionOpenController(repo, this.api, authTokens)
             )
+    }
+
+    public getService (): ConnectionService {
+        return this.service
     }
 }

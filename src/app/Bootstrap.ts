@@ -4,6 +4,8 @@ import { AlertModule } from '@/module/alert'
 import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
 import { AuthModule } from '@/module/auth'
 import { ProjectModule } from '@/module/project'
+import { AdministratorModule } from '@/module/administrator'
+import { InviteModule } from '@/module/invite'
 
 export class Bootstrap {
     public static getModules (): Module[] {
@@ -13,7 +15,9 @@ export class Bootstrap {
         const auth = new AuthModule(api)
         const connection = new ConnectionModule(alert.getAlertable(), api)
         const project = new ProjectModule(api, alert.getAlertable())
+        const administrator = new AdministratorModule(api, alert.getAlertable())
+        const invite = new InviteModule(connection.getService(), alert.getAlertable())
 
-        return [alert, auth, connection, project]
+        return [alert, auth, connection, project, administrator, invite]
     }
 }
