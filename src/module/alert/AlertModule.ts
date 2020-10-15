@@ -1,4 +1,4 @@
-import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { AlertCreateController } from './controller/AlertCreateController'
 import { AlertRemoveController } from './controller/AlertRemoveController'
 import { AutohideAlertable } from './AutohideAlertable'
@@ -17,14 +17,19 @@ export class AlertModule implements Module {
         )
     }
 
-    public getStore (): Store {
-        return this.store
+    public boot (context: BootContext): void {
+        context.withStore(this.store)
     }
 
-    public getControllerProvider (store: Store): ControllerProvider {
-        return (new Management())
-            .withAction('alert@create', new AlertCreateController(this.alertable))
-            .withAction('alert@remove', new AlertRemoveController(store.get('alerts')))
+    public register (context: RegisterContext, store: Store): void {
+        context.withController(
+                'alert@create',
+                new AlertCreateController(this.alertable)
+            )
+            .withController(
+                'alert@remove',
+                new AlertRemoveController(store.get('alerts'))
+            )
     }
 
     public getAlertable (): Alertable {

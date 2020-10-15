@@ -1,6 +1,6 @@
 <template>
     <field :id="_uid" :label="label">
-        <div>{{ this.value }}</div>
+        <div class="top-s">{{ this.value }}</div>
     </field>
 </template>
 

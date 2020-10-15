@@ -1,4 +1,4 @@
-import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
 import { ModuleBuilder } from '../ModuleBuilder'
@@ -20,15 +20,15 @@ export class ProjectModule implements Module {
             .build()
     }
 
-    public getStore (): Store {
-        return this.cudModule.getStore()
+    public boot (context: BootContext): void {
+        this.cudModule.boot(context)
     }
 
-    public getControllerProvider (store: Store): ControllerProvider {
+    public register (context: RegisterContext, store: Store): void {
+        this.cudModule.register(context, store)
+
         const repo = store.get('projects')
-        return (new Management())
-            .withProvider(this.cudModule.getControllerProvider(store))
-            .withAction(
+        context.withController(
                 'project@load',
                 new ProjectLoadAllController(repo, this.api)
             )

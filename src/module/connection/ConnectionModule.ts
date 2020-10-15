@@ -1,21 +1,17 @@
-import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { Storage } from '@/lib/storage'
 import { ConnectionCreateController } from './controller/ConnectionCreateController'
 import { ConnectionDeleteController } from './controller/ConnectionDeleteController'
 import { ConnectionUpdateController } from './controller/ConnectionUpdateController'
-import { ConnectionOpenController } from './controller/ConnectionOpenController'
-import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
 import { Alertable } from '../alert'
 import { ConnectionService } from './ConnectionService'
 
 export class ConnectionModule implements Module {
-    private api: OutsourcedProxyApi
     private alertable: Alertable
     private store: Store
     private service: ConnectionService
 
-    constructor (alertable: Alertable, api: OutsourcedProxyApi) {
-        this.api = api
+    constructor (alertable: Alertable) {
         this.alertable = alertable
         this.store = (new Store())
             .withItem('connections', Storage.createLocalStorageRepository('connections'))
@@ -23,29 +19,23 @@ export class ConnectionModule implements Module {
         this.service = new ConnectionService(this.store.get('connections'))
     }
 
-    public getStore (): Store {
-        return this.store
+    public boot (context: BootContext): void {
+        context.withStore(this.store)
     }
 
-    public getControllerProvider (store: Store): ControllerProvider {
+    public register (context: RegisterContext, store: Store): void {
         const repo = store.get('connections')
-        const authTokens = store.get('authTokens')
-        return (new Management())
-            .withAction(
+        context.withController(
                 'connection@create',
                 new ConnectionCreateController(this.service, this.alertable)
             )
-            .withAction(
+            .withController(
                 'connection@delete',
                 new ConnectionDeleteController(repo, this.alertable)
             )
-            .withAction(
+            .withController(
                 'connection@update',
                 new ConnectionUpdateController(repo, this.alertable)
-            )
-            .withAction(
-                'connection@open',
-                new ConnectionOpenController(repo, this.api, authTokens)
             )
     }
 

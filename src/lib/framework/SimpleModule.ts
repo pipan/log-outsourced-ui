@@ -1,6 +1,8 @@
 import { Module } from './Module'
 import { ControllerProvider } from './ControllerProvider'
 import { Store } from './Store'
+import { BootContext } from './BootContext'
+import { RegisterContext } from './RegisterContext'
 
 export class SimpleModule implements Module {
     private store: Store
@@ -11,11 +13,11 @@ export class SimpleModule implements Module {
         this.controllerProvider = controllerProvider
     }
 
-    public getStore (): Store {
-        return this.store
+    public boot (context: BootContext): void {
+        context.withStore(this.store)
     }
 
-    public getControllerProvider (): ControllerProvider {
-        return this.controllerProvider
+    public register (context: RegisterContext, store: Store): void {
+        context.withControllerProvider(this.controllerProvider)
     }
 }

@@ -15,3 +15,5 @@ export { Module } from './Module'
 export { SimpleModule } from './SimpleModule'
 
 export { Kernel } from './Kernel'
+export { RegisterContext } from './RegisterContext'
+export { BootContext } from './BootContext'

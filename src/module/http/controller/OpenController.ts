@@ -1,16 +1,19 @@
 import { Controller } from '@/lib/framework'
 import { Repository } from '@wildebeest/repository'
-import { OutsourcedHttpApi, OutsourcedProxyApi } from '@/lib/log-outsourced-api'
+import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
+import { ApiFactory } from '../ApiFactory'
 
-export class ConnectionOpenController implements Controller {
+export class OpenController implements Controller {
     private api: OutsourcedProxyApi
     private repo: Repository<any>
     private authTokens: Repository<any>
+    private factory: ApiFactory
 
-    public constructor (repo: Repository<any>, api: OutsourcedProxyApi, authTokens: Repository<any>) {
+    public constructor (repo: Repository<any>, api: OutsourcedProxyApi, authTokens: Repository<any>, factory: ApiFactory) {
         this.repo = repo
         this.api = api
         this.authTokens = authTokens
+        this.factory = factory
     }
 
     public action (data?: any): void {
@@ -20,6 +23,9 @@ export class ConnectionOpenController implements Controller {
         const connection = result.get()
         result.close()
         if (!connection) {
+            this.api.set(
+                this.factory.create('')
+            )
             return
         }
 
@@ -29,6 +35,8 @@ export class ConnectionOpenController implements Controller {
         const token = result.get() || {}
         result.close()
 
-        this.api.set(new OutsourcedHttpApi(connection.host, token))
+        this.api.set(
+            this.factory.create(connection.host, token)
+        )
     }
 }

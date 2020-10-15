@@ -1,4 +1,4 @@
-import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { AdministratorLoadController } from './controller/AdministratorLoadController'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { AdministratorInviteController } from './controller/AdministratorInviteController'
@@ -18,19 +18,19 @@ export class AdministratorModule implements Module {
             .build()
     }
 
-    public getStore (): Store {
-        return this.dModule.getStore()
+    public boot (context: BootContext): void {
+        this.dModule.boot(context)
     }
 
-    public getControllerProvider (store: Store): ControllerProvider {
+    public register (context: RegisterContext, store: Store): void {
+        this.dModule.register(context, store)
+
         const repo = store.get('administrators')
-        return (new Management())
-            .withProvider(this.dModule.getControllerProvider(store))
-            .withAction(
+        context.withController(
                 'administrator@load',
                 new AdministratorLoadController(repo, this.api)
             )
-            .withAction(
+            .withController(
                 'administrator@invite',
                 new AdministratorInviteController(repo, this.api)
             )

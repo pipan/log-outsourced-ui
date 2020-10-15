@@ -1,4 +1,4 @@
-import { Module, Store, ControllerProvider, Management } from '@/lib/framework'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { InviteLoadController } from './controller/InviteLoadController'
 import { InviteAcceptController } from './controller/InviteAcceptController'
 import { ConnectionService } from '../connection'
@@ -16,18 +16,17 @@ export class InviteModule implements Module {
             .withRepository('invites', 'invite_token')
     }
 
-    public getStore (): Store {
-        return this.store
+    public boot (context: BootContext): void {
+        context.withStore(this.store)
     }
 
-    public getControllerProvider (store: Store): ControllerProvider {
+    public register (context: RegisterContext, store: Store): void {
         const repo = store.get('invites')
-        return (new Management())
-            .withAction(
+        context.withController(
                 'invite@load',
                 new InviteLoadController(repo, this.alertable)
             )
-            .withAction(
+            .withController(
                 'invite@accept',
                 new InviteAcceptController(repo, this.connectionService, this.alertable)
             )
