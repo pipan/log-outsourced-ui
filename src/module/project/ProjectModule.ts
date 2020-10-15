@@ -15,7 +15,7 @@ export class ProjectModule implements Module {
 
         this.cudModule = (new ModuleBuilder('project'))
             .withCreateAction(() => this.api.projects(), alertable)
-            .withCreateAction(() => this.api.projects(), alertable)
+            .withDeleteAction(() => this.api.projects(), alertable)
             .withUpdateAction(() => this.api.projects(), alertable)
             .build()
     }

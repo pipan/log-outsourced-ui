@@ -53,7 +53,7 @@ export class Kernel implements RegisterContext, BootContext {
     public process (key: string, payload: any): void {
         const actions = this.management.getActions()
         if (!actions[key]) {
-            console.warn('Action was not found: ' + key)
+            console.debug('Action was not found: ' + key)
             return
         }
 
