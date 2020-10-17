@@ -33,7 +33,7 @@
     })
     export default class UserView extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
+        @Prop() store!: any
         @Prop() project!: any
 
         public users: any[] = []
@@ -52,7 +52,7 @@
                 this.users = items
             })
 
-            this.watcher.withRepository(this.repositories.users)
+            this.watcher.withRepository(this.store.users)
                 .withBinding(this.usersProperty)
         }
 

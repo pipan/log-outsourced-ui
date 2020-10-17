@@ -11,7 +11,7 @@ export class ApiFactory {
     public create (host: string, tokens: any = {}): OutsourcedApi {
         const api = new OutsourcedHttpApi(host, tokens)
         api.connectFn((event: any) => {
-            const status = event.type === 'error' ? -1 : event.response.status
+            const status = event.type === 'error' ? 'error' : event.response.status
             this.channel.dispatch({
                 status: status,
                 response: event.response

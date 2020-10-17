@@ -8,7 +8,6 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import AlertContainer from '@/components/alert/AlertContainer.vue'
-    import { AlertContract } from '../components/alert'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { ListWatcher } from '@/lib/watcher'
 
@@ -38,7 +37,7 @@
             this.watcher.stop()
         }
 
-        public closeAlert (alert: AlertContract): void {
+        public closeAlert (alert: any): void {
             this.channel.dispatch({
                 event: 'alert@remove',
                 data: alert

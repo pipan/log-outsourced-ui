@@ -1,5 +1,4 @@
-import { Module, PropertyEntity } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
+import { Module, PropertyEntity, BootContext, RegisterContext, Store } from '@/lib/framework'
 import { ListenerCreateResetController } from './controller/ListenerCreateResetController'
 import { ListenerCreateController } from './controller/ListenerCreateController'
 import { ListenerApi, ListenerEntity } from '@/lib/log-outsourced-api'
@@ -24,35 +23,43 @@ export class ListenerModule implements Module {
         this.logApi = logApi
     }
 
-    public install (context: Context): void {
-        const channel: Channel<any> = context.channel()
-        const listeners: Repository<ListenerEntity> = SimpleRepository.createIdentifiable()
+    public boot (context: BootContext): void {
+        console.log('empty module')
+    }
 
-        context.repositories().insert('listeners', listeners)
+    public register (context: RegisterContext, store: Store): void {
+        console.log('empty module')
+    }
 
-        const properties: Repository<PropertyEntity> = context.repositories().get('properties')!
-        properties.insert(new PropertyEntity('listener.create', undefined))
-        properties.insert(new PropertyEntity('listener.edit', undefined))
-        properties.insert(new PropertyEntity('listener.active', undefined))
-        properties.insert(new PropertyEntity('listener.active.uuid', ''))
+    public install (): void {
+        // const channel: Channel<any> = context.channel()
+        // const listeners: Repository<ListenerEntity> = SimpleRepository.createIdentifiable()
 
-        context.controllers().insert('listener@set.all', new ListenerSetAllController(listeners))
-        context.controllers().insert('listener.create@reset', new ListenerCreateResetController(properties))
-        context.controllers().insert('listener@create', new ListenerCreateController(listeners, this.listenerApi, channel))
-        context.controllers().insert('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, channel))
-        context.controllers().insert('listener@update', new ListenerUpdateController(listeners, this.listenerApi, channel))
+        // context.repositories().insert('listeners', listeners)
 
-        context.controllers().insert('listener@open', new ListenerOpenController(properties))
-        context.controllers().insert('listener@close', new ListenerCloseController(properties))
+        // const properties: Repository<PropertyEntity> = context.repositories().get('properties')!
+        // properties.insert(new PropertyEntity('listener.create', undefined))
+        // properties.insert(new PropertyEntity('listener.edit', undefined))
+        // properties.insert(new PropertyEntity('listener.active', undefined))
+        // properties.insert(new PropertyEntity('listener.active.uuid', ''))
 
-        context.controllers().insert('listener@test', new ListenerTestController(this.logApi, channel))
+        // context.controllers().insert('listener@set.all', new ListenerSetAllController(listeners))
+        // context.controllers().insert('listener.create@reset', new ListenerCreateResetController(properties))
+        // context.controllers().insert('listener@create', new ListenerCreateController(listeners, this.listenerApi, channel))
+        // context.controllers().insert('listener@delete', new ListenerDeleteController(listeners, this.listenerApi, channel))
+        // context.controllers().insert('listener@update', new ListenerUpdateController(listeners, this.listenerApi, channel))
 
-        const editListenerService: EditListenerService = new EditListenerService(properties)
-        editListenerService.start()
+        // context.controllers().insert('listener@open', new ListenerOpenController(properties))
+        // context.controllers().insert('listener@close', new ListenerCloseController(properties))
 
-        const activeUuidService: ListenerActiveUuidService = new ListenerActiveUuidService(listeners, properties)
-        activeUuidService.start()
+        // context.controllers().insert('listener@test', new ListenerTestController(this.logApi, channel))
 
-        context.channel().dispatch({ event: 'listener.create@reset' })
+        // const editListenerService: EditListenerService = new EditListenerService(properties)
+        // editListenerService.start()
+
+        // const activeUuidService: ListenerActiveUuidService = new ListenerActiveUuidService(listeners, properties)
+        // activeUuidService.start()
+
+        // context.channel().dispatch({ event: 'listener.create@reset' })
     }
 }

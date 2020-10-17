@@ -17,7 +17,7 @@
     import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
     import ListenerCreateCard from '@/components/domain/listener/ListenerCreateCard.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
-    import { HandlerEntity, ProjectEntity, ListenerEntity } from '../lib/log-outsourced-api'
+    import { HandlerEntity, ListenerEntity } from '../lib/log-outsourced-api'
     import { ViewRepository } from './ViewRepository'
     import { Closable, Channel } from '@wildebeest/observable'
 
@@ -37,24 +37,7 @@
         public model: any | null = null
         public handlers: Array<HandlerEntity> = []
 
-        private repo!: ViewRepository
         private closables: Array<Closable> = []
-
-        public created (): void {
-            this.repo = new ViewRepository(this)
-        }
-
-        public beforeDestroy (): void {
-            this.repo.unbindAll()
-            for (const closable of this.closables) {
-                closable.close()
-            }
-        }
-
-        public mounted (): void {
-            this.repo.bindProperty('model', this.queries.listenerCreate)
-            this.repo.bindValue('handlers', this.queries.handlers)
-        }
 
         public cancel (): void {
             this.$router.push({

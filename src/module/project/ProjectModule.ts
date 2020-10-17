@@ -3,6 +3,7 @@ import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
+import { ProjectOpenController } from './controller/ProjectOpenController'
 
 export class ProjectModule implements Module {
     private api: OutsourcedApi
@@ -32,9 +33,9 @@ export class ProjectModule implements Module {
                 'project@load',
                 new ProjectLoadAllController(repo, this.api)
             )
-            // .withAction(
-            //     'project@open',
-            //     new ProjectOpenController()
-            // )
+            .withController(
+                'project@open',
+                new ProjectOpenController(repo, this.api)
+            )
     }
 }

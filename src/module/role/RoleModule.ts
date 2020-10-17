@@ -1,25 +1,34 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
+import { Module, BootContext, RegisterContext, Store } from '@/lib/framework'
 import { SimpleRepository } from '@wildebeest/repository'
 import { StatefulChannel } from '@wildebeest/observable'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { RoleLoadController } from './controller/RoleLoadController'
 import { RoleCreateController } from './controller/RoleCreateController'
+import { ModuleBuilder } from '../ModuleBuilder'
+import { Alertable } from '../alert'
 
-export class RoleModule {
+export class RoleModule implements Module {
     private api: OutsourcedApi
+    private cModule: Module
 
-    constructor (api: OutsourcedApi) {
+    constructor (api: OutsourcedApi, alertable: Alertable) {
         this.api = api
+        this.cModule = (new ModuleBuilder('role'))
+            .withCreateAction(() => api.roles(), alertable)
+            .build()
     }
 
-    public install (context: Context): void {
-        const channel = context.channel()
-        const roles = SimpleRepository.fromKeyProperty('uuid')
+    public boot (context: BootContext): void {
+        this.cModule.boot(context)
+    }
 
-        context.repositories().insert('roles', roles)
+    public register (context: RegisterContext, store: Store): void {
+        this.cModule.register(context, store)
+        const repo = store.get('roles')
 
-        context.controllers().insert('role@load', new RoleLoadController(roles, this.api, channel))
-        context.controllers().insert('role@create', new RoleCreateController(roles, this.api, channel))
+        context.withController(
+            'role@load',
+            new RoleLoadController(repo, this.api)
+        )
     }
 }

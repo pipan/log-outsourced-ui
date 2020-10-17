@@ -1,11 +1,13 @@
 <template>
     <div>
-        <router-view v-if="!project.error && !project.loading"></router-view>
-        <div class="material__body" v-if="project.error">
+        <router-view
+            v-if="project"
+            :project="project"></router-view>
+        <div class="material__body" v-if="!project">
             <div class="material__container">
                 <error-status
-                    :status="project.error.status"
-                    :message="project.error.message">
+                    status="404"
+                    message="Project not found">
                 </error-status>
             </div>
         </div>
@@ -27,8 +29,7 @@
     })
     export default class ProejctGuard extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
-        @Prop() properties!: any
+        @Prop() store!: any
 
         public project: any = null
         public projectProperty: Channel<any> = new ProxyChannel()
@@ -49,7 +50,7 @@
                 this.project = item
             })
 
-            this.watcher.withRepository(this.repositories.projects)
+            this.watcher.withRepository(this.store.projects)
                 .withBinding(this.projectProperty)
         }
 

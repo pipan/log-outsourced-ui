@@ -21,8 +21,7 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ViewRepository } from './ViewRepository'
-    import { ProjectEntity, ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
+    import { ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
     import ListenerList from '../components/domain/listener/ListenerList.vue'
     import ListenerCreateCard from '../components/domain/listener/ListenerCreateCard.vue'
     import { Channel, Closable } from '@wildebeest/observable'
@@ -37,31 +36,11 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly queries!: any
 
-        public project: ProjectEntity | null = null
         public listeners: Array<ListenerEntity> = []
         public listener: ListenerEntity | null = null
         public handlers: Map<string, HandlerEntity> = new Map()
 
-        private repo!: ViewRepository
         private closables: Array<Closable> = []
-
-        public created (): void {
-            this.repo = new ViewRepository(this)
-        }
-
-        public beforeDestroy (): void {
-            this.repo.unbindAll()
-            for (const closable of this.closables) {
-                closable.close()
-            }
-        }
-
-        public mounted (): void {
-            this.repo.bindProperty('project', this.queries.projectActive)
-            this.repo.bindValue('listeners', this.queries.listeners)
-            this.repo.bindProperty('listener', this.queries.listenerActive)
-            this.repo.bindValue('handlers', this.queries.handlers)
-        }
 
         public create (): void {
             this.$router.push({

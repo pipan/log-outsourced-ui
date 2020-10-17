@@ -27,17 +27,9 @@ export class ProjectOpenController implements Controller {
         this.api.projects().get(data)
             .then((response: any) => {
                 if (!response.ok) {
-                    this.repo.insert({
-                        uuid: data,
-                        loading: false,
-                        error: {
-                            status: response.status,
-                            message: response.body.message
-                        }
-                    })
-                } else {
-                    this.repo.insert(response.body)
+                    return
                 }
+                this.repo.insert(response.body)
             })
     }
 }

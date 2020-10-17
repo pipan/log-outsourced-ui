@@ -6,6 +6,9 @@ import { ProjectModule } from '@/module/project'
 import { AdministratorModule } from '@/module/administrator'
 import { InviteModule } from '@/module/invite'
 import { HttpModule } from '@/module/http'
+import { UserModule } from '@/module/user'
+import { RoleModule } from '@/module/role'
+import { AppModule } from '@/module/app'
 
 export class Bootstrap {
     public static getModules (): Module[] {
@@ -16,7 +19,14 @@ export class Bootstrap {
         const project = new ProjectModule(http.getApi(), alert.getAlertable())
         const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
         const invite = new InviteModule(connection.getService(), alert.getAlertable())
+        const user = new UserModule(http.getApi(), alert.getAlertable())
+        const role = new RoleModule(http.getApi(), alert.getAlertable())
 
-        return [http, alert, auth, connection, project, administrator, invite]
+        const app = new AppModule(alert.getAlertable())
+
+        // new HandlerModule(httpApi.handlers()),
+        // new ListenerModule(httpApi.listeners(), httpApi.log())
+
+        return [http, alert, auth, connection, project, administrator, invite, user, role, app]
     }
 }

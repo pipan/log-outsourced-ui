@@ -33,7 +33,7 @@
     })
     export default class RoleView extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
+        @Prop() store!: any
         @Prop() project!: any
 
         public roles: any[] = []
@@ -52,7 +52,7 @@
                 this.roles = items
             })
 
-            this.watcher.withRepository(this.repositories.roles)
+            this.watcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
         }
 
