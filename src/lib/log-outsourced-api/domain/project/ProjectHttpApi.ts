@@ -1,22 +1,21 @@
 import { ProjectApi } from './ProjectApi'
-import { ProjectEntity } from './ProjectEntity'
-import { ProjectReadAdapter } from './ProjectReadAdapter'
-import { Adapter } from '@/lib/adapter'
-import { SuccessfulStatusFilter } from '../../http/SuccessfulStatusFilter'
 import { HttpFetch } from '../../http/HttpFetch'
 import { AuthHttp } from '../auth/AuthHttp'
+import { PromiseInterceptor } from '../../http'
+import { Dispatchable, Closable } from '@wildebeest/observable'
 
 export class ProjectHttpApi implements ProjectApi {
     private host: string
-    private readAdapter: Adapter<any, ProjectEntity>
-    private filter: SuccessfulStatusFilter
     private authHttp: AuthHttp
+    private interceptor: PromiseInterceptor = new PromiseInterceptor()
 
     public constructor (host: string, authHttp: AuthHttp) {
         this.host = host
         this.authHttp = authHttp
-        this.readAdapter = new ProjectReadAdapter()
-        this.filter = new SuccessfulStatusFilter()
+    }
+
+    public connect (dispatchable: Dispatchable<any>): Closable {
+        return this.interceptor.connect(dispatchable)
     }
 
     public all (): Promise<any> {
@@ -24,7 +23,9 @@ export class ProjectHttpApi implements ProjectApi {
             .withJson()
             .withMethod('GET')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public get (uuid: string): Promise<any> {
@@ -32,7 +33,9 @@ export class ProjectHttpApi implements ProjectApi {
             .withJson()
             .withMethod('GET')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public delete (project: any): Promise<Response> {
@@ -40,7 +43,9 @@ export class ProjectHttpApi implements ProjectApi {
             .withJson()
             .withMethod('DELETE')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public create (project: any): Promise<any> {
@@ -48,7 +53,9 @@ export class ProjectHttpApi implements ProjectApi {
             .withJson(project)
             .withMethod('POST')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public update (project: any): Promise<any> {
@@ -58,17 +65,18 @@ export class ProjectHttpApi implements ProjectApi {
             })
             .withMethod('PUT')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public generate (uuid: string): Promise<any> {
-        return fetch(this.host + '/api/v1/projects/' + uuid + '/generate', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(this.filter.filter.bind(this.filter))
-            .then(data => this.readAdapter.adapt(data))
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/projects/' + uuid + '/generate')
+            .withJson()
+            .withMethod('PUT')
+
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 }

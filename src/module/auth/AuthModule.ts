@@ -1,32 +1,43 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { AuthAccessController } from './controller/AuthAccessController'
-import { SimpleRepository } from '@wildebeest/repository'
-import { StatefulChannel, EagerObservable } from '@wildebeest/observable'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { UnauthorizedController } from './controller/UnauthorizedController'
 import { ConnectionCloseController } from './controller/ConnectionCloseController'
 
 export class AuthModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
 
-    constructor (api: StatefulChannel<OutsourcedApi>) {
+    constructor (api: OutsourcedApi) {
         this.api = api
     }
 
-    public install (context: Context): void {
-        const authTokens = SimpleRepository.fromKeyProperty('id')
-        const auth = new EagerObservable({
-            error: {
-                status: 401
-            }
-        })
+    public boot (context: BootContext): void {
+        context.withStore(
+            (new Store())
+                .withRepository('authTokens')
+                .withObservable('auth', {
+                    error: {
+                        status: 401
+                    }
+                })
+        )
+    }
 
-        context.observables().insert('auth', auth)
-        context.repositories().insert('authTokens', authTokens)
+    public register (context: RegisterContext, store: Store): void {
+        const auth = store.get('auth')
+        const tokens = store.get('authTokens')
 
-        context.controllers().insert('connection@close', new ConnectionCloseController(auth))
-        context.controllers().insert('auth@access', new AuthAccessController(authTokens, this.api, auth))
-        context.controllers().insert('error@401', new UnauthorizedController(auth))
+        context.withController(
+                'connection@close',
+                new ConnectionCloseController(auth)
+            )
+            .withController(
+                'auth@access',
+                new AuthAccessController(tokens, this.api, auth)
+            )
+            .withController(
+                'http@401',
+                new UnauthorizedController(auth)
+            )
     }
 }

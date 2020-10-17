@@ -6,15 +6,13 @@
                 <i class="material-icons md-18">add</i>
             </button>
         </div>
-        <project-list class="flex" v-bind:items="this.projects" @open="open($event)" @delete="deleteProject($event)"></project-list>
+        <project-list class="flex" v-bind:items="projects" @open="open($event)" @delete="deleteProject($event)"></project-list>
     </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import ProjectList from '@/components/ProjectList.vue'
-    import { ProjectEntity } from '@/lib/log-outsourced-api'
-    import { ViewRepository } from './ViewRepository'
     import { Channel } from '@wildebeest/observable'
     @Component({
         components: {
@@ -25,24 +23,9 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() public queries!: any
 
-        public projects: Array<ProjectEntity> = []
-        public repo!: ViewRepository
+        public project!: any
 
-        public created (): void {
-            this.repo = new ViewRepository(this)
-
-            this.channel.dispatch({ event: 'project@load.all' })
-        }
-
-        public beforeDestroy (): void {
-            this.repo.unbindAll()
-        }
-
-        public mounted (): void {
-            this.repo.bindValue('projects', this.queries.projects)
-        }
-
-        public open (project: ProjectEntity): void {
+        public open (project: any): void {
             this.$router.push('/project?pid=' + project.identify())
         }
 
@@ -50,7 +33,7 @@
             this.$router.push('/create')
         }
 
-        public deleteProject (project: ProjectEntity): void {
+        public deleteProject (project: any): void {
             this.channel.dispatch({
                 event: 'project@delete',
                 data: project

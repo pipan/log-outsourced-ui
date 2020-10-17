@@ -26,36 +26,25 @@ import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
 import ListenerDetail from '@/views/ListenerDetail.vue'
 import ListenerCreate from '@/views/ListenerCreate.vue'
-import { Framework } from '@/lib/framework'
-import { Channel } from '@wildebeest/observable'
+import { Store } from '@/lib/framework'
+import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
 
 export class VueApplication {
-    private channel: Channel<any>
+    private channel: Channel<any> = new ProxyChannel()
+    private store: Store
 
-    public constructor (framework: Framework) {
-        this.channel = framework.getChannel()
+    public constructor (store: Store) {
+        this.store = store
+    }
 
-        const properties: any = {
-            auth: framework.getObservable('auth'),
-            connection: framework.getObservable('connection'),
-            project: framework.getObservable('project')
-        }
-        const repositories: any = {
-            projects: framework.getRepository('projects'),
-            administrators: framework.getRepository('administrators'),
-            users: framework.getRepository('users'),
-            roles: framework.getRepository('roles'),
-            connections: framework.getRepository('connections'),
-            invites: framework.getRepository('invites'),
-            alerts: framework.getRepository('alerts')
-        }
-        const queries: any = {}
+    public connectFn (fn: (event: any) => void): Closable {
+        return this.channel.connectFn(fn)
+    }
 
+    public start (): void {
         const props: any = {
             channel: this.channel,
-            queries: queries,
-            repositories: repositories,
-            properties: properties
+            store: this.store.getData()
         }
 
         Vue.use(VueRouter)

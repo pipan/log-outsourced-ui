@@ -18,7 +18,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { ProjectEntity } from '@/lib/log-outsourced-api'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import ProjectNavigation from '@/components/domain/project/ProjectNavigation.vue'
     import { SingleResourceWatcher } from '@/lib/watcher'
@@ -30,31 +29,8 @@
     })
     export default class ProjectLayout extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
-
-        public project: any = null
-
-        public projectProperty: Channel<any> = new ProxyChannel()
-
-        private watcher = new SingleResourceWatcher()
-
-        @Watch('$route.params.projectUuid', { immediate: true })
-        public onIdChange (value: string, oldValue: string): void {
-            this.watcher.withId(value)
-        }
-
-        public created (): void {
-            this.projectProperty.connectFn((project: any) => {
-                this.project = project
-            })
-
-            this.watcher.withRepository(this.repositories.projects)
-                .withBinding(this.projectProperty)
-        }
-
-        public beforeDestroy (): void {
-            this.watcher.stop()
-        }
+        @Prop() store!: any
+        @Prop() project!: any
 
         public back (): void {
             this.$router.push({

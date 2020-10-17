@@ -59,6 +59,7 @@ input {
 .field {
     display: flex;
     flex-direction: row;
+    align-items: start;
     margin-top: var(--unit-m);
 
     &__label {

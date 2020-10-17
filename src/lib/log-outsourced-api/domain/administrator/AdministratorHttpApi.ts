@@ -1,12 +1,13 @@
 import { AdministratorApi } from './AdministratorApi'
-import { HttpFetch } from '../../http'
+import { HttpFetch, InterceptableHttp } from '../../http'
 import { AuthHttp } from '../auth/AuthHttp'
 
-export class AdministratorHttpApi implements AdministratorApi {
+export class AdministratorHttpApi extends InterceptableHttp implements AdministratorApi {
     private host: string
     private authHttp: AuthHttp
 
     constructor (host: string, authHttp: AuthHttp) {
+        super()
         this.host = host
         this.authHttp = authHttp
     }
@@ -16,7 +17,9 @@ export class AdministratorHttpApi implements AdministratorApi {
             .withJson()
             .withMethod('GET')
 
-        return this.authHttp.send(http)
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 
     public invite (admin: any): Promise<any> {
@@ -24,7 +27,9 @@ export class AdministratorHttpApi implements AdministratorApi {
             .withJson(admin)
             .withMethod('POST')
 
-        return this.authHttp.send(http)
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 
     public delete (admin: any): Promise<any> {
@@ -32,6 +37,8 @@ export class AdministratorHttpApi implements AdministratorApi {
             .withJson()
             .withMethod('DELETE')
 
-        return this.authHttp.send(http)
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 }

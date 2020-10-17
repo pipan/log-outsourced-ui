@@ -20,11 +20,10 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { Channel, Closable, ProxyChannel } from '@wildebeest/observable'
+    import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '../../components/contextmenu/Contextmenu.vue'
     import DoubleLinedItem from '../../components/list/double/DoubleLinedItem.vue'
     import SimpleList from '../../components/list/simple/SimpleList.vue'
-    import { ViewRepository } from '../ViewRepository'
     import { ListWatcher } from '@/lib/watcher'
 
     @Component({
@@ -36,7 +35,7 @@
     })
     export default class ConnectionList extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() readonly repositories!: any
+        @Prop() readonly store!: any
 
         public connections: Array<any> = []
         public connectionsChannel: Channel<any[]> = new ProxyChannel()
@@ -47,7 +46,7 @@
             this.connectionsChannel.connectFn((items: any[]) => {
                 this.connections = items
             })
-            this.watcher.withRepository(this.repositories.connections)
+            this.watcher.withRepository(this.store.connections)
                 .withBinding(this.connectionsChannel)
         }
 

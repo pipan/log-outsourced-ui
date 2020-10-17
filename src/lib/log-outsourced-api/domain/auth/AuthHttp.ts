@@ -11,7 +11,11 @@ export class AuthHttp {
         this.bearerToken = new BearerToken(tokens)
         this.authApi = authApi
 
-        this.authApi.connectFn((response: any) => {
+        this.authApi.connectFn((event: any) => {
+            if (event.type !== 'response') {
+                return
+            }
+            const response = event.response
             this.bearerToken.set(response.body.access, response.body.refresh)
         })
     }

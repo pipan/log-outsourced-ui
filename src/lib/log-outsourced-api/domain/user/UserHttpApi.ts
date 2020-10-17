@@ -1,14 +1,20 @@
 import { UserApi } from './UserApi'
 import { AuthHttp } from '../auth/AuthHttp'
-import { HttpFetch } from '../../http'
+import { HttpFetch, PromiseInterceptor } from '../../http'
+import { Dispatchable, Closable } from '@wildebeest/observable'
 
 export class UserHttpApi implements UserApi {
     private host: string
     private authHttp: AuthHttp
+    private interceptor: PromiseInterceptor = new PromiseInterceptor()
 
     public constructor (host: string, authHttp: AuthHttp) {
         this.host = host
         this.authHttp = authHttp
+    }
+
+    public connect (dispatchable: Dispatchable<any>): Closable {
+        return this.interceptor.connect(dispatchable)
     }
 
     public all (projectUuid: string): Promise<any> {
@@ -16,7 +22,9 @@ export class UserHttpApi implements UserApi {
             .withJson()
             .withMethod('GET')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public create (user: any): Promise<any> {
@@ -24,7 +32,9 @@ export class UserHttpApi implements UserApi {
             .withJson(user)
             .withMethod('POST')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public delete (user: any): Promise<any> {
@@ -32,7 +42,9 @@ export class UserHttpApi implements UserApi {
             .withJson()
             .withMethod('DELETE')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 
     public update (user: any): Promise<any> {
@@ -40,6 +52,8 @@ export class UserHttpApi implements UserApi {
             .withJson(user)
             .withMethod('PUT')
 
-        return this.authHttp.send(http)
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
     }
 }

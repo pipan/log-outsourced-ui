@@ -11,8 +11,7 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { ViewRepository } from './ViewRepository'
-    import { ProjectEntity, ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
+    import { ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
     import ListenerCreateCard from '../components/domain/listener/ListenerCreateCard.vue'
     import { Channel, Closable } from '@wildebeest/observable'
 
@@ -29,29 +28,12 @@
         public listener: ListenerEntity | null = null
         public handlers: Map<string, HandlerEntity> = new Map()
 
-        private repo!: ViewRepository
-
         @Watch('$route.query.rid', { immediate: true })
         public onUuidChange (value: string, oldValue: string): void {
             this.channel.dispatch({
                 event: 'listener@open',
                 data: value
             })
-        }
-
-        public created (): void {
-            this.repo = new ViewRepository(this)
-        }
-
-        public beforeDestroy (): void {
-            this.repo.unbindAll()
-            this.channel.dispatch({ event: 'listener@close' })
-        }
-
-        public mounted (): void {
-            this.repo.bindProperty('editModel', this.queries.listenerEdit)
-            this.repo.bindProperty('listener', this.queries.listenerActive)
-            this.repo.bindValue('handlers', this.queries.handlers)
         }
 
         public close (): void {

@@ -1,40 +1,34 @@
 import { Controller } from '@/lib/framework'
-import { AlertHelper } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
-import { Channel } from '@wildebeest/observable'
 import { CreateHttp } from '@/lib/log-outsourced-api/http'
+import { Alertable } from './alert'
 
 export class CreateController implements Controller {
     private repo: Repository<any>
-    private channel: Channel<any>
-    private createHttp: CreateHttp
+    private alertable: Alertable
+    private httpFactory: () => CreateHttp
 
-    public constructor (
-        repo: Repository<any>,
-        http: CreateHttp,
-        channel: Channel<any>
-    ) {
+    public constructor (repo: Repository<any>, httpFactory: () => CreateHttp, alertable: Alertable) {
         this.repo = repo
-        this.channel = channel
-        this.createHttp = http
+        this.alertable = alertable
+        this.httpFactory = httpFactory
     }
 
     public action (data?: any): void {
-        this.createHttp.create(data.body)
+        this.httpFactory().create(data.body)
             .then((response: any) => {
+                if (!response.ok) {
+                    return response
+                }
                 this.repo.insert(response.body)
-                this.channel.dispatch(
-                    AlertHelper.infoEvent('Project has been created')
-                )
+                this.alertable.success('')
                 if (data.success) {
                     data.success(response.body)
                 }
             })
             .catch((error: any) => {
                 console.error(error)
-                this.channel.dispatch(
-                    AlertHelper.errorEvent(error)
-                )
+                this.alertable.error(error)
             })
     }
 }

@@ -1,41 +1,39 @@
 import { AuthApi } from './AuthApi'
 import { HttpFetch } from '../../http/HttpFetch'
-import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
+import { Closable, Dispatchable } from '@wildebeest/observable'
+import { PromiseInterceptor } from '../../http'
 
 export class AuthHttpApi implements AuthApi {
     private host: string
-    private channel: Channel<any>
+    private promiseInterceptor = new PromiseInterceptor()
 
     public constructor (host: string) {
         this.host = host
-        this.channel = new ProxyChannel()
     }
 
-    public connectFn (fn: (item: any) => void): Closable {
-        return this.channel.connectFn(fn)
+    public connect (dispatchable: Dispatchable<any>): Closable {
+        return this.promiseInterceptor.connect(dispatchable)
+    }
+
+    public connectFn (fn: (event: any) => void): Closable {
+        return this.promiseInterceptor.connectFn(fn)
     }
 
     public access (data: any): Promise<any> {
-        return HttpFetch.fromUrl(this.host + '/api/v1/auth/access')
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/auth/access')
             .withJson(data)
             .post()
-            .then((response: any) => {
-                this.channel.dispatch(response)
-                return response
-            })
+
+        return this.promiseInterceptor.intercept(http)
     }
 
     public refresh (token: string): Promise<any> {
-        return HttpFetch.fromUrl(this.host + '/api/v1/auth/refresh')
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/auth/refresh')
             .withJson({
                 refresh_token: token
             })
             .post()
-            .then((response: any) => {
-                if (response.ok) {
-                    this.channel.dispatch(response)
-                }
-                return response
-            })
+
+        return this.promiseInterceptor.intercept(http)
     }
 }

@@ -5,29 +5,24 @@ import { StatefulChannel } from '@wildebeest/observable'
 
 export class AuthAccessController implements Controller {
     private authTokens: Repository<any>
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
     private auth: StatefulChannel<any>
 
-    constructor (authTokens: Repository<any>, api: StatefulChannel<OutsourcedApi>, auth: StatefulChannel<any>) {
+    constructor (authTokens: Repository<any>, api: OutsourcedApi, auth: StatefulChannel<any>) {
         this.authTokens = authTokens
         this.api = api
         this.auth = auth
     }
 
     public action (data?: any): void {
-        const outsourcedApi = this.api.get()
-        if (!outsourcedApi) {
-            console.error('Cannot login: API is not available.')
-            return
-        }
         const body = data.body
 
-        outsourcedApi.auth().access(body)
+        this.api.auth().access(body)
             .then((response: any) => {
                 if (response.ok) {
                     this.auth.dispatch({})
                     this.authTokens.insert({
-                        id: body.username + '@' + outsourcedApi.getHost(),
+                        id: body.username + '@' + this.api.getHost(),
                         access: response.body.access,
                         refresh: response.body.refresh
                     })

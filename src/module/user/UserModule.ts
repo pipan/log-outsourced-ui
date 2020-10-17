@@ -1,25 +1,32 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
-import { SimpleRepository } from '@wildebeest/repository'
-import { StatefulChannel } from '@wildebeest/observable'
+import { Module, BootContext, Store, RegisterContext } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { UserLoadController } from './controller/UserLoadController'
-import { UserCreateController } from './controller/UserCreateController'
+import { ModuleBuilder } from '../ModuleBuilder'
+import { Alertable } from '../alert'
 
 export class UserModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
+    private cModule: Module
 
-    constructor (api: StatefulChannel<OutsourcedApi>) {
+    constructor (api: OutsourcedApi, alertable: Alertable) {
         this.api = api
+
+        this.cModule = (new ModuleBuilder('user'))
+            .withCreateAction(() => api.users(), alertable)
+            .build()
     }
 
-    public install (context: Context): void {
-        const channel = context.channel()
-        const users = SimpleRepository.fromKeyProperty('uuid')
+    public boot (context: BootContext): void {
+        this.cModule.boot(context)
+    }
 
-        context.repositories().insert('users', users)
+    public register (context: RegisterContext, store: Store): void {
+        this.cModule.register(context, store)
+        const repo = store.get('users')
 
-        context.controllers().insert('user@load', new UserLoadController(users, this.api, channel))
-        context.controllers().insert('user@create', new UserCreateController(users, this.api, channel))
+        context.withController(
+                'user@load',
+                new UserLoadController(repo, this.api)
+            )
     }
 }

@@ -18,13 +18,16 @@ import { UserHttpApi } from './domain/user/UserHttpApi'
 import { UserApi } from './domain/user/UserApi'
 import { RoleHttpApi } from './domain/role/RoleHttpApi'
 import { RoleApi } from './domain/role/RoleApi'
+import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
     private host: string
+    private responseChannel: Channel<any>
 
     public constructor (host: string, tokens = {}) {
         this.host = host
+        this.responseChannel = new ProxyChannel()
 
         const authApi = new AuthHttpApi(host)
         const authHttp = new AuthHttp(authApi, tokens)
@@ -40,6 +43,17 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             invite: new InviteHttpApi(host),
             auth: authApi
         }
+
+        this.domains.project.connect(this.responseChannel)
+        this.domains.administrators.connect(this.responseChannel)
+        this.domains.users.connect(this.responseChannel)
+        this.domains.roles.connect(this.responseChannel)
+        this.domains.invite.connect(this.responseChannel)
+        this.domains.auth.connect(this.responseChannel)
+    }
+
+    public connectFn (fn: (data: any) => void): Closable {
+        return this.responseChannel.connectFn(fn)
     }
 
     public getHost (): string {

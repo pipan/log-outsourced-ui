@@ -26,9 +26,7 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import ButtonField from '@/components/form/ButtonField.vue'
     import { FormField } from '../lib/form'
-    import { ViewRepository } from './ViewRepository'
     import { Channel } from '@wildebeest/observable'
-    import { ProjectEntity } from '../lib/log-outsourced-api'
 
     @Component({
         components: {
@@ -39,22 +37,6 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly queries!: any
 
-        public project: ProjectEntity | null = null
-
-        private repo!: ViewRepository
-
-        public created (): void {
-            this.repo = new ViewRepository(this)
-        }
-
-        public beforeDestroy (): void {
-            this.repo.unbindAll()
-        }
-
-        public mounted (): void {
-            this.repo.bindProperty('project', this.queries.projectActive)
-        }
-
         public cancel (): void {
             this.$router.push({
                 path: '/project',
@@ -63,34 +45,36 @@
         }
 
         public generateUrl (): void {
-            this.channel.dispatch({
-                event: 'project@generate',
-                data: {
-                    body: this.project,
-                    success: (project: ProjectEntity) => {
-                        this.$router.push({
-                            path: '/project/settings',
-                            query: {
-                                pid: project.identify()
-                            }
-                        })
-                    }
-                }
-            })
+            console.log('project settings generate url')
+            // this.channel.dispatch({
+            //     event: 'project@generate',
+            //     data: {
+            //         body: this.project,
+            //         success: (project: ProjectEntity) => {
+            //             this.$router.push({
+            //                 path: '/project/settings',
+            //                 query: {
+            //                     pid: project.identify()
+            //                 }
+            //             })
+            //         }
+            //     }
+            // })
         }
 
         public remove (): void {
-            this.channel.dispatch({
-                event: 'project@delete',
-                data: {
-                    body: this.project,
-                    success: () => {
-                        this.$router.push({
-                            path: '/'
-                        })
-                    }
-                }
-            })
+            console.log('project settings remove')
+            // this.channel.dispatch({
+            //     event: 'project@delete',
+            //     data: {
+            //         body: this.project,
+            //         success: () => {
+            //             this.$router.push({
+            //                 path: '/'
+            //             })
+            //         }
+            //     }
+            // })
         }
     }
 </script>

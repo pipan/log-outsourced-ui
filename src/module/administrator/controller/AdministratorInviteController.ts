@@ -1,47 +1,27 @@
 import { Controller } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { Repository } from '@wildebeest/repository'
-import { Channel, StatefulChannel } from '@wildebeest/observable'
-import { Action, ChainAction } from '@/lib/action'
-import { UnauthorizedMiddleware, ErrorMiddleware } from '@/lib/log-outsourced-api/http'
 
 export class AdministratorInviteController implements Controller {
     private admins: Repository<any>
-    private api: StatefulChannel<OutsourcedApi>
-    private channel: Channel<any>
-    private thenChain: Action<any>
-    private catchChain: Action<any>
+    private api: OutsourcedApi
 
-    public constructor (admins: Repository<any>, api: StatefulChannel<OutsourcedApi>, channel: Channel<any>) {
+    public constructor (admins: Repository<any>, api: OutsourcedApi) {
         this.api = api
         this.admins = admins
-        this.channel = channel
-        this.thenChain = new ChainAction([
-            new UnauthorizedMiddleware(this.channel)
-        ])
-        this.catchChain = new ChainAction([
-            new ErrorMiddleware(this.channel)
-        ])
     }
 
     public action (data?: any): void {
-        const outsourcedApi = this.api.get()
-        if (!outsourcedApi) {
-            console.error('Cannot invite administrator: API is not available.')
-            return
-        }
-
-        outsourcedApi.administrators().invite(data.body)
-            .then(this.thenChain.activate.bind(this.thenChain))
+        this.api.administrators().invite(data.body)
             .then((response: any) => {
-                if (response.ok) {
-                    this.admins.insert(response.body)
-                    if (data.success) {
-                        data.success(response.body)
-                    }
+                if (!response.ok) {
+                    return response
+                }
+                this.admins.insert(response.body)
+                if (data.success) {
+                    data.success(response.body)
                 }
             })
-            .catch(this.catchChain.activate.bind(this.catchChain))
             .catch(() => {
                 this.admins.clear()
             })

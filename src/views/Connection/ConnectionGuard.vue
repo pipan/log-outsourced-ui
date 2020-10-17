@@ -1,19 +1,21 @@
 <template>
     <div>
-        <router-view v-if="!connection.error && !auth.error"></router-view>
-        <div class="material__body" v-if="connection.error || auth.error">
+        <router-view
+            :connection="connection"
+            v-if="connection && !auth.error"></router-view>
+        <div class="material__body" v-if="!connection || auth.error">
             <div class="material__container">
                 <connection-login
-                    v-if="!connection.error && auth.error && auth.error.status == 401"
+                    v-if="connection && auth.error && auth.error.status == 401"
                     :connection="connection"
                     :auth="auth"
                     @cancel="back()"
                     @submit="login($event)">
                 </connection-login>
                 <error-status
-                    v-if="connection.error"
-                    :status="connection.error.status"
-                    :message="connection.error.message">
+                    v-if="!connection"
+                    status="404"
+                    message="Connection not found">
                 </error-status>
             </div>
         </div>
@@ -37,17 +39,18 @@
     })
     export default class ConnectionGuard extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
-        @Prop() properties!: any
+        @Prop() store!: any
 
         public connection: any = null
+        public connectionProperty: Channel<any> = new ProxyChannel()
         public auth: any = {}
 
-        private watcher: any
+        private watcher = new SingleResourceWatcher()
         private authWatcher: any
 
         @Watch('$route.params.connectionId', { immediate: true })
         public onIdChange (value: string, oldValue: string): void {
+            this.watcher.withId(value)
             this.channel.dispatch({
                 event: 'connection@open',
                 data: value
@@ -55,15 +58,16 @@
         }
 
         public created (): void {
-            this.watcher = new PropertyWatcher((item: any) => {
+            this.connectionProperty.connectFn((item: any) => {
                 this.connection = item
             })
-            this.watcher.watch(this.properties.connection)
+            this.watcher.withRepository(this.store.connections)
+                .withBinding(this.connectionProperty)
 
             this.authWatcher = new PropertyWatcher((item: any) => {
                 this.auth = item
             })
-            this.authWatcher.watch(this.properties.auth)
+            this.authWatcher.watch(this.store.auth)
         }
 
         public beforeDestroy (): void {

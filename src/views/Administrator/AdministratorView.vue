@@ -25,7 +25,6 @@
     import IconListItem from '@/components/list/simple/IconListItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
     import clipboardCopy from 'clipboard-copy'
-    import { AlertHelper } from '@/module/alert'
 
     @Component({
         components: {
@@ -35,10 +34,9 @@
     })
     export default class AdministratorView extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
-        @Prop() properties!: any
+        @Prop() connection!: any
+        @Prop() store!: any
 
-        public connection: any
         public admins: any[] = []
 
         public adminProperty: Channel<any> = new ProxyChannel()
@@ -54,7 +52,7 @@
                 this.admins = items
             })
 
-            this.watcher.withRepository(this.repositories.administrators)
+            this.watcher.withRepository(this.store.administrators)
                 .withBinding(this.adminProperty)
         }
 
@@ -83,11 +81,10 @@
         }
 
         public copyInviteUrl (admin: any): void {
-            const connection = this.properties.connection.get()
-            clipboardCopy(location.origin + '/connection/invite/' + admin.invite_token + '?host=' + connection.host)
-            this.channel.dispatch(
-                AlertHelper.infoEvent('Invite URL was copied to clipboard')
-            )
+            clipboardCopy(location.origin + '/connection/invite/' + admin.invite_token + '?host=' + this.connection.host)
+            // this.channel.dispatch(
+            //     AlertHelper.infoEvent('Invite URL was copied to clipboard')
+            // )
         }
     }
 </script>

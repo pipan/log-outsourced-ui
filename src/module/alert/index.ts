@@ -1,2 +1,2 @@
 export { AlertModule } from './AlertModule'
-export { AlertHelper } from './AlertHelper'
+export { Alertable } from './Alertable'

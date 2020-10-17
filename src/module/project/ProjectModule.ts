@@ -1,34 +1,41 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
+import { Module, Store, BootContext, RegisterContext } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
-import { Channel, StatefulChannel, EagerObservable } from '@wildebeest/observable'
-import { Repository, SimpleRepository } from '@wildebeest/repository'
-import { ProjectCreateController } from './controller/ProjectCreateController'
-import { ProjectDeleteController } from './controller/ProjectDeleteController'
-import { ProjectUpdateController } from './controller/ProjectUpdateController'
+import { ModuleBuilder } from '../ModuleBuilder'
+import { Alertable } from '../alert'
 import { ProjectOpenController } from './controller/ProjectOpenController'
 
 export class ProjectModule implements Module {
-    private api: StatefulChannel<OutsourcedApi>
+    private api: OutsourcedApi
+    private alertable: Alertable
+    private cudModule: Module
 
-    public constructor (api: StatefulChannel<OutsourcedApi>) {
+    public constructor (api: OutsourcedApi, alertable: Alertable) {
         this.api = api
+        this.alertable = alertable
+
+        this.cudModule = (new ModuleBuilder('project'))
+            .withCreateAction(() => this.api.projects(), alertable)
+            .withDeleteAction(() => this.api.projects(), alertable)
+            .withUpdateAction(() => this.api.projects(), alertable)
+            .build()
     }
 
-    public install (context: Context): void {
-        const channel: Channel<any> = context.channel()
-        const activeProject = new EagerObservable()
-        const projects: Repository<any> = SimpleRepository.fromKeyProperty('uuid')
+    public boot (context: BootContext): void {
+        this.cudModule.boot(context)
+    }
 
-        context.repositories().insert('projects', projects)
-        context.observables().insert('project', activeProject)
+    public register (context: RegisterContext, store: Store): void {
+        this.cudModule.register(context, store)
 
-        context.controllers().insert('project@load', new ProjectLoadAllController(projects, this.api, channel))
-        context.controllers().insert('project@delete', new ProjectDeleteController(projects, this.api, channel))
-        context.controllers().insert('project@create', new ProjectCreateController(projects, this.api, channel))
-        context.controllers().insert('project@update', new ProjectUpdateController(projects, this.api, channel))
-
-        context.controllers().insert('project@open', new ProjectOpenController(projects, this.api))
+        const repo = store.get('projects')
+        context.withController(
+                'project@load',
+                new ProjectLoadAllController(repo, this.api)
+            )
+            .withController(
+                'project@open',
+                new ProjectOpenController(repo, this.api)
+            )
     }
 }
