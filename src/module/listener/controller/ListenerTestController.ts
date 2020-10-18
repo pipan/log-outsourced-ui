@@ -1,6 +1,4 @@
 import { Controller } from '@/lib/framework'
-import { ListenerEntity } from '@/lib/log-outsourced-api'
-import { AlertHelper } from '@/module/alert'
 import { Channel } from '@wildebeest/observable'
 import { LogApi } from '@/lib/log-outsourced-api/domain/log/LogApi'
 
@@ -41,16 +39,16 @@ export class ListenerTestController implements Controller {
             })
         }
 
-        resultPromise.then(() => {
-                this.channel.dispatch(
-                    AlertHelper.infoEvent('Test has been send')
-                )
-            })
-            .catch((error: any) => {
-                console.error(error)
-                this.channel.dispatch(
-                    AlertHelper.errorEvent('Something is wrong, cannot test rule')
-                )
-            })
+        // resultPromise.then(() => {
+        //         this.channel.dispatch(
+        //             AlertHelper.infoEvent('Test has been send')
+        //         )
+        //     })
+        //     .catch((error: any) => {
+        //         console.error(error)
+        //         this.channel.dispatch(
+        //             AlertHelper.errorEvent('Something is wrong, cannot test rule')
+        //         )
+        //     })
     }
 }

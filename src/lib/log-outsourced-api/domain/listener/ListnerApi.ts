@@ -1,7 +1,3 @@
-import { ListenerEntity } from './ListenerEntity'
+import { CreateHttp, UpdateHttp, DeleteHttp, AllForProjectHttp } from '../../http'
 
-export interface ListenerApi {
-    create (listener: ListenerEntity): Promise<ListenerEntity>;
-    update (listener: ListenerEntity): Promise<ListenerEntity>;
-    delete (listener: ListenerEntity): Promise<any>;
-}
+export interface ListenerApi extends CreateHttp, UpdateHttp, DeleteHttp, AllForProjectHttp {}

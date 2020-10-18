@@ -1,7 +1,6 @@
 <template>
-    <section class="material__container">
+    <section>
         <listener-create-card
-            v-if="model"
             :title="'Create Rule'"
             :model="model"
             :handlers="handlers"
@@ -17,9 +16,8 @@
     import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
     import ListenerCreateCard from '@/components/domain/listener/ListenerCreateCard.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
-    import { HandlerEntity, ListenerEntity } from '../lib/log-outsourced-api'
-    import { ViewRepository } from './ViewRepository'
-    import { Closable, Channel } from '@wildebeest/observable'
+    import { Closable, Channel, ProxyChannel } from '@wildebeest/observable'
+    import { ListWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
@@ -32,41 +30,55 @@
     })
     export default class ListenerCreate extends Vue {
         @Prop() readonly channel!: Channel<any>
-        @Prop() readonly queries!: any
+        @Prop() readonly store!: any
+        @Prop() readonly project!: any
 
-        public model: any | null = null
-        public handlers: Array<HandlerEntity> = []
+        public model: any = {}
 
-        private closables: Array<Closable> = []
+        public handlers: any[] = []
+        public handlersProperty: Channel<any[]> = new ProxyChannel()
+
+        public watcher = new ListWatcher()
+
+        public created (): void {
+            this.channel.dispatch({
+                event: 'handler@load'
+            })
+
+            this.handlersProperty.connectFn((items: any[]) => {
+                this.handlers = items
+            })
+
+            this.watcher.withRepository(this.store.handlers)
+                .withBinding(this.handlersProperty)
+        }
+
+        public beforeDestroy (): void {
+            this.watcher.stop()
+        }
 
         public cancel (): void {
             this.$router.push({
-                path: '/project',
+                name: 'logging.list',
                 query: this.$route.query
             })
         }
 
         public save (data: any): void {
-            const routeQuery = this.$route.query
-            data.projectUuid = routeQuery.pid
+            data.project_uuid = this.project.uuid
 
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
                     body: data,
-                    success: (listener: ListenerEntity) => {
-                        this.$router.push({ path: '/project', query: { pid: routeQuery.pid, rid: listener.identify() } })
+                    success: (listener: any) => {
+                        this.$router.push({
+                            name: 'logging.list',
+                            params: this.$route.params
+                        })
                     }
                 }
             })
-        }
-
-        public onNameChange (name: string): void {
-            this.model.name.set(name)
-        }
-
-        public onRulesChange (rules: string): void {
-            this.model.rules.set(rules)
         }
     }
 </script>

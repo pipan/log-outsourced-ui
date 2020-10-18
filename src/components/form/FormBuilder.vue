@@ -1,7 +1,12 @@
 <template>
     <div>
         <template v-for="(field, index) of fields">
-            <component :is="getComponentByType(field.type)" :value="getValue(values[field.id], field.default)" v-bind="field.props" :key="index" @change="values[field.id] = $event"></component>
+            <component
+                :is="getComponentByType(field.type)"
+                :value="getValue(values[field.id], field.default)"
+                v-bind="field.props"
+                :key="index"
+                @change="setField(field.id, $event)"></component>
         </template>
     </div>
 </template>
@@ -39,6 +44,11 @@
                 return def
             }
             return value
+        }
+
+        public setField (name: string, value: any): void {
+            this.values[name] = value
+            this.$emit('change', this.values)
         }
     }
 </script>

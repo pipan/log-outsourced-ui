@@ -6,10 +6,10 @@ export { ProjectHttpApi } from './domain/project/ProjectHttpApi'
 export { ProjectApi } from './domain/project/ProjectApi'
 
 export { HandlerApi } from './domain/handler/HandlerApi'
-export { HandlerEntity } from './domain/handler/HandlerEntity'
+export { HandlerHttpApi } from './domain/handler/HandlerHttpApi'
 
-export { ListenerEntity } from './domain/listener/ListenerEntity'
 export { ListenerApi } from './domain/listener/ListnerApi'
+export { ListenerHttpApi } from './domain/listener/ListenerHttpApi'
 
 export { ConfigApi } from './domain/config/ConfigApi'
 export { ConfigHttpApi } from './domain/config/ConfigHttpApi'

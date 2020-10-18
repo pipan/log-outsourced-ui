@@ -34,8 +34,6 @@ export class AuthAccessController implements Controller {
                         }
                     })
                 }
-            }).catch((err: any) => {
-                console.log('auth error', err)
             })
     }
 }

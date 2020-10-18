@@ -5,6 +5,8 @@ import { Repository, SimpleRepository } from '@wildebeest/repository'
 import { Alertable } from './alert'
 import { DeleteController } from './DeleteController'
 import { UpdateController } from './UpdateController'
+import { LoadHttp } from '@/lib/log-outsourced-api/http/LoadHttp'
+import { LoadController } from './LoadController'
 
 export class ModuleBuilder {
     private domain: string
@@ -26,6 +28,10 @@ export class ModuleBuilder {
 
     public withUpdateAction (httpFactory: () => UpdateHttp, alertable: Alertable): ModuleBuilder {
         return this.withAction('update', new UpdateController(this.repo, httpFactory, alertable))
+    }
+
+    public withLoadAction (httpFactory: () => LoadHttp): ModuleBuilder {
+        return this.withAction('load', new LoadController(this.repo, httpFactory))
     }
 
     public withAction (name: string, controller: Controller): ModuleBuilder {

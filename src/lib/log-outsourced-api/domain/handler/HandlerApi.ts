@@ -1,6 +1,5 @@
-import { HandlerEntity } from './HandlerEntity'
+import { LoadHttp } from '../../http/LoadHttp'
 
-export interface HandlerApi {
-    all (): Promise<Array<HandlerEntity>>;
-    view (slug: string): Promise<HandlerEntity>;
+export interface HandlerApi extends LoadHttp {
+    view (slug: string): Promise<any>;
 }

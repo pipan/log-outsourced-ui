@@ -1,56 +1,54 @@
 import { ListenerApi } from './ListnerApi'
-import { ListenerEntity } from './ListenerEntity'
-import { Adapter } from '@/lib/adapter'
-import { ListenerReadAdapter } from './ListenerReadAdapter'
+import { InterceptableHttp, HttpFetch } from '../../http'
+import { AuthHttp } from '../auth/AuthHttp'
 
-export class ListenerHttpApi implements ListenerApi {
+export class ListenerHttpApi extends InterceptableHttp implements ListenerApi {
     private host: string
-    private readSchema: Adapter<any, ListenerEntity>
+    private authHttp: AuthHttp
 
-    public constructor (host: string) {
+    public constructor (host: string, authHttp: AuthHttp) {
+        super()
         this.host = host
-        this.readSchema = new ListenerReadAdapter()
+        this.authHttp = authHttp
     }
 
-    public create (listener: ListenerEntity): Promise<ListenerEntity> {
-        return fetch(this.host + '/api/v1/listeners', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                project_uuid: listener.getProjecUuid(),
-                name: listener.getName(),
-                rules: listener.getRules(),
-                handler_slug: listener.getHandlerSlug(),
-                handler_values: listener.getHandlerValues()
-            })
-        })
-            .then(response => response.json())
-            .then(data => this.readSchema.adapt(data))
+    public all (projectUuid: string): Promise<any[]> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/listeners?project_uuid=' + projectUuid)
+            .withJson()
+            .withMethod('GET')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 
-    public update (listener: ListenerEntity): Promise<ListenerEntity> {
-        return fetch(this.host + '/api/v1/listeners/' + listener.getUuid(), {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: listener.getName(),
-                rules: listener.getRules(),
-                handler_slug: listener.getHandlerSlug(),
-                handler_values: listener.getHandlerValues()
-            })
-        })
-            .then(response => response.json())
-            .then(data => this.readSchema.adapt(data))
+    public create (listener: any): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/listeners')
+            .withJson(listener)
+            .withMethod('POST')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 
-    public delete (listener: ListenerEntity): Promise<ListenerEntity> {
-        return fetch(this.host + '/api/v1/listeners/' + listener.getUuid(), {
-            method: 'DELETE'
-        })
-            .then(response => response.json())
+    public update (listener: any): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/listeners/' + listener.uuid)
+            .withJson(listener)
+            .withMethod('PUT')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
+    }
+
+    public delete (listener: any): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/listeners/' + listener.uuid)
+            .withJson()
+            .withMethod('DELETE')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 }

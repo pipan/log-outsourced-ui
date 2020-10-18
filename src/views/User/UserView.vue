@@ -72,7 +72,6 @@
         }
 
         public remove (user: any): void {
-            console.log('user remove', user)
             this.channel.dispatch({
                 event: 'user@delete',
                 data: {

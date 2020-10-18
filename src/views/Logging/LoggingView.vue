@@ -1,17 +1,19 @@
 <template>
     <section>
         <filtered-list
-            title="Log listeners"
+            title="Logging Rules"
             @add="create()">
-            <simple-list-item
+            <icon-double-item
                 v-for="item of listeners"
                 :key="item.uuid"
-                :text="item.username"
+                :text="item.name"
+                :icon="getHandlerBySlug(item.handler_slug).meta.meta.icon"
+                :subtext="item.rules.join(', ')"
                 :value="item"
-                :contexts="['Delete']"
+                :contexts="['Delete', 'Test']"
                 @select="open($event)"
                 @delete="remove($event)">
-            </simple-list-item>
+            </icon-double-item>
         </filtered-list>
     </section>
 </template>
@@ -21,56 +23,83 @@
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
     import FilteredList from '@/components/list/filtered/FilteredList.vue'
-    import SimpleListItem from '@/components/list/simple/SimpleListItem.vue'
+    import IconDoubleItem from '@/components/list/double/IconDoubleItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
             Contextmenu,
             FilteredList,
-            SimpleListItem
+            IconDoubleItem
         }
     })
     export default class LoggingView extends Vue {
         @Prop() channel!: Channel<any>
-        @Prop() repositories!: any
+        @Prop() store!: any
+        @Prop() project!: any
 
         public listeners: any[] = []
-
         public listenersProperty: Channel<any> = new ProxyChannel()
-
         private watcher = new ListWatcher()
 
+        public handlers: any[] = []
+        public handlersProperty: Channel<any> = new ProxyChannel()
+        private handlerWatcher = new ListWatcher()
+
         public created (): void {
-            // this.channel.dispatch({
-            //     event: 'user@load'
-            // })
+            this.channel.dispatch({
+                event: 'listener@load',
+                data: this.project.uuid
+            })
+            this.channel.dispatch({
+                event: 'handler@load'
+            })
 
             this.listenersProperty.connectFn((items: any[]) => {
                 this.listeners = items
             })
+            this.watcher.withRepository(this.store.listeners)
+                .withBinding(this.listenersProperty)
 
-            // this.watcher.withRepository(this.repositories.users)
-            //     .withBinding(this.usersProperty)
+            this.handlersProperty.connectFn((items: any[]) => {
+                this.handlers = items
+            })
+            this.handlerWatcher.withRepository(this.store.handlers)
+                .withBinding(this.handlersProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.handlerWatcher.stop()
+        }
+
+        public getHandlerBySlug (slug: string): any {
+            for (const handler of this.handlers) {
+                if (handler.slug !== slug) {
+                    continue
+                }
+                return handler
+            }
+            return {
+                meta: {
+                    meta: {
+                        icon: ''
+                    }
+                }
+            }
         }
 
         public open (listener: any): void {
-            console.log('listener open', listener)
-            // this.$router.push({
-            //     name: 'project',
-            //     params: {
-            //         connectionId: this.$route.params.connectionId,
-            //         projectUuid: project.uuid
-            //     }
-            // })
+            this.$router.push({
+                name: 'logging.edit',
+                params: this.$route.params,
+                query: {
+                    uuid: listener.uuid
+                }
+            })
         }
 
         public remove (listener: any): void {
-            console.log('listener remove', listener)
             this.channel.dispatch({
                 event: 'listener@delete',
                 data: {
@@ -80,9 +109,8 @@
         }
 
         public create (): void {
-            console.log('listener create')
             this.$router.push({
-                name: 'listener.create',
+                name: 'logging.create',
                 params: this.$route.params
             })
         }

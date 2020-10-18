@@ -13,7 +13,7 @@ export class RoleLoadController implements Controller {
     }
 
     public action (data?: any): void {
-        const loadController = new LoadForProjectController(this.repo, this.api.roles())
+        const loadController = new LoadForProjectController(this.repo, () => this.api.roles())
 
         loadController.action(data)
     }

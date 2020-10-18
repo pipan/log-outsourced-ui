@@ -8,7 +8,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import { HandlerEntity } from '../../../lib/log-outsourced-api'
     import SelectField from '@/components/form/SelectField.vue'
 
     @Component({
@@ -17,21 +16,21 @@
         }
     })
     export default class HandlerSelect extends Vue {
-        @Prop({ default: () => [] }) readonly handlers!: Map<string, HandlerEntity>;
+        @Prop({ default: () => [] }) readonly handlers!: any[];
         @Prop({ default: '' }) readonly value!: string;
 
         public options: Array<any> = []
 
         @Watch('handlers', { immediate: true })
-        onHandlersChange (value: Map<string, HandlerEntity>, oldValue: Map<string, HandlerEntity>): void {
+        onHandlersChange (value: any[], oldValue: any[]): void {
             const newOptions: Array<any> = []
-            value.forEach((handler: HandlerEntity) => {
+            for (const handler of value) {
                 newOptions.push({
-                    id: handler.identify(),
-                    label: handler.getName(),
-                    value: handler.identify()
+                    id: handler.slug,
+                    label: handler.name,
+                    value: handler.slug
                 })
-            })
+            }
             this.options = newOptions
         }
     }

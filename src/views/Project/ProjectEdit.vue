@@ -19,7 +19,7 @@
             ProjectCard
         }
     })
-    export default class ProjectUpdate extends Vue {
+    export default class ProjectEdit extends Vue {
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly repositories!: any
 

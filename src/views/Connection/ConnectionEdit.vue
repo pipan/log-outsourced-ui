@@ -19,7 +19,7 @@
             ConnectionCard
         }
     })
-    export default class ConnectionUpdate extends Vue {
+    export default class ConnectionEdit extends Vue {
         @Prop() readonly repositories!: any
         @Prop() readonly channel!: Channel<any>
 

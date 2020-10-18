@@ -1,39 +1,49 @@
-import { Module, PropertyEntity, BootContext, RegisterContext, Store } from '@/lib/framework'
+import { Module, BootContext, RegisterContext, Store } from '@/lib/framework'
 import { ListenerCreateResetController } from './controller/ListenerCreateResetController'
-import { ListenerCreateController } from './controller/ListenerCreateController'
-import { ListenerApi, ListenerEntity } from '@/lib/log-outsourced-api'
-import { ListenerSetAllController } from './controller/ListenerSetAllController'
-import { ListenerDeleteController } from './controller/ListenerDeleteController'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { ListenerOpenController } from './controller/ListenerOpenController'
 import { ListenerCloseController } from './controller/ListenerCloseController'
-import { EditListenerService } from './service/EditListenerService'
-import { ListenerUpdateController } from './controller/ListenerUpdateController'
-import { ListenerActiveUuidService } from './service/ListenerActiveUuidService'
 import { Channel } from '@wildebeest/observable'
 import { Repository, SimpleRepository } from '@wildebeest/repository'
 import { ListenerTestController } from './controller/ListenerTestController'
 import { LogApi } from '@/lib/log-outsourced-api/domain/log/LogApi'
+import { Alertable } from '../alert'
+import { ModuleBuilder } from '../ModuleBuilder'
+import { LoadForProjectController } from '../LoadForProjectController'
 
 export class ListenerModule implements Module {
-    private listenerApi: ListenerApi
-    private logApi: LogApi
+    private api: OutsourcedApi
+    private alertable: Alertable
+    private cudModule: Module
 
-    public constructor (listenerApi: ListenerApi, logApi: LogApi) {
-        this.listenerApi = listenerApi
-        this.logApi = logApi
+    public constructor (api: OutsourcedApi, alertable: Alertable) {
+        this.api = api
+        this.alertable = alertable
+        this.cudModule = (new ModuleBuilder('listener'))
+            .withCreateAction(() => api.listeners(), alertable)
+            .withDeleteAction(() => api.listeners(), alertable)
+            .withUpdateAction(() => api.listeners(), alertable)
+            .build()
     }
 
     public boot (context: BootContext): void {
-        console.log('empty module')
+        this.cudModule.boot(context)
     }
 
     public register (context: RegisterContext, store: Store): void {
-        console.log('empty module')
+        this.cudModule.register(context, store)
+
+        const repo = store.get('listeners')
+
+        context.withController(
+            'listener@load',
+            new LoadForProjectController(repo, () => this.api.listeners())
+        )
     }
 
     public install (): void {
         // const channel: Channel<any> = context.channel()
-        // const listeners: Repository<ListenerEntity> = SimpleRepository.createIdentifiable()
+        // const listeners: Repository<any> = SimpleRepository.createIdentifiable()
 
         // context.repositories().insert('listeners', listeners)
 
