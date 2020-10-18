@@ -23,9 +23,5 @@ export class UpdateController implements Controller {
                     data.success(response.body)
                 }
             })
-            .catch((error: any) => {
-                console.error(error)
-                this.alertable.error(error)
-            })
     }
 }

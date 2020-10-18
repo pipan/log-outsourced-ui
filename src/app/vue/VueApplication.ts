@@ -19,6 +19,7 @@ import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import RoleView from '@/views/Role/RoleView.vue'
 import RoleCreate from '@/views/Role/RoleCreate.vue'
+import RoleEdit from '@/views/Role/RoleEdit.vue'
 import LoggingView from '@/views/Logging/LoggingView.vue'
 import ListenerCreate from '@/views/Logging/ListenerCreate.vue'
 import ListenerEdit from '@/views/Logging/ListenerEdit.vue'
@@ -179,6 +180,15 @@ export class VueApplication {
                                             component: RoleCreate,
                                             props: props,
                                             name: 'role.create',
+                                            meta: {
+                                                nav: 'role'
+                                            }
+                                        },
+                                        {
+                                            path: 'role/edit',
+                                            component: RoleEdit,
+                                            props: props,
+                                            name: 'role.edit',
                                             meta: {
                                                 nav: 'role'
                                             }

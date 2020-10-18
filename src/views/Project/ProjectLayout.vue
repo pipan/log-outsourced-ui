@@ -3,7 +3,10 @@
         <header class="material__header">
             <div class="flexbox-row space-between center flex flexfix">
                 <button class="btn btn--secondary btn--circle material__header__back" @click="back()"><i class="material-icons md-18">arrow_back</i></button>
-                <div class="material__header__title text-h2 text-ellipsis" v-if="project">{{ project.name }}</div>
+                <div class="material__header__title text-lonly--center">
+                    <div class="text-h2 text-ellipsis">{{ project.name }}</div>
+                    <div class="text--small text-ellipsis">{{ connection.username + '@' + connection.name }}</div>
+                </div>
             </div>
         </header>
         <project-navigation></project-navigation>
@@ -31,6 +34,7 @@
         @Prop() channel!: Channel<any>
         @Prop() store!: any
         @Prop() project!: any
+        @Prop() connection!: any
 
         public back (): void {
             this.$router.push({
