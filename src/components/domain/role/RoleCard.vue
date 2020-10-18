@@ -9,11 +9,13 @@
                     label="Name"
                     :value="model.name"
                     @change="model.name = $event"></string-field>
-                <select-checkbox-field
+                <multi-select
+                    class="top-m"
                     label="Permissions"
                     :value="model.permissions"
                     :options="permissions"
-                    @change="model.permissions = $event"></select-checkbox-field>
+                    filterAvailableSince="6"
+                    @change="model.permissions = $event"></multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -26,13 +28,13 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringField from '@/components/form/StringField.vue'
-    import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
+    import MultiSelect from '@/components/form/MultiSelect.vue'
     import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
             StringField,
-            SelectCheckboxField
+            MultiSelect
         }
     })
     export default class RoleCard extends Vue {
