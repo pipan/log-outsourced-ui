@@ -26,6 +26,10 @@ export class Store {
         return this.withItem(key, SimpleRepository.fromKeyProperty(index))
     }
 
+    public withStringRepository (key: string): Store {
+        return this.withItem(key, SimpleRepository.fromString())
+    }
+
     public withStore (store: Store): Store {
         const data = store.getData()
         let result = new Store(this.data)

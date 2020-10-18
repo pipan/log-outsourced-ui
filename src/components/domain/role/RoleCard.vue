@@ -9,6 +9,11 @@
                     label="Name"
                     :value="model.name"
                     @change="model.name = $event"></string-field>
+                <select-checkbox-field
+                    label="Permissions"
+                    :value="model.permissions"
+                    :options="permissions"
+                    @change="model.permissions = $event"></select-checkbox-field>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -21,15 +26,18 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringField from '@/components/form/StringField.vue'
+    import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
     import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
-            StringField
+            StringField,
+            SelectCheckboxField
         }
     })
     export default class RoleCard extends Vue {
         @Prop() readonly title!: string
+        @Prop({ default: () => [] }) permissions!: string[]
         @Prop({ default: () => { return {} } }) model!: any
 
         public cancel (): void {

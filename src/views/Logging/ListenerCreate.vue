@@ -37,7 +37,6 @@
 
         public handlers: any[] = []
         public handlersProperty: Channel<any[]> = new ProxyChannel()
-
         public watcher = new ListWatcher()
 
         public created (): void {

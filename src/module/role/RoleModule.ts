@@ -15,6 +15,7 @@ export class RoleModule implements Module {
         this.api = api
         this.cModule = (new ModuleBuilder('role'))
             .withCreateAction(() => api.roles(), alertable)
+            .withClearOnProjectOpen()
             .build()
     }
 

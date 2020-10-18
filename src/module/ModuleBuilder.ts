@@ -1,5 +1,5 @@
 import { Controller, Module, SimpleModule, Store, Management } from '@/lib/framework'
-import { CreateHttp, DeleteHttp, UpdateHttp } from '@/lib/log-outsourced-api/http'
+import { CreateHttp, DeleteHttp, UpdateHttp, AllForProjectHttp } from '@/lib/log-outsourced-api/http'
 import { CreateController } from './CreateController'
 import { Repository, SimpleRepository } from '@wildebeest/repository'
 import { Alertable } from './alert'
@@ -7,6 +7,8 @@ import { DeleteController } from './DeleteController'
 import { UpdateController } from './UpdateController'
 import { LoadHttp } from '@/lib/log-outsourced-api/http/LoadHttp'
 import { LoadController } from './LoadController'
+import { LoadForProjectController } from './LoadForProjectController'
+import { ClearController } from './ClearController'
 
 export class ModuleBuilder {
     private domain: string
@@ -19,24 +21,40 @@ export class ModuleBuilder {
     }
 
     public withCreateAction (httpFactory: () => CreateHttp, alertable: Alertable): ModuleBuilder {
-        return this.withAction('create', new CreateController(this.repo, httpFactory, alertable))
+        return this.withDomainAction('create', new CreateController(this.repo, httpFactory, alertable))
     }
 
     public withDeleteAction (httpFactory: () => DeleteHttp, alertable: Alertable): ModuleBuilder {
-        return this.withAction('delete', new DeleteController(this.repo, httpFactory, alertable))
+        return this.withDomainAction('delete', new DeleteController(this.repo, httpFactory, alertable))
     }
 
     public withUpdateAction (httpFactory: () => UpdateHttp, alertable: Alertable): ModuleBuilder {
-        return this.withAction('update', new UpdateController(this.repo, httpFactory, alertable))
+        return this.withDomainAction('update', new UpdateController(this.repo, httpFactory, alertable))
     }
 
     public withLoadAction (httpFactory: () => LoadHttp): ModuleBuilder {
-        return this.withAction('load', new LoadController(this.repo, httpFactory))
+        return this.withDomainAction('load', new LoadController(this.repo, httpFactory))
+    }
+
+    public withLoadForProjectAction (httpFactory: () => AllForProjectHttp): ModuleBuilder {
+        return this.withDomainAction('load', new LoadForProjectController(this.repo, httpFactory))
+    }
+
+    public withClearOnProjectOpen (): ModuleBuilder {
+        return this.withAction('project@open', new ClearController(this.repo))
+    }
+
+    public withDomainAction (name: string, controller: Controller): ModuleBuilder {
+        this.actions.push({
+            action: this.domain + '@' + name,
+            controller: controller
+        })
+        return this.withAction(this.domain + '@' + name, controller)
     }
 
     public withAction (name: string, controller: Controller): ModuleBuilder {
         this.actions.push({
-            action: this.domain + '@' + name,
+            action: name,
             controller: controller
         })
         return this
