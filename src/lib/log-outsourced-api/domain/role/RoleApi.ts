@@ -1,3 +1,3 @@
-import { CreateHttp, DeleteHttp, AllForProjectHttp } from '../../http'
+import { CreateHttp, DeleteHttp, AllForProjectHttp, UpdateHttp } from '../../http'
 
-export interface RoleApi extends AllForProjectHttp, CreateHttp, DeleteHttp {}
+export interface RoleApi extends AllForProjectHttp, CreateHttp, DeleteHttp, UpdateHttp {}

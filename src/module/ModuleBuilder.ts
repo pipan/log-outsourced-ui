@@ -45,10 +45,6 @@ export class ModuleBuilder {
     }
 
     public withDomainAction (name: string, controller: Controller): ModuleBuilder {
-        this.actions.push({
-            action: this.domain + '@' + name,
-            controller: controller
-        })
         return this.withAction(this.domain + '@' + name, controller)
     }
 

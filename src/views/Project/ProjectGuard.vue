@@ -2,6 +2,7 @@
     <div>
         <router-view
             v-if="project"
+            :connection="connection"
             :project="project"></router-view>
         <div class="material__body" v-if="!project">
             <div class="material__container">
@@ -29,6 +30,7 @@
     })
     export default class ProejctGuard extends Vue {
         @Prop() channel!: Channel<any>
+        @Prop() connection!: any
         @Prop() store!: any
 
         public project: any = null

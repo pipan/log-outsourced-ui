@@ -32,7 +32,7 @@ h1, h2, h3, h4, h5, h6 {
         display: flex;
         place-content: center center;
         align-items: center;
-        padding: var(--unit-s) var(--unit-m);
+        padding: var(--unit-s);
         width: 100%;
         height: 66px;
         background-color: var(--bg-level-top);
@@ -80,7 +80,7 @@ h1, h2, h3, h4, h5, h6 {
         box-sizing: border-box;
         margin: 0px auto;
         width: 100%;
-        padding: var(--unit-s);
+        padding: var(--unit-s) 0px;
     }
 }
 
@@ -91,6 +91,8 @@ h1, h2, h3, h4, h5, h6 {
 @media (min-width: 1280px) { 
     .material { 
         &__header {
+            padding: var(--unit-s) var(--unit-m);
+            
             &__title {
                 position: absolute;
                 left: 50%;
@@ -116,6 +118,7 @@ h1, h2, h3, h4, h5, h6 {
 
         &__container {
             width: 50%;
+            padding: var(--unit-s);
         }
     }
 }

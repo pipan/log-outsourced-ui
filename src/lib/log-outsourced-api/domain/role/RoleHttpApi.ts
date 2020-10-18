@@ -37,6 +37,16 @@ export class RoleHttpApi implements RoleApi {
         )
     }
 
+    public update (role: any): Promise<any> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/roles/' + role.uuid)
+            .withJson(role)
+            .withMethod('PUT')
+
+        return this.interceptor.intercept(
+            this.authHttp.send(http)
+        )
+    }
+
     public delete (role: any): Promise<any> {
         const http = HttpFetch.fromUrl(this.host + '/api/v1/roles/' + role.uuid)
             .withJson()

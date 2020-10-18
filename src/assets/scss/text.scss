@@ -15,6 +15,10 @@
         font-size: var(--font-small);
     }
 
+    &--center {
+        text-align: center;
+    }
+
     &-ellipsis {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -32,5 +36,29 @@
 
     &--auxilery {
         color: var(--auxilery)
+    }
+}
+
+@media (max-width: 959px) { 
+    .text {
+        &-sonly--center {
+            text-align: center;
+        }
+    }
+}
+
+@media (max-width: 1279px) and (min-width: 960px) { 
+    .text {
+        &-monly--center {
+            text-align: center;
+        }
+    }
+}
+
+@media (min-width: 1280px) { 
+    .text {
+        &-lonly--center {
+            text-align: center;
+        }
     }
 }

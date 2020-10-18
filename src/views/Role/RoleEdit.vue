@@ -2,6 +2,7 @@
     <section>
         <role-card
             title="Create role"
+            :model="model"
             :permissions="permissions"
             @submit="save($event)"
             @cancel="cancel()"></role-card>
@@ -19,7 +20,7 @@
             RoleCard
         }
     })
-    export default class RoleCreate extends Vue {
+    export default class RoleEdit extends Vue {
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
@@ -27,6 +28,10 @@
         public permissions: any[] = []
         public permissionsProperty: Channel<any[]> = new ProxyChannel()
         public permissionsWatcher = new ListWatcher()
+
+        public model: any = {}
+        public roleProperty: Channel<any[]> = new ProxyChannel()
+        public roleWatcher = new ListWatcher()
 
         public created (): void {
             this.channel.dispatch({
@@ -37,13 +42,23 @@
             this.permissionsProperty.connectFn((items: any[]) => {
                 this.permissions = items
             })
-
             this.permissionsWatcher.withRepository(this.store.permissions)
                 .withBinding(this.permissionsProperty)
+
+            const result = this.store.roles
+                .query()
+                .property(this.$route.query.uuid)
+
+            this.model = result.get()
+            if (!this.model) {
+                console.log('Not Found')
+            }
+            result.close()
         }
 
         public beforeDestroy (): void {
             this.permissionsWatcher.stop()
+            this.roleWatcher.stop()
         }
 
         public cancel (): void {
@@ -54,14 +69,11 @@
         }
 
         public save (model: any): void {
+            model.uuid = this.$route.query.uuid
             this.channel.dispatch({
-                event: 'role@create',
+                event: 'role@update',
                 data: {
-                    body: {
-                        name: model.name,
-                        permissions: model.permissions,
-                        project_uuid: this.project.uuid
-                    },
+                    body: model,
                     success: (project: any) => {
                         this.$router.push({
                             name: 'role.list',
