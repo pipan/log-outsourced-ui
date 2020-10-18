@@ -3,9 +3,11 @@
         <div class="list__item__top">
             {{ text }}
         </div>
-        <contextmenu ref="contextmenu" v-if="this.contexts.length > 0">
-            <button class="context__menu__item bottom-s" v-for="context of contexts" :key="context" @click="emit(context, $event)">{{ context }}</button>
-        </contextmenu>
+        <simple-contextmenu
+            :items="contexts"
+            :value="value"
+            @select="$emit($event.name, $event.value)">
+        </simple-contextmenu>
         <div class="list__item__bottom flexbox-row center">
             <div class="flex text--auxilery text-ellipsis flexfix">
                 {{ subtext }}
@@ -16,11 +18,11 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import Contextmenu from '../../contextmenu/Contextmenu.vue'
+    import SimpleContextmenu from '../../contextmenu/SimpleContextmenu.vue'
 
     @Component({
         components: {
-            Contextmenu
+            SimpleContextmenu
         }
     })
     export default class DoubleLinedItem extends Vue {
@@ -32,11 +34,6 @@
 
         select (): void {
             this.$emit('select', this.value)
-        }
-
-        emit (name: string, event: any): void {
-            event.stopPropagation()
-            this.$emit(name, this.value)
         }
     }
 </script>

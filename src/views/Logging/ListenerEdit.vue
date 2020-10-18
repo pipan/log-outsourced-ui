@@ -55,6 +55,9 @@
                 .property(this.$route.query.uuid)
 
             this.model = result.get()
+            if (!this.model) {
+                console.log('Not Found')
+            }
             result.close()
         }
 

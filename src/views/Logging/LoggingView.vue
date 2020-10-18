@@ -12,7 +12,8 @@
                 :value="item"
                 :contexts="['Delete', 'Test']"
                 @select="open($event)"
-                @delete="remove($event)">
+                @delete="remove($event)"
+                @test="sendTestLog($event)">
             </icon-double-item>
         </filtered-list>
     </section>
@@ -112,6 +113,16 @@
             this.$router.push({
                 name: 'logging.create',
                 params: this.$route.params
+            })
+        }
+
+        public sendTestLog (listener: any): void {
+            this.channel.dispatch({
+                event: 'log@test',
+                data: {
+                    projectUuid: this.$route.params.projectUuid,
+                    rules: listener.rules
+                }
             })
         }
     }
