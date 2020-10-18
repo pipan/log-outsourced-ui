@@ -4,7 +4,9 @@
             <div>{{ label }}</div>
             <div class="field__error top-s" v-if="hasError()">{{ error }}</div>
         </label>
-        <slot></slot>
+        <div class="field__controll">
+            <slot></slot>
+        </div>
     </div>
 </template>
 

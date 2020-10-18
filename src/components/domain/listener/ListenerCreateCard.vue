@@ -8,19 +8,20 @@
                         label="Name"
                         :value="model.name"
                         @change="model.name = $event"></string-field>
-                    <select-checkbox-field
+                    <multi-select
+                        class="top-m"
                         label="Log levels"
                         :value="model.rules"
                         :options="['debug','info','notice','warning','error','critical','alert','emergency']"
-                        @change="model.rules = $event"></select-checkbox-field>
+                        @change="model.rules = $event"></multi-select>
                     <handler-select
                         :handlers="handlers"
                         :value="model.handler_slug"
                         @change="onHandlerChange($event)"></handler-select>
                 </div>
                 <form-builder
-                    v-if="fields"
-                    class="top-l"
+                    v-if="fields.length > 0"
+                    class="top-m"
                     :fields="fields"
                     :values="model.handler_values"
                     @change="model.handler_Values = $event"></form-builder>
@@ -39,14 +40,14 @@
     import SelectField from '@/components/form/SelectField.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import HandlerSelect from '@/components/domain/handler/HandlerSelect.vue'
-    import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
+    import MultiSelect from '@/components/form/MultiSelect.vue'
 
     @Component({
         components: {
             StringField,
             SelectField,
             FormBuilder,
-            SelectCheckboxField,
+            MultiSelect,
             HandlerSelect
         }
     })

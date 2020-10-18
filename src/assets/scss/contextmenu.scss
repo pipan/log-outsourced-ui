@@ -17,15 +17,22 @@
 
     &__menu {
         position: absolute;
+        display: flex;
+        flex-direction: column;
         min-width: 120px;
         top: calc(var(--unit-s) * -1);
         background-color: var(--bg-level-top);
         border-radius: var(--corner-radius);
         z-index: 10;
         box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.55);
+
+        &--inline {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
     
         &__item {
-            width: 100%;
             text-align: left;
             background-color: transparent;
             border: none;
