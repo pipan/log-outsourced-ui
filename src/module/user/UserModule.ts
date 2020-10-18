@@ -13,6 +13,7 @@ export class UserModule implements Module {
 
         this.cModule = (new ModuleBuilder('user'))
             .withCreateAction(() => api.users(), alertable)
+            .withClearOnProjectOpen()
             .build()
     }
 

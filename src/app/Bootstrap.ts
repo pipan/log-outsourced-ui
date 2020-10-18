@@ -11,6 +11,7 @@ import { RoleModule } from '@/module/role'
 import { AppModule } from '@/module/app'
 import { ListenerModule } from '@/module/listener'
 import { HandlerModule } from '@/module/handler'
+import { PermissionModule } from '@/module/permission/PermissionModule'
 
 export class Bootstrap {
     public static getModules (): Module[] {
@@ -21,8 +22,9 @@ export class Bootstrap {
         const project = new ProjectModule(http.getApi(), alert.getAlertable())
         const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
         const invite = new InviteModule(connection.getService(), alert.getAlertable())
-        const user = new UserModule(http.getApi(), alert.getAlertable())
+        const permission = new PermissionModule(http.getApi())
         const role = new RoleModule(http.getApi(), alert.getAlertable())
+        const user = new UserModule(http.getApi(), alert.getAlertable())
         const handler = new HandlerModule(http.getApi())
         const listener = new ListenerModule(http.getApi(), alert.getAlertable())
 
@@ -31,6 +33,6 @@ export class Bootstrap {
         // new HandlerModule(httpApi.handlers()),
         // new ListenerModule(httpApi.listeners(), httpApi.log())
 
-        return [http, alert, auth, connection, project, administrator, invite, user, role, handler, listener, app]
+        return [http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, app]
     }
 }

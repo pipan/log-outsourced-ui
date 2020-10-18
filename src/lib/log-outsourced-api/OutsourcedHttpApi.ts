@@ -19,6 +19,8 @@ import { UserApi } from './domain/user/UserApi'
 import { RoleHttpApi } from './domain/role/RoleHttpApi'
 import { RoleApi } from './domain/role/RoleApi'
 import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
+import { PermissionHttpApi } from './domain/permission/PermissionHttpApi'
+import { PermissionApi } from './domain/permission/PermissionApi'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
@@ -36,6 +38,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             project: new ProjectHttpApi(host, authHttp),
             administrators: new AdministratorHttpApi(host, authHttp),
             users: new UserHttpApi(host, authHttp),
+            permissions: new PermissionHttpApi(host, authHttp),
             roles: new RoleHttpApi(host, authHttp),
             handler: new HandlerHttpApi(host, authHttp),
             listener: new ListenerHttpApi(host, authHttp),
@@ -47,6 +50,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
         this.domains.project.connect(this.responseChannel)
         this.domains.administrators.connect(this.responseChannel)
         this.domains.users.connect(this.responseChannel)
+        this.domains.permissions.connect(this.responseChannel)
         this.domains.roles.connect(this.responseChannel)
         this.domains.invite.connect(this.responseChannel)
         this.domains.auth.connect(this.responseChannel)
@@ -94,5 +98,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
     public roles (): RoleApi {
         return this.domains.roles
+    }
+
+    public permissions (): PermissionApi {
+        return this.domains.permissions
     }
 }

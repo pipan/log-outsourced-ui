@@ -28,3 +28,6 @@ export { UserHttpApi } from './domain/user/UserHttpApi'
 
 export { LogApi } from './domain/log/LogApi'
 export { LogHttpApi } from './domain/log/LogHttpApi'
+
+export { PermissionApi } from './domain/permission/PermissionApi'
+export { PermissionHttpApi } from './domain/permission/PermissionHttpApi'

@@ -1,7 +1,4 @@
-import { CreateHttp } from '../../http/CreateHttp';
+import { CreateHttp } from '../../http/CreateHttp'
+import { DeleteHttp, UpdateHttp, AllForProjectHttp } from '../../http'
 
-export interface UserApi extends CreateHttp {
-    all (projectUuid: string): Promise<any>;
-    delete (user: any): Promise<Response>;
-    update (user: any): Promise<any>;
-}
+export interface UserApi extends CreateHttp, DeleteHttp, UpdateHttp, AllForProjectHttp {}

@@ -8,6 +8,7 @@ import { LogApi } from './domain/log/LogApi'
 import { ProjectApi } from './domain/project/ProjectApi'
 import { RoleApi } from './domain/role/RoleApi'
 import { UserApi } from './domain/user/UserApi'
+import { PermissionApi } from './domain/permission/PermissionApi'
 
 export class OutsourcedProxyApi implements OutsourcedApi {
     private api!: OutsourcedApi
@@ -54,5 +55,9 @@ export class OutsourcedProxyApi implements OutsourcedApi {
 
     public users (): UserApi {
         return this.api.users()
+    }
+
+    public permissions (): PermissionApi {
+        return this.api.permissions()
     }
 }
