@@ -1,7 +1,8 @@
 <template>
     <div class="list__item" :class="{'list__item--active': active}" @click="select()">
         <div class="list__item__top">
-            {{ text }}
+            <span class="material-icons md-18">{{ icon }}</span>
+            <div class="left-m">{{ text }}</div>
         </div>
         <simple-contextmenu
             :items="contexts"
@@ -25,8 +26,9 @@
             SimpleContextmenu
         }
     })
-    export default class DoubleLinedItem extends Vue {
+    export default class IconDoubleItem extends Vue {
         @Prop() readonly text!: string
+        @Prop() readonly icon!: string
         @Prop() readonly subtext!: string
         @Prop() readonly value!: any
         @Prop({ default: () => [] }) readonly contexts!: Array<string>

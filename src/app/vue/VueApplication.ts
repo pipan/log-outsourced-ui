@@ -8,24 +8,22 @@ import ConnectionGuard from '@/views/Connection/ConnectionGuard.vue'
 import ConnectionLayout from '@/views/Connection/ConnectionLayout.vue'
 import ConnectionList from '@/views/Connection/ConnectionList.vue'
 import ConnectionCreate from '@/views/Connection/ConnectionCreate.vue'
-import ConnectionUpdate from '@/views/Connection/ConnectionUpdate.vue'
+import ConnectionEdit from '@/views/Connection/ConnectionEdit.vue'
 import ConnectionInvite from '@/views/Connection/ConnectionInvite.vue'
 import ProjectGuard from '@/views/Project/ProjectGuard.vue'
 import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
+import ProjectEdit from '@/views/Project/ProjectEdit.vue'
 import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import RoleView from '@/views/Role/RoleView.vue'
 import RoleCreate from '@/views/Role/RoleCreate.vue'
 import LoggingView from '@/views/Logging/LoggingView.vue'
-import ProjectUpdate from '@/views/Project/ProjectUpdate.vue'
-import ProjectSettings from '@/views/ProjectSettings.vue'
-import ProjectDetail from '@/views/ProjectDetail.vue'
+import ListenerCreate from '@/views/Logging/ListenerCreate.vue'
+import ListenerEdit from '@/views/Logging/ListenerEdit.vue'
 import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
-import ListenerDetail from '@/views/ListenerDetail.vue'
-import ListenerCreate from '@/views/ListenerCreate.vue'
 import { Store } from '@/lib/framework'
 import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
 
@@ -58,17 +56,20 @@ export class VueApplication {
                         {
                             path: '',
                             component: ConnectionList,
-                            props: props
+                            props: props,
+                            name: 'connection.list'
                         },
                         {
                             path: 'connection/create',
                             component: ConnectionCreate,
-                            props: props
+                            props: props,
+                            name: 'connection.create'
                         },
                         {
-                            path: 'connection/update',
-                            component: ConnectionUpdate,
-                            props: props
+                            path: 'connection/edit',
+                            component: ConnectionEdit,
+                            props: props,
+                            name: 'connection.edit'
                         },
                         {
                             path: 'connection/invite/:token',
@@ -108,7 +109,7 @@ export class VueApplication {
                                 },
                                 {
                                     path: 'project/edit',
-                                    component: ProjectUpdate,
+                                    component: ProjectEdit,
                                     props: props,
                                     name: 'project.edit',
                                     meta: {
@@ -190,39 +191,28 @@ export class VueApplication {
                                             meta: {
                                                 nav: 'logging'
                                             }
+                                        },
+                                        {
+                                            path: 'logging/create',
+                                            component: ListenerCreate,
+                                            props: props,
+                                            name: 'logging.create',
+                                            meta: {
+                                                nav: 'logging'
+                                            }
+                                        },
+                                        {
+                                            path: 'logging/edit',
+                                            component: ListenerEdit,
+                                            props: props,
+                                            name: 'logging.edit',
+                                            meta: {
+                                                nav: 'logging'
+                                            }
                                         }
                                     ]
                                 }
                             ]
-                        }
-                    ]
-                },
-                {
-                    path: '/:connectionId/:projectUuid',
-                    component: ProjectLayout,
-                    props: props,
-                    children: [
-                        {
-                            path: '',
-                            component: ProjectDetail,
-                            props: props,
-                            children: [
-                                {
-                                    path: 'rule',
-                                    component: ListenerDetail,
-                                    props: props
-                                }
-                            ]
-                        },
-                        {
-                            path: 'rule/create',
-                            component: ListenerCreate,
-                            props: props
-                        },
-                        {
-                            path: 'settings',
-                            component: ProjectSettings,
-                            props: props
                         }
                     ]
                 },

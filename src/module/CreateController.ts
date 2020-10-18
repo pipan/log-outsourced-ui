@@ -26,9 +26,5 @@ export class CreateController implements Controller {
                     data.success(response.body)
                 }
             })
-            .catch((error: any) => {
-                console.error(error)
-                this.alertable.error(error)
-            })
     }
 }

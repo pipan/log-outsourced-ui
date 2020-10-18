@@ -20,12 +20,8 @@ export class DeleteController implements Controller {
                 this.repo.remove(data.body)
                 this.alertable.success('')
                 if (data.success) {
-                    data.success(response.body)
+                    data.success()
                 }
-            })
-            .catch((error: any) => {
-                console.error(error)
-                this.alertable.error(error)
             })
     }
 }

@@ -15,10 +15,15 @@
                         @change="model.rules = $event"></select-checkbox-field>
                     <handler-select
                         :handlers="handlers"
-                        :value="model.handler.slug"
+                        :value="model.handler_slug"
                         @change="onHandlerChange($event)"></handler-select>
                 </div>
-                <form-builder class="top-l" :fields="fields" :values="model.handler.values"></form-builder>
+                <form-builder
+                    v-if="fields"
+                    class="top-l"
+                    :fields="fields"
+                    :values="model.handler_values"
+                    @change="model.handler_Values = $event"></form-builder>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="$emit('cancel')">CANCEL</button>
@@ -35,7 +40,6 @@
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import HandlerSelect from '@/components/domain/handler/HandlerSelect.vue'
     import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
-    import { HandlerEntity, ProjectEntity } from '../../../lib/log-outsourced-api'
 
     @Component({
         components: {
@@ -49,25 +53,40 @@
     export default class ListenerCreateCard extends Vue {
         @Prop({ default: () => { return {} } }) readonly model: any
         @Prop({ default: '' }) readonly title!: string
-        @Prop({ default: () => [] }) readonly handlers!: Map<string, HandlerEntity>
+        @Prop({ default: () => [] }) readonly handlers!: any[]
 
         public fields: Array<any> = []
 
+        @Watch('handlers')
+        public onHandlersChange (value: any[], oldvalue: any[]): void {
+            this.onHandlerChange(this.model.handler_slug)
+        }
+
         @Watch('model', { immediate: true })
         public onModelChange (value: any, oldvalue: any): void {
-            this.onHandlerChange(value.handler.slug)
+            this.onHandlerChange(value.handler_slug)
+        }
+
+        private getHandlerBySlug (slug: string): any {
+            for (const handler of this.handlers) {
+                if (handler.slug !== slug) {
+                    continue
+                }
+                return handler
+            }
+            return null
         }
 
         public onHandlerChange (handlerSlug: string): void {
-            if (!this.handlers.has(handlerSlug)) {
+            const handler = this.getHandlerBySlug(handlerSlug)
+            if (!handler) {
                 this.fields = []
-                this.model.handler.slug = ''
+                this.model.handler_slug = ''
                 return
             }
-            const handler: HandlerEntity = this.handlers.get(handlerSlug)!
             const newFields = []
-            for (const fieldSchemaKey in handler.getMeta().schema) {
-                const fieldSchema: any = handler.getMeta().schema[fieldSchemaKey]
+            for (const fieldSchemaKey in handler.meta.schema) {
+                const fieldSchema: any = handler.meta.schema[fieldSchemaKey]
                 newFields.push({
                     type: fieldSchema.type,
                     id: fieldSchemaKey,
@@ -81,22 +100,19 @@
             }
             this.fields = newFields
 
-            this.model.handler.slug = handler.identify()
+            this.model.handler_slug = handler.slug
         }
 
         public save (): void {
             const saveData: any = {
                 name: this.model.name,
                 rules: this.model.rules,
-                handler: {
-                    slug: this.model.handler?.slug,
-                    values: {}
-                }
+                handler_slug: this.model.handler_slug,
+                handler_values: {}
             }
 
-            const handlerValues: any = {}
             for (const field of this.fields) {
-                saveData.handler.values[field.id] = this.model.handler?.values[field.id]
+                saveData.handler_values[field.id] = this.model.handler_values[field.id]
             }
 
             this.$emit('save', saveData)

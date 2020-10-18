@@ -1,24 +1,24 @@
-import { Module } from '@/lib/framework'
-import { Context } from '@/lib/framework/module/Context'
-import { HandlerApi } from '@/lib/log-outsourced-api/domain/handler/HandlerApi'
-import { HandlerEntity } from '@/lib/log-outsourced-api'
-import { HandlerLoadAllController } from './controller/HandlerLoadAllController'
-import { Repository, SimpleRepository } from '@wildebeest/repository'
+import { Module, BootContext, RegisterContext, Store } from '@/lib/framework'
+import { OutsourcedApi } from '@/lib/log-outsourced-api'
+import { LoadController } from '../LoadController'
 
 export class HandlerModule implements Module {
-    protected handlerApi: HandlerApi
+    protected api: OutsourcedApi
+    private store: Store
 
-    public constructor (handlerApi: HandlerApi) {
-        this.handlerApi = handlerApi
+    public constructor (api: OutsourcedApi) {
+        this.api = api
+        this.store = (new Store())
+            .withRepository('handlers', 'slug')
     }
 
-    public install (context: Context): void {
-        const handlers: Repository<HandlerEntity> = SimpleRepository.createIdentifiable()
+    public boot (context: BootContext): void {
+        context.withStore(this.store)
+    }
 
-        context.repositories().insert('handlers', handlers)
+    public register (context: RegisterContext, store: Store): void {
+        const repo = store.get('handlers')
 
-        context.controllers().insert('handler@load.all', new HandlerLoadAllController(this.handlerApi, handlers))
-
-        context.channel().dispatch({ event: 'handler@load.all' })
+        context.withController('handler@load', new LoadController(repo, () => this.api.handlers()))
     }
 }

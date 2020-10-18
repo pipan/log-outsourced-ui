@@ -21,14 +21,11 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ListenerEntity, HandlerEntity } from '../lib/log-outsourced-api'
-    import ListenerList from '../components/domain/listener/ListenerList.vue'
     import ListenerCreateCard from '../components/domain/listener/ListenerCreateCard.vue'
     import { Channel, Closable } from '@wildebeest/observable'
 
     @Component({
         components: {
-            ListenerList,
             ListenerCreateCard
         }
     })
@@ -36,9 +33,9 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly queries!: any
 
-        public listeners: Array<ListenerEntity> = []
-        public listener: ListenerEntity | null = null
-        public handlers: Map<string, HandlerEntity> = new Map()
+        public listeners: Array<any> = []
+        public listener: any | null = null
+        public handlers: Map<string, any> = new Map()
 
         private closables: Array<Closable> = []
 
@@ -49,7 +46,7 @@
             })
         }
 
-        public openListener (listener: ListenerEntity): void {
+        public openListener (listener: any): void {
             this.$router.push({
                 path: '/project/rule',
                 query: {
@@ -59,14 +56,14 @@
             })
         }
 
-        public deleteListener (listener: ListenerEntity): void {
+        public deleteListener (listener: any): void {
             this.channel.dispatch({
                 event: 'listener@delete',
                 data: listener
             })
         }
 
-        public testListener (listener: ListenerEntity): void {
+        public testListener (listener: any): void {
             this.channel.dispatch({
                 event: 'listener@test',
                 data: {

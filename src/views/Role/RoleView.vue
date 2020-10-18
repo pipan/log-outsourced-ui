@@ -72,7 +72,6 @@
         }
 
         public remove (role: any): void {
-            console.log('role remove', role)
             this.channel.dispatch({
                 event: 'role@delete',
                 data: {
@@ -82,7 +81,6 @@
         }
 
         public create (): void {
-            console.log('role create')
             this.$router.push({
                 name: 'role.create',
                 params: this.$route.params

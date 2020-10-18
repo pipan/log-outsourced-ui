@@ -11,7 +11,6 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import { ListenerEntity, HandlerEntity } from '@/lib/log-outsourced-api'
     import Contextmenu from '../../contextmenu/Contextmenu.vue'
 
     @Component({})

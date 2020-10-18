@@ -37,8 +37,8 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             administrators: new AdministratorHttpApi(host, authHttp),
             users: new UserHttpApi(host, authHttp),
             roles: new RoleHttpApi(host, authHttp),
-            handler: new HandlerHttpApi(host),
-            listener: new ListenerHttpApi(host),
+            handler: new HandlerHttpApi(host, authHttp),
+            listener: new ListenerHttpApi(host, authHttp),
             log: new LogHttpApi(host),
             invite: new InviteHttpApi(host),
             auth: authApi
