@@ -17,6 +17,7 @@ export class ListenerModule implements Module {
             .withCreateAction(() => api.listeners(), alertable)
             .withDeleteAction(() => api.listeners(), alertable)
             .withUpdateAction(() => api.listeners(), alertable)
+            .withClearOnProjectOpen()
             .build()
     }
 
