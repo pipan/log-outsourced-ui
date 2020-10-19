@@ -43,7 +43,7 @@
         }
     })
     export default class ConnectionInvite extends Vue {
-        @Prop() readonly repositories!: any
+        @Prop() readonly store!: any
         @Prop() readonly channel!: Channel<any>
 
         public model: any = {
@@ -51,12 +51,9 @@
             passwordRepeat: ''
         }
 
-        public invitation: any = {}
-
         public host = ''
-
+        public invitation: any = {}
         private watcher: SingleResourceWatcher<any> = new SingleResourceWatcher()
-
         private invitationProperty: Channel<any> = new ProxyChannel()
 
         @Watch('$route.query.host', { immediate: true })
@@ -81,7 +78,7 @@
                 this.invitation = invite
             })
 
-            this.watcher.withRepository(this.repositories.invites)
+            this.watcher.withRepository(this.store.invites)
                 .withBinding(this.invitationProperty)
         }
 

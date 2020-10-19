@@ -3,15 +3,16 @@ import { InviteLoadController } from './controller/InviteLoadController'
 import { InviteAcceptController } from './controller/InviteAcceptController'
 import { ConnectionService } from '../connection'
 import { Alertable } from '../alert'
+import { ApiFactory } from '../http'
 
 export class InviteModule implements Module {
     private store: Store
     private connectionService: ConnectionService
-    private alertable: Alertable
+    private apiFactory: ApiFactory
 
-    constructor (connectionService: ConnectionService, alertable: Alertable) {
+    constructor (connectionService: ConnectionService, apiFactory: ApiFactory) {
         this.connectionService = connectionService
-        this.alertable = alertable
+        this.apiFactory = apiFactory
         this.store = (new Store())
             .withRepository('invites', 'invite_token')
     }
@@ -24,11 +25,11 @@ export class InviteModule implements Module {
         const repo = store.get('invites')
         context.withController(
                 'invite@load',
-                new InviteLoadController(repo, this.alertable)
+                new InviteLoadController(repo, this.apiFactory)
             )
             .withController(
                 'invite@accept',
-                new InviteAcceptController(repo, this.connectionService, this.alertable)
+                new InviteAcceptController(repo, this.connectionService, this.apiFactory)
             )
     }
 }
