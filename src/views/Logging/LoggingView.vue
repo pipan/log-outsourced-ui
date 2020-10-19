@@ -1,22 +1,30 @@
 <template>
-    <section>
-        <filtered-list
-            title="Logging Rules"
-            @add="create()">
-            <icon-double-item
-                v-for="item of listeners"
-                :key="item.uuid"
-                :text="item.name"
-                :icon="getHandlerBySlug(item.handler_slug).meta.meta.icon"
-                :subtext="item.rules.join(', ')"
-                :value="item"
-                :contexts="['Delete', 'Test']"
-                @select="open($event)"
-                @delete="remove($event)"
-                @test="sendTestLog($event)">
-            </icon-double-item>
-        </filtered-list>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container" :class="{'hide-m': listener}">
+            <filtered-list
+                title="Logging Rules"
+                @add="create()">
+                <icon-double-item
+                    v-for="item of listeners"
+                    :key="item.uuid"
+                    :text="item.name"
+                    :icon="getHandlerBySlug(item.handler_slug).meta.meta.icon"
+                    :subtext="item.rules.join(', ')"
+                    :value="item"
+                    :contexts="['Delete', 'Test']"
+                    :active="listener && item.uuid === listener.uuid"
+                    @select="open($event)"
+                    @delete="remove($event)"
+                    @test="sendTestLog($event)">
+                </icon-double-item>
+            </filtered-list>
+        </section>
+        <router-view
+            :channel="channel"
+            :store="store"
+            :project="project"
+            :listener="listener"></router-view>
+    </div>
 </template>
 
 <script lang="ts">
@@ -39,6 +47,10 @@
         @Prop() store!: any
         @Prop() project!: any
 
+        public listener!: any
+        public listenerProperty: Channel<any> = new ProxyChannel()
+        private listenerWatcher = new SingleResourceWatcher()
+
         public listeners: any[] = []
         public listenersProperty: Channel<any> = new ProxyChannel()
         private watcher = new ListWatcher()
@@ -46,6 +58,14 @@
         public handlers: any[] = []
         public handlersProperty: Channel<any> = new ProxyChannel()
         private handlerWatcher = new ListWatcher()
+
+        @Watch('$route.query.uuid', { immediate: true })
+        public onUuidChange (value: string, oldValue: string): void {
+            if (!value) {
+                this.listener = null
+            }
+            this.listenerWatcher.withId(value)
+        }
 
         public created (): void {
             this.channel.dispatch({
@@ -67,11 +87,18 @@
             })
             this.handlerWatcher.withRepository(this.store.handlers)
                 .withBinding(this.handlersProperty)
+
+            this.listenerProperty.connectFn((item: any) => {
+                this.listener = item
+            })
+            this.listenerWatcher.withRepository(this.store.listeners)
+                .withBinding(this.listenerProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
             this.handlerWatcher.stop()
+            this.listenerWatcher.stop()
         }
 
         public getHandlerBySlug (slug: string): any {

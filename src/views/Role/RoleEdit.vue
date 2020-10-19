@@ -1,8 +1,8 @@
 <template>
-    <section>
+    <section class="material__container">
         <role-card
-            title="Create role"
-            :model="model"
+            title="Edit role"
+            :model="role"
             :permissions="permissions"
             @submit="save($event)"
             @cancel="cancel()"></role-card>
@@ -24,14 +24,11 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
+        @Prop() readonly role!: any
 
         public permissions: any[] = []
         public permissionsProperty: Channel<any[]> = new ProxyChannel()
         public permissionsWatcher = new ListWatcher()
-
-        public model: any = {}
-        public roleProperty: Channel<any[]> = new ProxyChannel()
-        public roleWatcher = new ListWatcher()
 
         public created (): void {
             this.channel.dispatch({
@@ -44,21 +41,10 @@
             })
             this.permissionsWatcher.withRepository(this.store.permissions)
                 .withBinding(this.permissionsProperty)
-
-            const result = this.store.roles
-                .query()
-                .property(this.$route.query.uuid)
-
-            this.model = result.get()
-            if (!this.model) {
-                console.log('Not Found')
-            }
-            result.close()
         }
 
         public beforeDestroy (): void {
             this.permissionsWatcher.stop()
-            this.roleWatcher.stop()
         }
 
         public cancel (): void {

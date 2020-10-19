@@ -155,7 +155,18 @@ export class VueApplication {
                                             name: 'user.list',
                                             meta: {
                                                 nav: 'user'
-                                            }
+                                            },
+                                            children: [
+                                                {
+                                                    path: 'edit',
+                                                    component: UserEdit,
+                                                    props: props,
+                                                    name: 'user.edit',
+                                                    meta: {
+                                                        nav: 'user'
+                                                    }
+                                                }
+                                            ]
                                         },
                                         {
                                             path: 'user/create',
@@ -167,22 +178,24 @@ export class VueApplication {
                                             }
                                         },
                                         {
-                                            path: 'user/edit',
-                                            component: UserEdit,
-                                            props: props,
-                                            name: 'user.edit',
-                                            meta: {
-                                                nav: 'user'
-                                            }
-                                        },
-                                        {
                                             path: 'role',
                                             component: RoleView,
                                             props: props,
                                             name: 'role.list',
                                             meta: {
                                                 nav: 'role'
-                                            }
+                                            },
+                                            children: [
+                                                {
+                                                    path: 'edit',
+                                                    component: RoleEdit,
+                                                    props: props,
+                                                    name: 'role.edit',
+                                                    meta: {
+                                                        nav: 'role'
+                                                    }
+                                                }
+                                            ]
                                         },
                                         {
                                             path: 'role/create',
@@ -194,37 +207,30 @@ export class VueApplication {
                                             }
                                         },
                                         {
-                                            path: 'role/edit',
-                                            component: RoleEdit,
-                                            props: props,
-                                            name: 'role.edit',
-                                            meta: {
-                                                nav: 'role'
-                                            }
-                                        },
-                                        {
                                             path: 'logging',
                                             component: LoggingView,
                                             props: props,
                                             name: 'logging.list',
                                             meta: {
                                                 nav: 'logging'
-                                            }
+                                            },
+                                            children: [
+                                                {
+                                                    path: 'edit',
+                                                    component: ListenerEdit,
+                                                    props: props,
+                                                    name: 'logging.edit',
+                                                    meta: {
+                                                        nav: 'logging'
+                                                    }
+                                                }
+                                            ]
                                         },
                                         {
                                             path: 'logging/create',
                                             component: ListenerCreate,
                                             props: props,
                                             name: 'logging.create',
-                                            meta: {
-                                                nav: 'logging'
-                                            }
-                                        },
-                                        {
-                                            path: 'logging/edit',
-                                            component: ListenerEdit,
-                                            props: props,
-                                            name: 'logging.edit',
                                             meta: {
                                                 nav: 'logging'
                                             }

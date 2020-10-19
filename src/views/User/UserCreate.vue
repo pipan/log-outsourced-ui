@@ -1,11 +1,13 @@
 <template>
-    <section>
-        <user-card
-            title="Create user"
-            :roles="roles"
-            @submit="save($event)"
-            @cancel="cancel()"></user-card>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container">
+            <user-card
+                title="Create user"
+                :roles="roles"
+                @submit="save($event)"
+                @cancel="cancel()"></user-card>
+        </section>
+    </div>
 </template>
 
 <script lang="ts">

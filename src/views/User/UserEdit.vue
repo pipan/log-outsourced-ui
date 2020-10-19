@@ -1,16 +1,16 @@
 <template>
-    <section>
+    <section class="material__container">
         <user-card
             title="Edit user"
             :roles="roles"
-            :model="model"
+            :model="user"
             @submit="save($event)"
             @cancel="cancel()"></user-card>
     </section>
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator'
+    import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import UserCard from '@/components/domain/user/UserCard.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { ListWatcher } from '@/lib/watcher'
@@ -24,8 +24,7 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
-
-        public model!: any
+        @Prop() readonly user!: any
 
         public roles: any[] = []
         public rolesProperty: Channel<any[]> = new ProxyChannel()
@@ -45,12 +44,6 @@
             })
             this.rolesWatcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
-
-            const result = this.store.users.query()
-                .property(this.$route.query.uuid)
-
-            this.model = result.get()
-            result.close()
         }
 
         public beforeDestroy (): void {

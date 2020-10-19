@@ -1,20 +1,28 @@
 <template>
-    <section>
-        <filtered-list
-            title="Users"
-            @add="create()">
-            <double-lined-item
-                v-for="item of users"
-                :key="item.uuid"
-                :text="item.username"
-                :subtext="item.roles.join(', ')"
-                :value="item"
-                :contexts="['Delete']"
-                @select="open($event)"
-                @delete="remove($event)">
-            </double-lined-item>
-        </filtered-list>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container" :class="{'hide-m': user}">
+            <filtered-list
+                title="Users"
+                @add="create()">
+                <double-lined-item
+                    v-for="item of users"
+                    :key="item.uuid"
+                    :text="item.username"
+                    :subtext="item.roles.join(', ')"
+                    :value="item"
+                    :contexts="['Delete']"
+                    :active="user && item.uuid === user.uuid"
+                    @select="open($event)"
+                    @delete="remove($event)">
+                </double-lined-item>
+            </filtered-list>
+        </section>
+        <router-view
+            :channel="channel"
+            :store="store"
+            :project="project"
+            :user="user"></router-view>
+    </div>
 </template>
 
 <script lang="ts">
@@ -37,9 +45,21 @@
         @Prop() store!: any
         @Prop() project!: any
 
+        public user!: any
+        public userProperty: Channel<any> = new ProxyChannel()
+        private userWatcher = new SingleResourceWatcher()
+
         public users: any[] = []
         public usersProperty: Channel<any> = new ProxyChannel()
         private watcher = new ListWatcher()
+
+        @Watch('$route.query.uuid', { immediate: true })
+        public onUuidChange (value: string, oldValue: string): void {
+            if (!value) {
+                this.user = null
+            }
+            this.userWatcher.withId(value)
+        }
 
         public created (): void {
             this.channel.dispatch({
@@ -50,16 +70,25 @@
             this.usersProperty.connectFn((items: any[]) => {
                 this.users = items
             })
-
             this.watcher.withRepository(this.store.users)
                 .withBinding(this.usersProperty)
+
+            this.userProperty.connectFn((item: any) => {
+                this.user = item
+            })
+            this.userWatcher.withRepository(this.store.users)
+                .withBinding(this.userProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.userWatcher.stop()
         }
 
         public open (user: any): void {
+            if (this.$route.query.uuid === user.uuid) {
+                return
+            }
             this.$router.push({
                 name: 'user.edit',
                 params: this.$route.params,
