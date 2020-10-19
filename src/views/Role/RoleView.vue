@@ -1,20 +1,28 @@
 <template>
-    <section>
-        <filtered-list
-            title="Roles"
-            @add="create()">
-            <double-lined-item
-                v-for="item of roles"
-                :key="item.uuid"
-                :text="item.name"
-                :subtext="item.permissions.join(', ')"
-                :value="item"
-                :contexts="['Delete']"
-                @select="open($event)"
-                @delete="remove($event)">
-            </double-lined-item>
-        </filtered-list>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container" :class="{'hide-m': role}">
+            <filtered-list
+                title="Roles"
+                @add="create()">
+                <double-lined-item
+                    v-for="item of roles"
+                    :key="item.uuid"
+                    :text="item.name"
+                    :subtext="item.permissions.join(', ')"
+                    :value="item"
+                    :contexts="['Delete']"
+                    :active="role && role.uuid === item.uuid"
+                    @select="open($event)"
+                    @delete="remove($event)">
+                </double-lined-item>
+            </filtered-list>
+        </section>
+        <router-view
+            :channel="channel"
+            :store="store"
+            :project="project"
+            :role="role"></router-view>
+    </div>
 </template>
 
 <script lang="ts">
@@ -37,9 +45,21 @@
         @Prop() store!: any
         @Prop() project!: any
 
+        public role!: any
+        public roleProperty: Channel<any> = new ProxyChannel()
+        private roleWatcher = new SingleResourceWatcher()
+
         public roles: any[] = []
         public rolesProperty: Channel<any> = new ProxyChannel()
         private watcher = new ListWatcher()
+
+        @Watch('$route.query.uuid', { immediate: true })
+        public onUuidChange (value: string, oldValue: string): void {
+            if (!value) {
+                this.role = null
+            }
+            this.roleWatcher.withId(value)
+        }
 
         public created (): void {
             this.channel.dispatch({
@@ -50,13 +70,19 @@
             this.rolesProperty.connectFn((items: any[]) => {
                 this.roles = items
             })
-
             this.watcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
+
+            this.roleProperty.connectFn((item: any) => {
+                this.role = item
+            })
+            this.roleWatcher.withRepository(this.store.roles)
+                .withBinding(this.roleProperty)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.roleWatcher.stop()
         }
 
         public open (role: any): void {

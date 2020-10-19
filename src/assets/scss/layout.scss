@@ -58,8 +58,8 @@ h1, h2, h3, h4, h5, h6 {
         display: flex;
         flex-direction: column;
         top: 66px;
-        left: auto;
-        right: auto;
+        left: 0px;
+        right: 0px;
         padding: var(--unit-s);
 
         &--with-nav {
@@ -98,19 +98,21 @@ h1, h2, h3, h4, h5, h6 {
     .material { 
         &__header {
             padding: var(--unit-s) var(--unit-m);
-            
-            &__title {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
+
+            &__back {
+                margin-right: 52px;
             }
         }
 
         &__body {
             flex-direction: row;
             position: absolute;
-            left: 90px;
-            right: 90px;
+
+            &--with-nav {
+                left: 90px;
+                right: 0px;
+                padding-bottom: var(--unit-s);
+            }
         }
 
         &__nav {

@@ -1,8 +1,8 @@
 <template>
-    <section>
+    <section class="material__container">
         <listener-create-card
             :title="'Edit Rule'"
-            :model="model"
+            :model="listener"
             :handlers="handlers"
             @cancel="cancel()"
             @save="save($event)"></listener-create-card>
@@ -32,8 +32,7 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
-
-        public model: any = {}
+        @Prop() readonly listener!: any
 
         public handlers: any[] = []
         public handlersProperty: Channel<any[]> = new ProxyChannel()
@@ -49,16 +48,6 @@
             })
             this.watcher.withRepository(this.store.handlers)
                 .withBinding(this.handlersProperty)
-
-            const result = this.store.listeners
-                .query()
-                .property(this.$route.query.uuid)
-
-            this.model = result.get()
-            if (!this.model) {
-                console.log('Not Found')
-            }
-            result.close()
         }
 
         public beforeDestroy (): void {
@@ -68,7 +57,7 @@
         public cancel (): void {
             this.$router.push({
                 name: 'logging.list',
-                query: this.$route.query
+                params: this.$route.params
             })
         }
 

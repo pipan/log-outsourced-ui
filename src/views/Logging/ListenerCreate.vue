@@ -1,12 +1,14 @@
 <template>
-    <section>
-        <listener-create-card
-            :title="'Create Rule'"
-            :model="model"
-            :handlers="handlers"
-            @cancel="cancel()"
-            @save="save($event)"></listener-create-card>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container">
+            <listener-create-card
+                :title="'Create Rule'"
+                :model="model"
+                :handlers="handlers"
+                @cancel="cancel()"
+                @save="save($event)"></listener-create-card>
+        </section>
+    </div>
 </template>
 
 <script lang="ts">

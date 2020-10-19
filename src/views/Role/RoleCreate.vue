@@ -1,11 +1,13 @@
 <template>
-    <section>
-        <role-card
-            title="Create role"
-            :permissions="permissions"
-            @submit="save($event)"
-            @cancel="cancel()"></role-card>
-    </section>
+    <div class="material__body material__body--with-nav">
+        <section class="material__container">
+            <role-card
+                title="Create role"
+                :permissions="permissions"
+                @submit="save($event)"
+                @cancel="cancel()"></role-card>
+        </section>
+    </div>
 </template>
 
 <script lang="ts">
