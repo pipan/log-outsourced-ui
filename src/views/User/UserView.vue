@@ -3,15 +3,16 @@
         <filtered-list
             title="Users"
             @add="create()">
-            <simple-list-item
+            <double-lined-item
                 v-for="item of users"
                 :key="item.uuid"
                 :text="item.username"
+                :subtext="item.roles.join(', ')"
                 :value="item"
                 :contexts="['Delete']"
                 @select="open($event)"
                 @delete="remove($event)">
-            </simple-list-item>
+            </double-lined-item>
         </filtered-list>
     </section>
 </template>
@@ -21,14 +22,14 @@
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import Contextmenu from '@/components/contextmenu/Contextmenu.vue'
     import FilteredList from '@/components/list/filtered/FilteredList.vue'
-    import SimpleListItem from '@/components/list/simple/SimpleListItem.vue'
+    import DoubleLinedItem from '@/components/list/double/DoubleLinedItem.vue'
     import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
             Contextmenu,
             FilteredList,
-            SimpleListItem
+            DoubleLinedItem
         }
     })
     export default class UserView extends Vue {
@@ -37,9 +38,7 @@
         @Prop() project!: any
 
         public users: any[] = []
-
         public usersProperty: Channel<any> = new ProxyChannel()
-
         private watcher = new ListWatcher()
 
         public created (): void {
@@ -61,14 +60,13 @@
         }
 
         public open (user: any): void {
-            console.log('user open', user)
-            // this.$router.push({
-            //     name: 'project',
-            //     params: {
-            //         connectionId: this.$route.params.connectionId,
-            //         projectUuid: project.uuid
-            //     }
-            // })
+            this.$router.push({
+                name: 'user.edit',
+                params: this.$route.params,
+                query: {
+                    uuid: user.uuid
+                }
+            })
         }
 
         public remove (user: any): void {

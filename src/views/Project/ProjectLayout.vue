@@ -10,7 +10,7 @@
             </div>
         </header>
         <project-navigation></project-navigation>
-        <div class="material__body">
+        <div class="material__body material__body--with-nav">
             <div class="material__container">
                 <router-view
                     :project="project"></router-view>

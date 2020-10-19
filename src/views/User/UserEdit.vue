@@ -1,8 +1,9 @@
 <template>
     <section>
         <user-card
-            title="Create user"
+            title="Edit user"
             :roles="roles"
+            :model="model"
             @submit="save($event)"
             @cancel="cancel()"></user-card>
     </section>
@@ -24,6 +25,8 @@
         @Prop() readonly store!: any
         @Prop() readonly project!: any
 
+        public model!: any
+
         public roles: any[] = []
         public rolesProperty: Channel<any[]> = new ProxyChannel()
         public rolesWatcher = new ListWatcher()
@@ -40,9 +43,14 @@
                     this.roles.push(item.name)
                 }
             })
-
             this.rolesWatcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
+
+            const result = this.store.users.query()
+                .property(this.$route.query.uuid)
+
+            this.model = result.get()
+            result.close()
         }
 
         public beforeDestroy (): void {
@@ -57,14 +65,11 @@
         }
 
         public save (model: any): void {
+            model.uuid = this.$route.query.uuid
             this.channel.dispatch({
-                event: 'user@create',
+                event: 'user@update',
                 data: {
-                    body: {
-                        username: model.username,
-                        roles: model.roles,
-                        project_uuid: this.project.uuid
-                    },
+                    body: model,
                     success: (project: any) => {
                         this.$router.push({
                             name: 'user.list',

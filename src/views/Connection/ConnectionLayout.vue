@@ -7,7 +7,7 @@
             </div>
         </header>
         <connection-navigation></connection-navigation>
-        <div class="material__body">
+        <div class="material__body material__body--with-nav">
             <div class="material__container">
                 <router-view :connection="connection"></router-view>
             </div>
