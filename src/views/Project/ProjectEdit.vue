@@ -21,7 +21,7 @@
     })
     export default class ProjectEdit extends Vue {
         @Prop() readonly channel!: Channel<any>
-        @Prop() readonly repositories!: any
+        @Prop() readonly store!: any
 
         public project: any
 
@@ -39,7 +39,7 @@
                 this.project = item
             })
 
-            this.watcher.withRepository(this.repositories.projects)
+            this.watcher.withRepository(this.store.projects)
                 .withBinding(this.projectProperty)
         }
 

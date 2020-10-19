@@ -21,7 +21,7 @@ export class Bootstrap {
         const connection = new ConnectionModule(alert.getAlertable())
         const project = new ProjectModule(http.getApi(), alert.getAlertable())
         const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
-        const invite = new InviteModule(connection.getService(), alert.getAlertable())
+        const invite = new InviteModule(connection.getService(), http.getApiFactory())
         const permission = new PermissionModule(http.getApi())
         const role = new RoleModule(http.getApi(), alert.getAlertable())
         const user = new UserModule(http.getApi(), alert.getAlertable())
