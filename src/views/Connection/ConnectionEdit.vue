@@ -20,7 +20,7 @@
         }
     })
     export default class ConnectionEdit extends Vue {
-        @Prop() readonly repositories!: any
+        @Prop() readonly store!: any
         @Prop() readonly channel!: Channel<any>
 
         public model: any = {}
@@ -39,7 +39,7 @@
         }
 
         private loadConnection (id: string): void {
-            const query = this.repositories.connections.query()
+            const query = this.store.connections.query()
                 .property(id)
 
             const connection = query.get()

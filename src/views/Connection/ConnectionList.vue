@@ -11,8 +11,8 @@
                 :value="connection"
                 :contexts="['Edit', 'Remove']"
                 @select="open($event)"
-                @Edit="edit($event)"
-                @Remove="remove($event)">
+                @edit="edit($event)"
+                @remove="remove($event)">
             </double-lined-item>
         </simple-list>
     </section>
@@ -59,7 +59,12 @@
         }
 
         public edit (connection: any): void {
-            this.$router.push('/connection/update?id=' + connection.id)
+            this.$router.push({
+                name: 'connection.edit',
+                query: {
+                    id: connection.id
+                }
+            })
         }
 
         public remove (connection: any): void {

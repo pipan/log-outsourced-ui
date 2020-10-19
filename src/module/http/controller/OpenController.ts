@@ -35,8 +35,12 @@ export class OpenController implements Controller {
         const token = result.get() || {}
         result.close()
 
+        let host = connection.host
+        if (!host.startsWith('http')) {
+            host = 'https://' + host
+        }
         this.api.set(
-            this.factory.create(connection.host, token)
+            this.factory.create(host, token)
         )
     }
 }
