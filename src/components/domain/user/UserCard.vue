@@ -9,6 +9,13 @@
                     label="Username"
                     :value="model.username"
                     @change="model.username = $event"></string-field>
+                <multi-select
+                    class="top-m"
+                    label="Roles"
+                    :value="model.roles"
+                    :options="roles"
+                    filterAvailableSince="6"
+                    @change="model.roles = $event"></multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -21,15 +28,17 @@
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import StringField from '@/components/form/StringField.vue'
-    import { Channel } from '@wildebeest/observable'
+    import MultiSelect from '@/components/form/MultiSelect.vue'
 
     @Component({
         components: {
-            StringField
+            StringField,
+            MultiSelect
         }
     })
     export default class UserCard extends Vue {
         @Prop() readonly title!: string
+        @Prop({ default: () => [] }) roles!: any
         @Prop({ default: () => { return {} } }) model!: any
 
         public cancel (): void {

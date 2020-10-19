@@ -64,7 +64,7 @@
             }
             this.filteredOptions = []
             for (const item of this.options) {
-                if (!item.startsWith(value)) {
+                if (!item.toLowerCase().startsWith(value)) {
                     continue
                 }
                 this.filteredOptions.push(item)

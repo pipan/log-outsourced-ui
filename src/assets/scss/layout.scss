@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6 {
         position: fixed;
         top: 0px;
         left: 0px;
-        z-index: 5;
+        z-index: 8;
         display: flex;
         place-content: center center;
         align-items: center;
@@ -61,9 +61,15 @@ h1, h2, h3, h4, h5, h6 {
         left: auto;
         right: auto;
         padding: var(--unit-s);
+
+        &--with-nav {
+            padding-bottom: 56px;
+        }
     }
 
     &__nav {
+        z-index: 5;
+        background-color: var(--bg-level-bottom);
         box-sizing: border-box;
         position: fixed;
         display: flex;
@@ -72,8 +78,8 @@ h1, h2, h3, h4, h5, h6 {
         padding: 0px;
         top: auto;
         bottom: 0px;
-        left: var(--unit-s);
-        right: var(--unit-s);
+        left: 0px;
+        right: 0px;
     }
 
     &__container {

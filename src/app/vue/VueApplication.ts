@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from '@/views/App.vue'
 import Layout from '@/views/Layout.vue'
-import Index from '@/views/Index.vue'
 import NotFound from '@/views/Error/NotFound.vue'
 import ConnectionGuard from '@/views/Connection/ConnectionGuard.vue'
 import ConnectionLayout from '@/views/Connection/ConnectionLayout.vue'
@@ -17,6 +16,7 @@ import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import ProjectEdit from '@/views/Project/ProjectEdit.vue'
 import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
+import UserEdit from '@/views/User/UserEdit.vue'
 import RoleView from '@/views/Role/RoleView.vue'
 import RoleCreate from '@/views/Role/RoleCreate.vue'
 import RoleEdit from '@/views/Role/RoleEdit.vue'
@@ -162,6 +162,15 @@ export class VueApplication {
                                             component: UserCreate,
                                             props: props,
                                             name: 'user.create',
+                                            meta: {
+                                                nav: 'user'
+                                            }
+                                        },
+                                        {
+                                            path: 'user/edit',
+                                            component: UserEdit,
+                                            props: props,
+                                            name: 'user.edit',
                                             meta: {
                                                 nav: 'user'
                                             }
