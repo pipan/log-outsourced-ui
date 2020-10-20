@@ -5,11 +5,14 @@
                 <div>{{ label }}</div>
             </label>
             <inline-context-menu
+                ref="filterContext"
                 v-if="filterAvailableSince <= options.length"
                 icon="filter_list"
                 :attantion="filterValue !== ''">
                 <input
                     type="text"
+                    v-autofocus="true"
+                    v-press:Escape="onEsc"
                     :value="filterValue"
                     class="field__input field__input--auto left-s"
                     @input="onFilter($event.target.value)" />
@@ -28,12 +31,18 @@
     import Field from './Field.vue'
     import StringInput from './StringInput.vue'
     import InlineContextMenu from '../contextmenu/InlineContextMenu.vue'
+    import { Autofocus } from '@/directives/form/Autofocus.ts'
+    import { Press } from '@/directives/form/Press.ts'
 
     @Component({
         components: {
             StringInput,
             InlineContextMenu,
             SelectCheckboxInput
+        },
+        directives: {
+            autofocus: new Autofocus(),
+            press: new Press()
         }
     })
     export default class MultiSelect extends Vue {
@@ -54,6 +63,10 @@
         @Watch('options', { immediate: true })
         public onOptionsChange (value: any[], oldValue: any[]): void {
             this.onFilter(this.filterValue)
+        }
+
+        public onEsc (): void {
+            (this.$refs.filterContext as InlineContextMenu).close()
         }
 
         public onFilter (value: string): void {

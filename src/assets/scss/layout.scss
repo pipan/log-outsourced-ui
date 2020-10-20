@@ -83,8 +83,8 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     &__container {
+        max-width: 600px;
         box-sizing: border-box;
-        margin: 0px auto;
         width: 100%;
         padding: var(--unit-s) 0px;
     }
@@ -107,6 +107,7 @@ h1, h2, h3, h4, h5, h6 {
         &__body {
             flex-direction: row;
             position: absolute;
+            justify-content: center;
 
             &--with-nav {
                 left: 90px;
