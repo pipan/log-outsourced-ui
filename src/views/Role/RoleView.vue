@@ -3,9 +3,12 @@
         <section class="material__container" :class="{'hide-m': role}">
             <filtered-list
                 title="Roles"
+                :filterAvailable="true"
+                :filter="filterValue"
+                @filter="filter($event)"
                 @add="create()">
                 <double-lined-item
-                    v-for="item of roles"
+                    v-for="item of rolesFiltered"
                     :key="item.uuid"
                     :text="item.name"
                     :subtext="item.permissions.join(', ')"
@@ -49,6 +52,8 @@
         public roleProperty: Channel<any> = new ProxyChannel()
         private roleWatcher = new SingleResourceWatcher()
 
+        public filterValue = ''
+        public rolesFiltered: any[] = []
         public roles: any[] = []
         public rolesProperty: Channel<any> = new ProxyChannel()
         private watcher = new ListWatcher()
@@ -69,6 +74,7 @@
 
             this.rolesProperty.connectFn((items: any[]) => {
                 this.roles = items
+                this.filter(this.filterValue)
             })
             this.watcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
@@ -83,6 +89,21 @@
         public beforeDestroy (): void {
             this.watcher.stop()
             this.roleWatcher.stop()
+        }
+
+        public filter (value: string): void {
+            this.filterValue = value
+            if (!this.filterValue) {
+                this.rolesFiltered = this.roles
+                return
+            }
+            this.rolesFiltered = []
+            for (const role of this.roles) {
+                if (!role.name.toLowerCase().startsWith(this.filterValue)) {
+                    continue
+                }
+                this.rolesFiltered.push(role)
+            }
         }
 
         public open (role: any): void {

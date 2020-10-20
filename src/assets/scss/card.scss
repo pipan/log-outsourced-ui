@@ -3,6 +3,7 @@
     background-color: var(--bg-level-middle);
 
     &__header {
+        position: relative;
         border-top-left-radius: var(--corner-radius);
         border-top-right-radius: var(--corner-radius);
         background-color: var(--bg-level-top);
