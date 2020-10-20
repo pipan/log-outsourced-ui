@@ -3,6 +3,7 @@
     border-radius: var(--corner-radius);
 
     &__header {
+        position: relative;
         padding: var(--unit-m);
     }
 

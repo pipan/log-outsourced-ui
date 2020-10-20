@@ -3,9 +3,11 @@
         <section class="material__container" :class="{'hide-m': user}">
             <filtered-list
                 title="Users"
+                :filterAvailable="users.length > 2"
+                @filter="filter($event)"
                 @add="create()">
                 <double-lined-item
-                    v-for="item of users"
+                    v-for="item of usersFiltered"
                     :key="item.uuid"
                     :text="item.username"
                     :subtext="item.roles.join(', ')"
@@ -49,6 +51,8 @@
         public userProperty: Channel<any> = new ProxyChannel()
         private userWatcher = new SingleResourceWatcher()
 
+        public filterValue = ''
+        public usersFiltered: any[] = []
         public users: any[] = []
         public usersProperty: Channel<any> = new ProxyChannel()
         private watcher = new ListWatcher()
@@ -69,6 +73,7 @@
 
             this.usersProperty.connectFn((items: any[]) => {
                 this.users = items
+                this.filter(this.filterValue)
             })
             this.watcher.withRepository(this.store.users)
                 .withBinding(this.usersProperty)
@@ -78,6 +83,21 @@
             })
             this.userWatcher.withRepository(this.store.users)
                 .withBinding(this.userProperty)
+        }
+
+        public filter (value: string): void {
+            this.filterValue = value
+            if (!this.filterValue) {
+                this.usersFiltered = this.users
+                return
+            }
+            this.usersFiltered = []
+            for (const user of this.users) {
+                if (!user.username.toLowerCase().startsWith(this.filterValue)) {
+                    continue
+                }
+                this.usersFiltered.push(user)
+            }
         }
 
         public beforeDestroy (): void {

@@ -4,19 +4,12 @@
             <label class="field__label">
                 <div>{{ label }}</div>
             </label>
-            <inline-context-menu
+            <filter-context-menu
                 ref="filterContext"
                 v-if="filterAvailableSince <= options.length"
-                icon="filter_list"
-                :attantion="filterValue !== ''">
-                <input
-                    type="text"
-                    v-autofocus="true"
-                    v-press:Escape="onEsc"
-                    :value="filterValue"
-                    class="field__input field__input--auto left-s"
-                    @input="onFilter($event.target.value)" />
-            </inline-context-menu>
+                :value="filterValue"
+                @filter="onFilter($event)">
+            </filter-context-menu>
         </div>
         <select-checkbox-input
             :options="filteredOptions"
@@ -30,14 +23,14 @@
     import SelectCheckboxInput from './SelectCheckboxInput.vue'
     import Field from './Field.vue'
     import StringInput from './StringInput.vue'
-    import InlineContextMenu from '../contextmenu/InlineContextMenu.vue'
+    import FilterContextMenu from '../contextmenu/FilterContextMenu.vue'
     import { Autofocus } from '@/directives/form/Autofocus.ts'
     import { Press } from '@/directives/form/Press.ts'
 
     @Component({
         components: {
             StringInput,
-            InlineContextMenu,
+            FilterContextMenu,
             SelectCheckboxInput
         },
         directives: {
@@ -63,10 +56,6 @@
         @Watch('options', { immediate: true })
         public onOptionsChange (value: any[], oldValue: any[]): void {
             this.onFilter(this.filterValue)
-        }
-
-        public onEsc (): void {
-            (this.$refs.filterContext as InlineContextMenu).close()
         }
 
         public onFilter (value: string): void {
