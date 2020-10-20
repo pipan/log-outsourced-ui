@@ -25,7 +25,7 @@
             icon="settings"
             class="top-lonly-m"
             :active="$route.meta.nav === 'project.settings'"
-            @select="open('project.settings')">
+            @select="open('settings')">
         </navigation-item>
     </div>
 </template>
@@ -43,7 +43,8 @@
         private map: {[key: string]: string} = {
             user: 'user.list',
             role: 'role.list',
-            logging: 'logging.list'
+            logging: 'logging.list',
+            settings: 'settings.project'
         }
 
         public open (navName: string): void {

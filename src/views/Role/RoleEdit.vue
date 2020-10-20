@@ -1,23 +1,30 @@
 <template>
     <section class="material__container">
         <role-card
+            v-if="role"
             title="Edit role"
             :model="role"
             :permissions="permissions"
             @submit="save($event)"
             @cancel="cancel()"></role-card>
+        <error-status
+            v-if="!role"
+            status="404"
+            message="Rule not found"></error-status>
     </section>
 </template>
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import RoleCard from '@/components/domain/role/RoleCard.vue'
+    import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { ListWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
-            RoleCard
+            RoleCard,
+            ErrorStatus
         }
     })
     export default class RoleEdit extends Vue {

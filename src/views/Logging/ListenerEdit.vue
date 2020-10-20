@@ -1,11 +1,16 @@
 <template>
     <section class="material__container">
         <listener-create-card
+            v-if="listener"
             :title="'Edit Rule'"
             :model="listener"
             :handlers="handlers"
             @cancel="cancel()"
             @save="save($event)"></listener-create-card>
+        <error-status
+            v-if="!listener"
+            status="404"
+            message="Rule not found"></error-status>
     </section>
 </template>
 
@@ -15,6 +20,7 @@
     import SelectField from '@/components/form/SelectField.vue'
     import SelectCheckboxField from '@/components/form/SelectCheckboxField.vue'
     import ListenerCreateCard from '@/components/domain/listener/ListenerCreateCard.vue'
+    import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import { Closable, Channel, ProxyChannel } from '@wildebeest/observable'
     import { ListWatcher } from '@/lib/watcher'
@@ -25,7 +31,8 @@
             SelectField,
             FormBuilder,
             SelectCheckboxField,
-            ListenerCreateCard
+            ListenerCreateCard,
+            ErrorStatus
         }
     })
     export default class ListenerEdit extends Vue {

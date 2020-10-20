@@ -3,7 +3,7 @@
         <header class="material__header">
             <div class="flexbox-row space-between center flex flexfix">
                 <button class="btn btn--secondary btn--circle material__header__back" @click="back()"><i class="material-icons md-18">arrow_back</i></button>
-                <div class="material__header__title text-h2 text-ellipsis" v-if="connection">{{ connection.name }}</div>
+                <div class="material__header__title text-h2 text-ellipsis text-lonly--center" v-if="connection">{{ connection.name }}</div>
             </div>
         </header>
         <connection-navigation></connection-navigation>
