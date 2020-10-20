@@ -7,6 +7,7 @@
                     label="User"
                     :value="connection.username + '@' + connection.host"></constant-field>
                 <password-field
+                    :autofocus="true"
                     id="password"
                     label="Password"
                     :value="model.password"

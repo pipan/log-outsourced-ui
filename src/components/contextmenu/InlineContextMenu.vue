@@ -28,6 +28,7 @@
         public open (event: any): void {
             this.visible = true
             event.stopPropagation()
+            this.$emit('open')
         }
 
         public close (): void {

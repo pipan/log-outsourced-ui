@@ -1,6 +1,11 @@
 <template>
     <field :id="_uid" :label="label" :error="error">
-        <password-input :id="_uid" :placeholder="placeholder" :value="value" @change="$emit('change', $event)"></password-input>
+        <password-input
+            :id="_uid"
+            :placeholder="placeholder"
+            :value="value"
+            :autofocus="autofocus"
+            @change="$emit('change', $event)"></password-input>
     </field>
 </template>
 
@@ -20,6 +25,7 @@
         @Prop({ default: '' }) readonly placeholder!: string;
         @Prop({ default: '' }) readonly error!: string;
         @Prop({ default: '' }) readonly value!: string;
+        @Prop({ default: false }) readonly autofocus!: boolean;
     }
 </script>
 
