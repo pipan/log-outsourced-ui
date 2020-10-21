@@ -1,12 +1,13 @@
 <template>
     <section class="material__container">
-        <user-card
+        <user-edit-card
             v-if="user"
-            title="Edit user"
+            :title="user.username"
             :roles="roles"
             :model="user"
+            :form="form"
             @submit="save($event)"
-            @cancel="cancel()"></user-card>
+            @cancel="cancel()"></user-edit-card>
         <error-status
             v-if="!user"
             status="404"
@@ -16,14 +17,14 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-    import UserCard from '@/components/domain/user/UserCard.vue'
+    import UserEditCard from '@/components/domain/user/UserEditCard.vue'
     import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { ListWatcher } from '@/lib/watcher'
 
     @Component({
         components: {
-            UserCard,
+            UserEditCard,
             ErrorStatus
         }
     })
@@ -65,6 +66,7 @@
         }
 
         public save (model: any): void {
+            console.log('update', model)
             model.uuid = this.$route.query.uuid
             this.channel.dispatch({
                 event: 'user@update',

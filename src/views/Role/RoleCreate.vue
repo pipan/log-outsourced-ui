@@ -3,6 +3,7 @@
         <section class="material__container">
             <role-card
                 title="Create role"
+                :form="form"
                 :permissions="permissions"
                 @submit="save($event)"
                 @cancel="cancel()"></role-card>
@@ -14,7 +15,8 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import RoleCard from '@/components/domain/role/RoleCard.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -25,6 +27,11 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
+
+        public uid = Uid.next()
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
 
         public permissions: any[] = []
         public permissionsProperty: Channel<any[]> = new ProxyChannel()
@@ -39,13 +46,21 @@
             this.permissionsProperty.connectFn((items: any[]) => {
                 this.permissions = items
             })
-
             this.permissionsWatcher.withRepository(this.store.permissions)
                 .withBinding(this.permissionsProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.permissionsWatcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -59,6 +74,7 @@
             this.channel.dispatch({
                 event: 'role@create',
                 data: {
+                    uid: this.uid,
                     body: {
                         name: model.name,
                         permissions: model.permissions,

@@ -3,20 +3,12 @@
         <form @submit.prevent="save()">
             <header class="card__header">{{ title }}</header>
             <div class="card__body">
-                <string-field
-                    v-if="model"
-                    id="name"
-                    label="Name"
-                    :value="model.name"
-                    :error="form.error ? form.error.name : ''"
-                    @change="model.name = $event"></string-field>
                 <multi-select
-                    class="top-m"
-                    label="Permissions"
-                    :value="model.permissions"
-                    :options="permissions"
+                    label="Roles"
+                    :value="model.roles"
+                    :options="roles"
                     filterAvailableSince="6"
-                    @change="model.permissions = $event"></multi-select>
+                    @change="model.roles = $event"></multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -28,19 +20,16 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator'
-    import StringField from '@/components/form/StringField.vue'
     import MultiSelect from '@/components/form/MultiSelect.vue'
-    import { Channel } from '@wildebeest/observable'
 
     @Component({
         components: {
-            StringField,
             MultiSelect
         }
     })
-    export default class RoleCard extends Vue {
+    export default class UserCard extends Vue {
         @Prop() readonly title!: string
-        @Prop({ default: () => [] }) permissions!: string[]
+        @Prop({ default: () => [] }) roles!: any
         @Prop({ default: () => { return {} } }) model!: any
         @Prop({ default: () => { return {} } }) form!: any
 

@@ -1,21 +1,19 @@
 import { Module, BootContext, RegisterContext, Store } from '@/lib/framework'
-import { SimpleRepository } from '@wildebeest/repository'
-import { StatefulChannel } from '@wildebeest/observable'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { RoleLoadController } from './controller/RoleLoadController'
-import { RoleCreateController } from './controller/RoleCreateController'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
+import { ServerValidator } from '../form'
 
 export class RoleModule implements Module {
     private api: OutsourcedApi
     private cModule: Module
 
-    constructor (api: OutsourcedApi, alertable: Alertable) {
+    constructor (api: OutsourcedApi, alertable: Alertable, serverValidator: ServerValidator) {
         this.api = api
         this.cModule = (new ModuleBuilder('role'))
-            .withCreateAction(() => api.roles(), alertable)
-            .withUpdateAction(() => api.roles(), alertable)
+            .withCreateAction(() => api.roles(), alertable, serverValidator)
+            .withUpdateAction(() => api.roles(), alertable, serverValidator)
             .withDeleteAction(() => api.roles(), alertable)
             .withClearOnProjectOpen()
             .build()

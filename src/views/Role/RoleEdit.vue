@@ -2,9 +2,10 @@
     <section class="material__container">
         <role-card
             v-if="role"
-            title="Edit role"
+            :title="role.name"
             :model="role"
             :permissions="permissions"
+            :form="form"
             @submit="save($event)"
             @cancel="cancel()"></role-card>
         <error-status
@@ -19,7 +20,8 @@
     import RoleCard from '@/components/domain/role/RoleCard.vue'
     import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -32,6 +34,11 @@
         @Prop() readonly store!: any
         @Prop() readonly project!: any
         @Prop() readonly role!: any
+
+        public uid = Uid.next()
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
 
         public permissions: any[] = []
         public permissionsProperty: Channel<any[]> = new ProxyChannel()
@@ -48,10 +55,19 @@
             })
             this.permissionsWatcher.withRepository(this.store.permissions)
                 .withBinding(this.permissionsProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.permissionsWatcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -66,6 +82,7 @@
             this.channel.dispatch({
                 event: 'role@update',
                 data: {
+                    uid: this.uid,
                     body: model,
                     success: (project: any) => {
                         this.$router.push({

@@ -8,6 +8,7 @@
                     id="name"
                     label="Name"
                     :value="model.name"
+                    :error="form.error ? form.error.name : ''"
                     @change="model.name = $event"></string-field>
             </div>
             <footer class="card__footer">
@@ -31,6 +32,7 @@
     export default class ProjectCard extends Vue {
         @Prop() readonly title!: string
         @Prop({ default: () => { return {} } }) model!: any
+        @Prop({ default: () => { return {} } }) form!: any
 
         public cancel (): void {
             this.$emit('cancel')

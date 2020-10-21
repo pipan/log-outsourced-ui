@@ -4,20 +4,22 @@ import { ProjectLoadAllController } from './controller/ProjectLoadAllController'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
 import { ProjectOpenController } from './controller/ProjectOpenController'
+import { CreateController } from '../CreateController'
+import { ServerValidator } from '../form'
 
 export class ProjectModule implements Module {
     private api: OutsourcedApi
     private alertable: Alertable
     private cudModule: Module
 
-    public constructor (api: OutsourcedApi, alertable: Alertable) {
+    public constructor (api: OutsourcedApi, alertable: Alertable, serverValidator: ServerValidator) {
         this.api = api
         this.alertable = alertable
 
         this.cudModule = (new ModuleBuilder('project'))
-            .withCreateAction(() => this.api.projects(), alertable)
+            .withCreateAction(() => this.api.projects(), alertable, serverValidator)
             .withDeleteAction(() => this.api.projects(), alertable)
-            .withUpdateAction(() => this.api.projects(), alertable)
+            .withUpdateAction(() => this.api.projects(), alertable, serverValidator)
             .build()
     }
 
@@ -29,6 +31,7 @@ export class ProjectModule implements Module {
         this.cudModule.register(context, store)
 
         const repo = store.get('projects')
+        const formRepo = store.get('forms')
         context.withController(
                 'project@load',
                 new ProjectLoadAllController(repo, this.api)

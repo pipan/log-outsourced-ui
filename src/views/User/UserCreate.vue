@@ -4,6 +4,7 @@
             <user-card
                 title="Create user"
                 :roles="roles"
+                :form="form"
                 @submit="save($event)"
                 @cancel="cancel()"></user-card>
         </section>
@@ -14,7 +15,8 @@
     import { Component, Vue, Prop } from 'vue-property-decorator'
     import UserCard from '@/components/domain/user/UserCard.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -25,6 +27,11 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
         @Prop() readonly project!: any
+
+        public uid = Uid.next()
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
 
         public roles: any[] = []
         public rolesProperty: Channel<any[]> = new ProxyChannel()
@@ -45,10 +52,19 @@
 
             this.rolesWatcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.rolesWatcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -62,6 +78,7 @@
             this.channel.dispatch({
                 event: 'user@create',
                 data: {
+                    uid: this.uid,
                     body: {
                         username: model.username,
                         roles: model.roles,
