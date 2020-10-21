@@ -72,6 +72,11 @@
         }
 
         public remove (admin: any): void {
+            const consent = confirm('You are about to delete an administrator: ' + admin.username)
+            if (!consent) {
+                return
+            }
+
             this.channel.dispatch({
                 event: 'administrator@delete',
                 data: {
