@@ -5,10 +5,10 @@
             <div class="card__body">
                 <multi-select
                     label="Roles"
-                    :value="model.roles"
+                    :value="innerModel.roles"
                     :options="roles"
                     filterAvailableSince="6"
-                    @change="model.roles = $event"></multi-select>
+                    @change="innerModel.roles = $event"></multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator'
+    import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import MultiSelect from '@/components/form/MultiSelect.vue'
 
     @Component({
@@ -33,12 +33,23 @@
         @Prop({ default: () => { return {} } }) model!: any
         @Prop({ default: () => { return {} } }) form!: any
 
+        public innerModel: any = {}
+
+        @Watch('model', { immediate: true })
+        public onModelChange (value: any, oldValue: any): void {
+            this.innerModel = {
+                uuid: value.uuid,
+                username: value.username,
+                roles: [...value.roles]
+            }
+        }
+
         public cancel (): void {
             this.$emit('cancel')
         }
 
         public save (): void {
-            this.$emit('submit', this.model)
+            this.$emit('submit', this.innerModel)
         }
     }
 </script>
