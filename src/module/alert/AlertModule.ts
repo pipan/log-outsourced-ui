@@ -13,7 +13,8 @@ export class AlertModule implements Module {
             .withRepository('alerts')
 
         this.alertable = new AutohideAlertable(
-            this.store.get('alerts')
+            this.store.get('alerts'),
+            12000
         )
     }
 

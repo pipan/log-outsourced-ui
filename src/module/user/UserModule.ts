@@ -14,6 +14,7 @@ export class UserModule implements Module {
         this.cModule = (new ModuleBuilder('user'))
             .withCreateAction(() => api.users(), alertable)
             .withUpdateAction(() => api.users(), alertable)
+            .withDeleteAction(() => api.users(), alertable)
             .withClearOnProjectOpen()
             .build()
     }
