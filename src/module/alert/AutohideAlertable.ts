@@ -7,6 +7,12 @@ export class AutohideAlertable implements Alertable {
     private generator: Generatable<string> = new IncrementalStringGenerator()
     private delay: number
 
+    private icons: {[key: string]: string} = {
+        success: 'thumb_up_alt',
+        warning: 'warning',
+        error: 'error'
+    }
+
     constructor (repo: Repository<any>, delay = 3000) {
         this.repo = repo
         this.delay = delay
@@ -29,10 +35,13 @@ export class AutohideAlertable implements Alertable {
     }
 
     public push (type: string, message: string): void {
-        const alert = {
+        const alert: any = {
             id: this.generator.generate(),
             type: type,
             message: message
+        }
+        if (this.icons[type]) {
+            alert.icon = this.icons[type]
         }
         this.repo.insert(alert)
 
