@@ -14,15 +14,18 @@ import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import ProjectEdit from '@/views/Project/ProjectEdit.vue'
+import ProjectSettings from '@/views/Project/ProjectSettings.vue'
 import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import UserEdit from '@/views/User/UserEdit.vue'
+import UserSettings from '@/views/User/UserSettings.vue'
 import RoleView from '@/views/Role/RoleView.vue'
 import RoleCreate from '@/views/Role/RoleCreate.vue'
 import RoleEdit from '@/views/Role/RoleEdit.vue'
 import LoggingView from '@/views/Logging/LoggingView.vue'
 import ListenerCreate from '@/views/Logging/ListenerCreate.vue'
 import ListenerEdit from '@/views/Logging/ListenerEdit.vue'
+import SettingsLayout from '@/views/Settings/SettingsLayout.vue'
 import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
 import { Store } from '@/lib/framework'
@@ -233,6 +236,32 @@ export class VueApplication {
                                             name: 'logging.create',
                                             meta: {
                                                 nav: 'logging'
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'settings',
+                                    component: SettingsLayout,
+                                    props: props,
+                                    name: 'settings',
+                                    children: [
+                                        {
+                                            path: 'project',
+                                            component: ProjectSettings,
+                                            props: props,
+                                            name: 'settings.project',
+                                            meta: {
+                                                nav: 'project'
+                                            }
+                                        },
+                                        {
+                                            path: 'user',
+                                            component: UserSettings,
+                                            props: props,
+                                            name: 'settings.user',
+                                            meta: {
+                                                nav: 'user'
                                             }
                                         }
                                     ]

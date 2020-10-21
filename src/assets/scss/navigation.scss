@@ -1,5 +1,6 @@
 .nav {
     &__item {
+        box-sizing: border-box;
         padding: 0px;
         border-top: solid 1px transparent;
         border-right: none;
@@ -18,6 +19,7 @@
             border-top: none;
             border-right: solid 1px transparent;
             flex-grow: auto;
+            width: 104px;
     
             &--active {    
                 border-color: var(--primary);

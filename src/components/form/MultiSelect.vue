@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="field field--filter">
-            <label class="field__label">
+            <label class="field__label field__label--full">
                 <div>{{ label }}</div>
             </label>
             <filter-context-menu
