@@ -8,6 +8,7 @@
                     id="username"
                     label="Username"
                     :value="model.username"
+                    :error="form.error ? form.error.username : ''"
                     @change="model.username = $event"></string-field>
                 <multi-select
                     class="top-m"
@@ -40,6 +41,7 @@
         @Prop() readonly title!: string
         @Prop({ default: () => [] }) roles!: any
         @Prop({ default: () => { return {} } }) model!: any
+        @Prop({ default: () => { return {} } }) form!: any
 
         public cancel (): void {
             this.$emit('cancel')

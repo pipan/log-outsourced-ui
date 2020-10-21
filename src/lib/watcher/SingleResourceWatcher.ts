@@ -1,5 +1,5 @@
 import { Repository, QueryResult } from '@wildebeest/repository'
-import { Channel } from '@wildebeest/observable'
+import { Channel, ProxyChannel } from '@wildebeest/observable'
 import { Identifiable } from '@wildebeest/repository/dist/identify/Identifiable'
 import { QueryWatcher } from './QueryWatcher'
 
@@ -40,6 +40,12 @@ export class SingleResourceWatcher<T extends Identifiable> {
     public withBinding (binding: Channel<T>): SingleResourceWatcher<T> {
         this.queryWatcher.withBinding(binding)
         return this.restart()
+    }
+
+    public withBindingFn (fn: (item: any) => void): SingleResourceWatcher<T> {
+        const property: Channel<any> = new ProxyChannel()
+        property.connectFn(fn)
+        return this.withBinding(property)
     }
 
     public withRepository (repository: Repository<T>): SingleResourceWatcher<T> {

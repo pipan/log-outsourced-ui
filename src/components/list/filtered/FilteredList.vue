@@ -5,6 +5,7 @@
             <filter-context-menu
                 v-if="filterAvailable"
                 :value="filterValue"
+                class="top-s"
                 @filter="onFilter($event)"></filter-context-menu>
         </div>
         <slot></slot>

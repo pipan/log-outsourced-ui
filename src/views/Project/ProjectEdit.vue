@@ -3,6 +3,7 @@
         <project-card
             title="Edit project"
             :model="project"
+            :form="form"
             @submit="save($event)"
             @cancel="cancel()"></project-card>
     </section>
@@ -13,6 +14,7 @@
     import ProjectCard from '@/components/domain/project/ProjectCard.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
     import { SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -23,11 +25,14 @@
         @Prop() readonly channel!: Channel<any>
         @Prop() readonly store!: any
 
+        protected uid = Uid.next()
+
         public project: any
-
         public projectProperty: Channel<any> = new ProxyChannel()
-
         private watcher = new SingleResourceWatcher()
+
+        public form: any = {}
+        private formWatcher = new SingleResourceWatcher()
 
         @Watch('$route.query.uuid', { immediate: true })
         public onUuidChange (value: string, oldValue: string): void {
@@ -41,10 +46,19 @@
 
             this.watcher.withRepository(this.store.projects)
                 .withBinding(this.projectProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -58,6 +72,7 @@
             this.channel.dispatch({
                 event: 'project@update',
                 data: {
+                    uid: this.uid,
                     body: model,
                     success: (project: any) => {
                         this.$router.push({

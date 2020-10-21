@@ -12,19 +12,33 @@ import { AppModule } from '@/module/app'
 import { ListenerModule } from '@/module/listener'
 import { HandlerModule } from '@/module/handler'
 import { PermissionModule } from '@/module/permission/PermissionModule'
+import { FormModule } from '@/module/form'
 
 export class Bootstrap {
     public static getModules (): Module[] {
+        const form = new FormModule()
         const http = new HttpModule()
         const alert = new AlertModule()
         const auth = new AuthModule(http.getApi())
         const connection = new ConnectionModule(alert.getAlertable())
-        const project = new ProjectModule(http.getApi(), alert.getAlertable())
+        const project = new ProjectModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getServerValidator()
+        )
         const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
         const invite = new InviteModule(connection.getService(), http.getApiFactory())
         const permission = new PermissionModule(http.getApi())
-        const role = new RoleModule(http.getApi(), alert.getAlertable())
-        const user = new UserModule(http.getApi(), alert.getAlertable())
+        const role = new RoleModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getServerValidator()
+        )
+        const user = new UserModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getServerValidator()
+        )
         const handler = new HandlerModule(http.getApi())
         const listener = new ListenerModule(http.getApi(), alert.getAlertable())
 
@@ -33,6 +47,6 @@ export class Bootstrap {
         // new HandlerModule(httpApi.handlers()),
         // new ListenerModule(httpApi.listeners(), httpApi.log())
 
-        return [http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, app]
+        return [form, http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, app]
     }
 }
