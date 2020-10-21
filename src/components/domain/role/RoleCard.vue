@@ -7,16 +7,16 @@
                     v-if="model"
                     id="name"
                     label="Name"
-                    :value="model.name"
+                    :value="innerModel.name"
                     :error="form.error ? form.error.name : ''"
-                    @change="model.name = $event"></string-field>
+                    @change="innerModel.name = $event"></string-field>
                 <multi-select
                     class="top-m"
                     label="Permissions"
-                    :value="model.permissions"
+                    :value="innerModel.permissions"
                     :options="permissions"
                     filterAvailableSince="6"
-                    @change="model.permissions = $event"></multi-select>
+                    @change="innerModel.permissions = $event"></multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator'
+    import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import StringField from '@/components/form/StringField.vue'
     import MultiSelect from '@/components/form/MultiSelect.vue'
     import { Channel } from '@wildebeest/observable'
@@ -44,12 +44,23 @@
         @Prop({ default: () => { return {} } }) model!: any
         @Prop({ default: () => { return {} } }) form!: any
 
+        public innerModel: any = {}
+
+        @Watch('model', { immediate: true })
+        public onModelChange (value: any, oldValue: any): void {
+            this.innerModel = {
+                uuid: value.uuid,
+                name: value.name,
+                permissions: [...value.permissions]
+            }
+        }
+
         public cancel (): void {
             this.$emit('cancel')
         }
 
         public save (): void {
-            this.$emit('submit', this.model)
+            this.$emit('submit', this.innerModel)
         }
     }
 </script>

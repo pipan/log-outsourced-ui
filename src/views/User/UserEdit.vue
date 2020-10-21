@@ -20,7 +20,8 @@
     import UserEditCard from '@/components/domain/user/UserEditCard.vue'
     import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -33,6 +34,11 @@
         @Prop() readonly store!: any
         @Prop() readonly project!: any
         @Prop() readonly user!: any
+
+        public uid = Uid.next()
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
 
         public roles: any[] = []
         public rolesProperty: Channel<any[]> = new ProxyChannel()
@@ -52,10 +58,19 @@
             })
             this.rolesWatcher.withRepository(this.store.roles)
                 .withBinding(this.rolesProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.rolesWatcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -66,18 +81,11 @@
         }
 
         public save (model: any): void {
-            console.log('update', model)
             model.uuid = this.$route.query.uuid
             this.channel.dispatch({
                 event: 'user@update',
                 data: {
-                    body: model,
-                    success: (project: any) => {
-                        this.$router.push({
-                            name: 'user.list',
-                            params: this.$route.params
-                        })
-                    }
+                    body: model
                 }
             })
         }

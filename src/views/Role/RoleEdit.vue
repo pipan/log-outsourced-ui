@@ -83,13 +83,7 @@
                 event: 'role@update',
                 data: {
                     uid: this.uid,
-                    body: model,
-                    success: (project: any) => {
-                        this.$router.push({
-                            name: 'role.list',
-                            params: this.$route.params
-                        })
-                    }
+                    body: model
                 }
             })
         }
