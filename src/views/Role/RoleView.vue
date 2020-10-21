@@ -117,6 +117,10 @@
         }
 
         public remove (role: any): void {
+            const consent = confirm('You are about to delete a role: ' + role.name)
+            if (!consent) {
+                return
+            }
             this.channel.dispatch({
                 event: 'role@delete',
                 data: {

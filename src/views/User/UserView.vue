@@ -119,6 +119,10 @@
         }
 
         public remove (user: any): void {
+            const consent = confirm('You are about to delete a user: ' + user.username)
+            if (!consent) {
+                return
+            }
             this.channel.dispatch({
                 event: 'user@delete',
                 data: {

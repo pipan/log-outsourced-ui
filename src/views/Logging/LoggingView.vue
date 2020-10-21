@@ -128,6 +128,10 @@
         }
 
         public remove (listener: any): void {
+            const consent = confirm('You are about to delete a rule: ' + listener.name)
+            if (!consent) {
+                return
+            }
             this.channel.dispatch({
                 event: 'listener@delete',
                 data: {

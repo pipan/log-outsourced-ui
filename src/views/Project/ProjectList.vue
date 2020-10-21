@@ -69,6 +69,10 @@
         }
 
         public remove (project: any): void {
+            const consent = confirm('You are about to delete project and all of it\'s content: ' + project.name)
+            if (!consent) {
+                return
+            }
             this.channel.dispatch({
                 event: 'project@delete',
                 data: {
