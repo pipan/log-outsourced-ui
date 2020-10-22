@@ -40,7 +40,11 @@ export class Bootstrap {
             form.getServerValidator()
         )
         const handler = new HandlerModule(http.getApi())
-        const listener = new ListenerModule(http.getApi(), alert.getAlertable())
+        const listener = new ListenerModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getServerValidator()
+        )
 
         const app = new AppModule(alert.getAlertable())
 

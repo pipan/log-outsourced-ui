@@ -2,17 +2,15 @@ import { Controller } from '@/lib/framework'
 import { StatefulChannel } from '@wildebeest/observable'
 
 export class UnauthorizedController implements Controller {
-    private auth: StatefulChannel<any>
+    private error: StatefulChannel<any>
 
-    public constructor (auth: StatefulChannel<any>) {
-        this.auth = auth
+    public constructor (error: StatefulChannel<any>) {
+        this.error = error
     }
 
     public action (data?: any): void {
-        this.auth.dispatch({
-            error: {
-                status: 401
-            }
+        this.error.dispatch({
+            status: 401
         })
     }
 }

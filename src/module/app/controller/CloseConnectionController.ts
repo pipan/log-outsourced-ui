@@ -1,7 +1,7 @@
 import { Controller } from '@/lib/framework'
 import { StatefulChannel } from '@wildebeest/observable'
 
-export class HttpErrorController implements Controller {
+export class CloseConnectionController implements Controller {
     private error: StatefulChannel<any>
 
     public constructor (error: StatefulChannel<any>) {
@@ -9,9 +9,6 @@ export class HttpErrorController implements Controller {
     }
 
     public action (data?: any): void {
-        this.error.dispatch({
-            status: 'Error',
-            message: 'Something went wrong'
-        })
+        this.error.dispatch(null)
     }
 }
