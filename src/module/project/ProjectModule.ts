@@ -6,6 +6,7 @@ import { Alertable } from '../alert'
 import { ProjectOpenController } from './controller/ProjectOpenController'
 import { CreateController } from '../CreateController'
 import { ServerValidator } from '../form'
+import { ClearController } from '../ClearController'
 
 export class ProjectModule implements Module {
     private api: OutsourcedApi
@@ -31,7 +32,6 @@ export class ProjectModule implements Module {
         this.cudModule.register(context, store)
 
         const repo = store.get('projects')
-        const formRepo = store.get('forms')
         context.withController(
                 'project@load',
                 new ProjectLoadAllController(repo, this.api)
@@ -39,6 +39,10 @@ export class ProjectModule implements Module {
             .withController(
                 'project@open',
                 new ProjectOpenController(repo, this.api)
+            )
+            .withController(
+                'connection@open',
+                new ClearController(repo)
             )
     }
 }

@@ -2,13 +2,13 @@
     <div>
         <router-view
             :connection="connection"
-            v-if="connection && !auth.error"></router-view>
-        <div class="material__body" v-if="!connection || auth.error">
+            v-if="connection && !error"></router-view>
+        <div class="material__body" v-if="!connection || error">
             <div class="material__container">
                 <connection-login
-                    v-if="connection && auth.error && auth.error.status == 401"
+                    v-if="connection && error.status === 401"
                     :connection="connection"
-                    :auth="auth"
+                    :error="error"
                     @cancel="back()"
                     @submit="login($event)">
                 </connection-login>
@@ -16,6 +16,11 @@
                     v-if="!connection"
                     status="404"
                     message="Connection not found">
+                </error-status>
+                <error-status
+                    v-if="error && error.status !== 401"
+                    :status="error.status"
+                    :message="error.message">
                 </error-status>
             </div>
         </div>
@@ -43,10 +48,10 @@
 
         public connection: any = null
         public connectionProperty: Channel<any> = new ProxyChannel()
-        public auth: any = {}
-
         private watcher = new SingleResourceWatcher()
-        private authWatcher: any
+
+        public error: any = null
+        private errorWatcher: any
 
         @Watch('$route.params.connectionId', { immediate: true })
         public onIdChange (value: string, oldValue: string): void {
@@ -64,15 +69,15 @@
             this.watcher.withRepository(this.store.connections)
                 .withBinding(this.connectionProperty)
 
-            this.authWatcher = new PropertyWatcher((item: any) => {
-                this.auth = item
+            this.errorWatcher = new PropertyWatcher((item: any) => {
+                this.error = item
             })
-            this.authWatcher.watch(this.store.auth)
+            this.errorWatcher.watch(this.store.error)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
-            this.authWatcher.stop()
+            this.errorWatcher.stop()
             this.channel.dispatch({
                 event: 'connection@close'
             })
@@ -85,6 +90,9 @@
                     body: {
                         username: this.connection.username,
                         password: password
+                    },
+                    success: () => {
+                        this.error = null
                     }
                 }
             })

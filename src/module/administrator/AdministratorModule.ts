@@ -4,6 +4,7 @@ import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { AdministratorInviteController } from './controller/AdministratorInviteController'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
+import { ClearController } from '../ClearController'
 
 export class AdministratorModule implements Module {
     private api: OutsourcedApi
@@ -33,6 +34,10 @@ export class AdministratorModule implements Module {
             .withController(
                 'administrator@invite',
                 new AdministratorInviteController(repo, this.api)
+            )
+            .withController(
+                'connection@open',
+                new ClearController(repo)
             )
     }
 }
