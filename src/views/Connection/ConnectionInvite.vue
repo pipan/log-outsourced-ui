@@ -94,7 +94,11 @@
         }
 
         public accept (): void {
-            if (!this.model.password || this.model.password !== this.model.passwordRepeat) {
+            if (!this.model.password) {
+                this.form.error.password = 'Password is required'
+                return
+            }
+            if (this.model.password !== this.model.passwordRepeat) {
                 this.form.error.password = 'Password has to match with repeat password'
                 return
             }
