@@ -11,7 +11,7 @@
                     :icon="getHandlerBySlug(item.handler_slug).meta.meta.icon"
                     :subtext="item.rules.join(', ')"
                     :value="item"
-                    :contexts="['Delete', 'Test']"
+                    :contexts="['Test', 'Delete']"
                     :active="listener && item.uuid === listener.uuid"
                     @select="open($event)"
                     @delete="remove($event)"
