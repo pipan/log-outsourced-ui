@@ -9,6 +9,7 @@ import { UserApi } from './domain/user/UserApi'
 import { RoleApi } from './domain/role/RoleApi'
 import { PermissionApi } from './domain/permission/PermissionApi'
 import { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
+import { ProjectKeyApi } from './domain/settings/projectkey/ProjectKeyApi'
 
 export interface OutsourcedApi {
     getHost (): string;
@@ -23,4 +24,5 @@ export interface OutsourcedApi {
     roles (): RoleApi;
     permissions (): PermissionApi;
     defaultRoles (): DefaultRoleApi;
+    projectKeys (): ProjectKeyApi;
 }

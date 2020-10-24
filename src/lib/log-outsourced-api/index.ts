@@ -34,3 +34,6 @@ export { PermissionHttpApi } from './domain/permission/PermissionHttpApi'
 
 export { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
 export { DefaultRoleHttpApi } from './domain/settings/defaultrole/DefaultRoleHttpApi'
+
+export { ProjectKeyApi } from './domain/settings/projectkey/ProjectKeyApi'
+export { ProjectKeyHttpApi } from './domain/settings/projectkey/ProjectKeyHttpApi'

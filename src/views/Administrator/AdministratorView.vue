@@ -87,9 +87,13 @@
 
         public copyInviteUrl (admin: any): void {
             clipboardCopy(location.origin + '/connection/invite/' + admin.invite_token + '?host=' + this.connection.host)
-            // this.channel.dispatch(
-            //     AlertHelper.infoEvent('Invite URL was copied to clipboard')
-            // )
+            this.channel.dispatch({
+                event: 'alert@create',
+                data: {
+                    type: 'info',
+                    message: 'Invite URL has been copied to clipboard'
+                }
+            })
         }
     }
 </script>

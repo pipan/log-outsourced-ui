@@ -1,10 +1,10 @@
 <template>
     <div class="material__nav">
         <navigation-item
-            text="Project"
-            icon="folder_open"
-            :active="$route.meta.nav === 'project'"
-            @select="open('project')">
+            text="Access Keys"
+            icon="vpn_key"
+            :active="$route.meta.nav === 'projectkey'"
+            @select="open('projectkey')">
         </navigation-item>
         <navigation-item
             text="User"
@@ -28,7 +28,7 @@
     export default class SettingsNavigation extends Vue {
         private map: {[key: string]: string} = {
             user: 'settings.user',
-            project: 'settings.project'
+            projectkey: 'projectkey.list'
         }
 
         public open (navName: string): void {
