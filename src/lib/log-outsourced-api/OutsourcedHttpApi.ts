@@ -21,6 +21,8 @@ import { RoleApi } from './domain/role/RoleApi'
 import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
 import { PermissionHttpApi } from './domain/permission/PermissionHttpApi'
 import { PermissionApi } from './domain/permission/PermissionApi'
+import { DefaultRoleHttpApi } from './domain/settings/defaultrole/DefaultRoleHttpApi'
+import { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
@@ -44,6 +46,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             listener: new ListenerHttpApi(host, authHttp),
             log: new LogHttpApi(host),
             invite: new InviteHttpApi(host),
+            defaultRoles: new DefaultRoleHttpApi(host, authHttp),
             auth: authApi
         }
 
@@ -102,5 +105,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
     public permissions (): PermissionApi {
         return this.domains.permissions
+    }
+
+    public defaultRoles (): DefaultRoleApi {
+        return this.domains.defaultRoles
     }
 }

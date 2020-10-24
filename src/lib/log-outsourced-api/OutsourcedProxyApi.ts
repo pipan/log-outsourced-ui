@@ -9,6 +9,7 @@ import { ProjectApi } from './domain/project/ProjectApi'
 import { RoleApi } from './domain/role/RoleApi'
 import { UserApi } from './domain/user/UserApi'
 import { PermissionApi } from './domain/permission/PermissionApi'
+import { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
 
 export class OutsourcedProxyApi implements OutsourcedApi {
     private api!: OutsourcedApi
@@ -59,5 +60,9 @@ export class OutsourcedProxyApi implements OutsourcedApi {
 
     public permissions (): PermissionApi {
         return this.api.permissions()
+    }
+
+    public defaultRoles (): DefaultRoleApi {
+        return this.api.defaultRoles()
     }
 }
