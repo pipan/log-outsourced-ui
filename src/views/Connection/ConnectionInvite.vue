@@ -12,6 +12,7 @@
                         id="password"
                         label="Password"
                         :value="model.password"
+                        :error="form.error.password"
                         @change="model.password = $event"></password-field>
                     <password-field
                         id="password_repeat"
@@ -51,6 +52,12 @@
             passwordRepeat: ''
         }
 
+        public form: any = {
+            error: {
+                password: ''
+            }
+        }
+
         public host = ''
         public invitation: any = {}
         private watcher: SingleResourceWatcher<any> = new SingleResourceWatcher()
@@ -88,7 +95,7 @@
 
         public accept (): void {
             if (!this.model.password || this.model.password !== this.model.passwordRepeat) {
-                console.log('validation error')
+                this.form.error.password = 'Password has to match with repeat password'
                 return
             }
             this.channel.dispatch({
