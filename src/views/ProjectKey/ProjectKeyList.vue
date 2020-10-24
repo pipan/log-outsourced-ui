@@ -2,7 +2,7 @@
     <div class="material__body material__body--with-nav">
         <section class="material__container">
             <filtered-list
-                title="Project Keys"
+                title="Access Keys"
                 :filterAvailable="keys.length > 6"
                 @filter="filter($event)"
                 @add="create()">

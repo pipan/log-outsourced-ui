@@ -24,7 +24,7 @@
                     class="top-m"
                     :fields="fields"
                     :values="model.handler_values"
-                    @change="model.handler_Values = $event"></form-builder>
+                    @change="model.handler_values = $event"></form-builder>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="$emit('cancel')">CANCEL</button>

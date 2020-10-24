@@ -31,6 +31,7 @@ export class TestController implements Controller {
                 if (response.ok) {
                     this.alertable.info('Test has been send')
                 }
+                return response
             })
     }
 }

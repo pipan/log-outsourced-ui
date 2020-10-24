@@ -67,20 +67,19 @@
 
         public save (data: any): void {
             data.project_uuid = this.project.uuid
-            console.log('save')
 
-            // this.channel.dispatch({
-            //     event: 'listener@create',
-            //     data: {
-            //         body: data,
-            //         success: (listener: any) => {
-            //             this.$router.push({
-            //                 name: 'logging.list',
-            //                 params: this.$route.params
-            //             })
-            //         }
-            //     }
-            // })
+            this.channel.dispatch({
+                event: 'listener@create',
+                data: {
+                    body: data,
+                    success: (listener: any) => {
+                        this.$router.push({
+                            name: 'logging.list',
+                            params: this.$route.params
+                        })
+                    }
+                }
+            })
         }
     }
 </script>
