@@ -31,3 +31,6 @@ export { LogHttpApi } from './domain/log/LogHttpApi'
 
 export { PermissionApi } from './domain/permission/PermissionApi'
 export { PermissionHttpApi } from './domain/permission/PermissionHttpApi'
+
+export { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
+export { DefaultRoleHttpApi } from './domain/settings/defaultrole/DefaultRoleHttpApi'

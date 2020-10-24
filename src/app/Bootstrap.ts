@@ -13,6 +13,7 @@ import { ListenerModule } from '@/module/listener'
 import { HandlerModule } from '@/module/handler'
 import { PermissionModule } from '@/module/permission/PermissionModule'
 import { FormModule } from '@/module/form'
+import { DefaultRoleModule } from '@/module/defaultrole'
 
 export class Bootstrap {
     public static getModules (): Module[] {
@@ -45,12 +46,10 @@ export class Bootstrap {
             alert.getAlertable(),
             form.getServerValidator()
         )
+        const defaultRole = new DefaultRoleModule(http.getApi(), alert.getAlertable())
 
         const app = new AppModule(alert.getAlertable())
 
-        // new HandlerModule(httpApi.handlers()),
-        // new ListenerModule(httpApi.listeners(), httpApi.log())
-
-        return [form, http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, app]
+        return [form, http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, defaultRole, app]
     }
 }

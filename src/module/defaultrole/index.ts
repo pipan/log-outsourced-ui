@@ -1,0 +1,1 @@
+export { DefaultRoleModule } from './DefaultRoleModule'
