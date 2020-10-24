@@ -25,13 +25,17 @@ export class InviteAcceptController implements Controller {
         const invite = query.get()
         query.close()
 
-        inviteApi.invite().accept(body).then((response: any) => {
-            this.repo.remove(invite)
-            this.connectionService.create({
-                name: host,
-                host: host,
-                username: invite.username
+        inviteApi.invite().accept(body)
+            .then((response: any) => {
+                this.repo.remove(invite)
+                this.connectionService.create({
+                    name: host,
+                    host: host,
+                    username: invite.username
+                })
+                if (data.success) {
+                    data.success()
+                }
             })
-        })
     }
 }

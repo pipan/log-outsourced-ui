@@ -80,7 +80,8 @@ export class VueApplication {
                         {
                             path: 'connection/invite/:token',
                             component: ConnectionInvite,
-                            props: props
+                            props: props,
+                            name: 'connection.invite'
                         }
                     ]
                 },

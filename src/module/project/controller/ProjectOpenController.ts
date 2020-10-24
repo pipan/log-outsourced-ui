@@ -12,11 +12,10 @@ export class ProjectOpenController implements Controller {
     }
 
     public action (data: string): void {
-        const result = this.repo.query()
+        const project = this.repo.query()
             .property(data)
+            .imidiate()
 
-        const project = result.get()
-        result.close()
         if (!project) {
             this.repo.insert({
                 uuid: data,

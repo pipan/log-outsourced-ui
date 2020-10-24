@@ -28,7 +28,11 @@ export class Bootstrap {
             alert.getAlertable(),
             form.getFormValidator()
         )
-        const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
+        const administrator = new AdministratorModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getFormValidator()
+        )
         const invite = new InviteModule(connection.getService(), http.getApiFactory())
         const permission = new PermissionModule(
             http.getApi(),
