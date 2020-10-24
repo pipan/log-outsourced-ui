@@ -5,6 +5,7 @@
                 :title="'Create Rule'"
                 :model="model"
                 :handlers="handlers"
+                :form="form"
                 @cancel="cancel()"
                 @save="save($event)"></listener-create-card>
         </section>
@@ -19,7 +20,8 @@
     import ListenerCreateCard from '@/components/domain/listener/ListenerCreateCard.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import { Closable, Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -35,7 +37,12 @@
         @Prop() readonly store!: any
         @Prop() readonly project!: any
 
+        public uid = Uid.next()
+
         public model: any = {}
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
 
         public handlers: any[] = []
         public handlersProperty: Channel<any[]> = new ProxyChannel()
@@ -49,13 +56,21 @@
             this.handlersProperty.connectFn((items: any[]) => {
                 this.handlers = items
             })
-
             this.watcher.withRepository(this.store.handlers)
                 .withBinding(this.handlersProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -71,6 +86,7 @@
             this.channel.dispatch({
                 event: 'listener@create',
                 data: {
+                    uid: this.uid,
                     body: data,
                     success: (listener: any) => {
                         this.$router.push({

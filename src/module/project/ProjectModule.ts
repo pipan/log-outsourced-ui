@@ -5,7 +5,7 @@ import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
 import { ProjectOpenController } from './controller/ProjectOpenController'
 import { CreateController } from '../CreateController'
-import { ServerValidator } from '../form'
+import { FormValidator } from '../form'
 import { ClearController } from '../ClearController'
 
 export class ProjectModule implements Module {
@@ -13,14 +13,14 @@ export class ProjectModule implements Module {
     private alertable: Alertable
     private cudModule: Module
 
-    public constructor (api: OutsourcedApi, alertable: Alertable, serverValidator: ServerValidator) {
+    public constructor (api: OutsourcedApi, alertable: Alertable, FormValidator: FormValidator) {
         this.api = api
         this.alertable = alertable
 
         this.cudModule = (new ModuleBuilder('project'))
-            .withCreateAction(() => this.api.projects(), alertable, serverValidator)
+            .withCreateAction(() => this.api.projects(), alertable, FormValidator)
             .withDeleteAction(() => this.api.projects(), alertable)
-            .withUpdateAction(() => this.api.projects(), alertable, serverValidator)
+            .withUpdateAction(() => this.api.projects(), alertable, FormValidator)
             .build()
     }
 

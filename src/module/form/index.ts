@@ -1,2 +1,2 @@
 export { FormModule } from './FormModule'
-export { ServerValidator } from './ServerValidator'
+export { FormValidator } from './FormValidator'

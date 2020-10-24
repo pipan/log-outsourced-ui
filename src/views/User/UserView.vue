@@ -3,7 +3,7 @@
         <section class="material__container" :class="{'hide-m': user}">
             <filtered-list
                 title="Users"
-                :filterAvailable="users.length > 2"
+                :filterAvailable="true"
                 @filter="filter($event)"
                 @add="create()">
                 <double-lined-item

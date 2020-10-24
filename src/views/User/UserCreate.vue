@@ -2,7 +2,7 @@
     <div class="material__body material__body--with-nav">
         <section class="material__container">
             <user-card
-                title="Create user"
+                title="Create User"
                 :roles="roles"
                 :form="form"
                 @submit="save($event)"

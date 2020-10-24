@@ -1,15 +1,15 @@
 import { Module, BootContext, RegisterContext, Store } from '@/lib/framework'
-import { ServerValidator } from './ServerValidator'
+import { FormValidator } from './FormValidator'
 
 export class FormModule implements Module {
     private store: Store
-    private serverValidator: ServerValidator
+    private FormValidator: FormValidator
 
     constructor () {
         this.store = (new Store())
             .withRepository('forms', 'id')
 
-        this.serverValidator = new ServerValidator(this.store.get('forms'))
+        this.FormValidator = new FormValidator(this.store.get('forms'))
     }
 
     public boot (context: BootContext): void {
@@ -20,7 +20,7 @@ export class FormModule implements Module {
         console.log('form module: register')
     }
 
-    public getServerValidator (): ServerValidator {
-        return this.serverValidator
+    public getFormValidator (): FormValidator {
+        return this.FormValidator
     }
 }

@@ -14,6 +14,7 @@
                     class="top-m"
                     label="Permissions"
                     :value="innerModel.permissions"
+                    :error="form.error ? form.error.permissions : ''"
                     :options="permissions"
                     filterAvailableSince="6"
                     @change="innerModel.permissions = $event"></multi-select>
@@ -48,10 +49,14 @@
 
         @Watch('model', { immediate: true })
         public onModelChange (value: any, oldValue: any): void {
+            let permissionsClone: string[] = []
+            if (value.permissions) {
+                permissionsClone = [...value.permissions]
+            }
             this.innerModel = {
                 uuid: value.uuid,
                 name: value.name,
-                permissions: [...value.permissions]
+                permissions: permissionsClone
             }
         }
 

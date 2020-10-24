@@ -4,19 +4,19 @@ import { Alertable } from '../alert'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { LoadForProjectController } from '../LoadForProjectController'
 import { TestController } from './controller/TestController'
-import { ServerValidator } from '../form'
+import { FormValidator } from '../form'
 
 export class ListenerModule implements Module {
     private api: OutsourcedApi
     private alertable: Alertable
     private cudModule: Module
 
-    public constructor (api: OutsourcedApi, alertable: Alertable, serverValidator: ServerValidator) {
+    public constructor (api: OutsourcedApi, alertable: Alertable, FormValidator: FormValidator) {
         this.api = api
         this.alertable = alertable
         this.cudModule = (new ModuleBuilder('listener'))
-            .withCreateAction(() => api.listeners(), alertable, serverValidator)
-            .withUpdateAction(() => api.listeners(), alertable, serverValidator)
+            .withCreateAction(() => api.listeners(), alertable, FormValidator)
+            .withUpdateAction(() => api.listeners(), alertable, FormValidator)
             .withDeleteAction(() => api.listeners(), alertable)
             .withClearOnProjectOpen()
             .build()

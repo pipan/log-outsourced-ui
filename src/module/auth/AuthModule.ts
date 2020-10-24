@@ -17,12 +17,12 @@ export class AuthModule implements Module {
     }
 
     public register (context: RegisterContext, store: Store): void {
-        const auth = store.get('auth')
+        const error = store.get('error')
         const tokens = store.get('authTokens')
 
         context.withController(
             'auth@access',
-            new AuthAccessController(tokens, this.api, auth)
+            new AuthAccessController(tokens, this.api, error)
         )
     }
 }

@@ -4,6 +4,7 @@
             v-if="listener"
             :title="'Edit Rule'"
             :model="listener"
+            :form="form"
             :handlers="handlers"
             @cancel="cancel()"
             @save="save($event)"></listener-create-card>
@@ -23,7 +24,8 @@
     import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import FormBuilder from '@/components/form/FormBuilder.vue'
     import { Closable, Channel, ProxyChannel } from '@wildebeest/observable'
-    import { ListWatcher } from '@/lib/watcher'
+    import { ListWatcher, SingleResourceWatcher } from '@/lib/watcher'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -41,6 +43,11 @@
         @Prop() readonly project!: any
         @Prop() readonly listener!: any
 
+        public uid = Uid.next()
+
+        public form: any = {}
+        public formWatcher = new SingleResourceWatcher()
+
         public handlers: any[] = []
         public handlersProperty: Channel<any[]> = new ProxyChannel()
         public watcher = new ListWatcher()
@@ -55,10 +62,19 @@
             })
             this.watcher.withRepository(this.store.handlers)
                 .withBinding(this.handlersProperty)
+
+            this.formWatcher.withRepository(this.store.forms)
+                .withBindingFn(this.onFormChange.bind(this))
+                .withId(this.uid)
         }
 
         public beforeDestroy (): void {
             this.watcher.stop()
+            this.formWatcher.stop()
+        }
+
+        public onFormChange (item: any): void {
+            this.form = item
         }
 
         public cancel (): void {
@@ -73,6 +89,7 @@
             this.channel.dispatch({
                 event: 'listener@update',
                 data: {
+                    uid: this.uid,
                     body: data,
                     success: (listener: any) => {
                         this.$router.push({
