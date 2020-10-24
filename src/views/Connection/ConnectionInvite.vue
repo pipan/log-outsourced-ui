@@ -1,7 +1,7 @@
 <template>
     <section class="material__container">
-        <div class="card">
-            <form @submit.prevent="accept()" v-if="invitation">
+        <div class="card" v-if="invitation">
+            <form @submit.prevent="accept()">
                 <header class="card__header">Invitation</header>
                 <div class="card__body">
                     <div>You have been invited to work at <span class="text--primary">{{ host }}</span></div>
@@ -26,6 +26,11 @@
                 </footer>
             </form>
         </div>
+        <error-status
+            v-if="!invitation"
+            status="404"
+            message="I'm afraid I cannot find this invitation">
+        </error-status>
     </section>
 </template>
 
@@ -33,6 +38,7 @@
     import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
     import PasswordField from '@/components/form/PasswordField.vue'
     import ConstantField from '@/components/form/ConstantField.vue'
+    import ErrorStatus from '@/components/error/ErrorStatus.vue'
     import { ObservableProperty } from '@wildebeest/repository'
     import { SingleResourceWatcher } from '@/lib/watcher'
     import { Channel, ProxyChannel } from '@wildebeest/observable'
@@ -40,7 +46,8 @@
     @Component({
         components: {
             PasswordField,
-            ConstantField
+            ConstantField,
+            ErrorStatus
         }
     })
     export default class ConnectionInvite extends Vue {
@@ -109,6 +116,11 @@
                     body: {
                         invite_token: this.invitation.invite_token,
                         password: this.model.password
+                    },
+                    success: () => {
+                        this.$router.push({
+                            name: 'connection.list'
+                        })
                     }
                 }
             })

@@ -83,7 +83,6 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     &__container {
-        max-width: 600px;
         box-sizing: border-box;
         width: 100%;
         padding: var(--unit-s) 0px;
@@ -126,6 +125,7 @@ h1, h2, h3, h4, h5, h6 {
         }
 
         &__container {
+            max-width: 600px;
             width: 50%;
             padding: var(--unit-s);
         }

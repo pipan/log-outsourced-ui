@@ -5,15 +5,18 @@ import { AdministratorInviteController } from './controller/AdministratorInviteC
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
 import { ClearController } from '../ClearController'
+import { FormValidator } from '../form'
 
 export class AdministratorModule implements Module {
     private api: OutsourcedApi
     private alertable: Alertable
+    private formValidator: FormValidator
     private dModule: Module
 
-    public constructor (api: OutsourcedApi, alertable: Alertable) {
+    public constructor (api: OutsourcedApi, alertable: Alertable, formValidator: FormValidator) {
         this.api = api
         this.alertable = alertable
+        this.formValidator = formValidator
         this.dModule = (new ModuleBuilder('administrator'))
             .withDeleteAction(() => this.api.administrators(), alertable)
             .build()
@@ -33,7 +36,7 @@ export class AdministratorModule implements Module {
             )
             .withController(
                 'administrator@invite',
-                new AdministratorInviteController(repo, this.api)
+                new AdministratorInviteController(repo, this.api, this.formValidator)
             )
             .withController(
                 'connection@open',

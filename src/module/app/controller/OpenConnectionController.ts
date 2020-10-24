@@ -23,11 +23,9 @@ export class OpenConnectionController implements Controller {
             return
         }
 
-        const result = this.tokens.query()
+        const token = this.tokens.query()
             .property(connection.username + '@' + connection.host)
-
-        const token = result.get()
-        result.close()
+            .imidiate()
 
         if (token) {
             return
