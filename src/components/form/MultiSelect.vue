@@ -1,10 +1,13 @@
 <template>
     <div>
-        <div class="field field--filter" :class="{'field--error': error !== ''}">
-            <label class="field__label field__label--full">
-                <div>{{ label }}</div>
-                <div class="field__error top-s" v-if="error">{{ error }}</div>
-            </label>
+        <div class="flexbox-row">
+            <div class="flex field field--filter" :class="{'field--error': error !== ''}">
+                <label class="field__label field__label--full">
+                    <div>{{ label }}</div>
+                    <div class="field__error top-s" v-if="error">{{ error }}</div>
+                </label>
+            </div>
+            <slot name="actions"></slot>
             <filter-context-menu
                 ref="filterContext"
                 v-if="filterAvailableSince <= options.length"
@@ -26,7 +29,6 @@
     import StringInput from './StringInput.vue'
     import FilterContextMenu from '../contextmenu/FilterContextMenu.vue'
     import { Autofocus } from '@/directives/form/Autofocus.ts'
-    import { Press } from '@/directives/form/Press.ts'
 
     @Component({
         components: {
@@ -35,8 +37,7 @@
             SelectCheckboxInput
         },
         directives: {
-            autofocus: new Autofocus(),
-            press: new Press()
+            autofocus: new Autofocus()
         }
     })
     export default class MultiSelect extends Vue {

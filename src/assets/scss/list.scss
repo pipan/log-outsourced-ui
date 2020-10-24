@@ -5,6 +5,8 @@
     &__header {
         position: relative;
         padding: var(--unit-m);
+        display: flex;
+        flex-direction: row;
     }
 
     &__footer {

@@ -14,7 +14,7 @@ export class AlertModule implements Module {
 
         this.alertable = new AutohideAlertable(
             this.store.get('alerts'),
-            12000
+            8000
         )
     }
 

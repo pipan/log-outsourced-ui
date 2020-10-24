@@ -17,7 +17,24 @@
                     :error="form.error ? form.error.permissions : ''"
                     :options="permissions"
                     filterAvailableSince="6"
-                    @change="innerModel.permissions = $event"></multi-select>
+                    @change="innerModel.permissions = $event">
+                        <template v-slot:actions>
+                            <inline-context-menu
+                                ref="permissionAddContext"
+                                :relative="true"
+                                icon="add"
+                                class="right-m">
+                                <input
+                                    type="text"
+                                    v-autofocus="true"
+                                    @keydown.esc="onEsc()"
+                                    @keydown.enter.prevent="permissionAdd()"
+                                    :value="newPermissionValue"
+                                    class="field__input field__input--auto left-s"
+                                    @input="newPermissionValue = $event.target.value" />
+                            </inline-context-menu>
+                        </template>
+                    </multi-select>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="cancel()">CANCEL</button>
@@ -32,11 +49,17 @@
     import StringField from '@/components/form/StringField.vue'
     import MultiSelect from '@/components/form/MultiSelect.vue'
     import { Channel } from '@wildebeest/observable'
+    import InlineContextMenu from '@/components/contextmenu/InlineContextMenu.vue'
+    import { Autofocus } from '@/directives/form/Autofocus'
 
     @Component({
         components: {
             StringField,
-            MultiSelect
+            MultiSelect,
+            InlineContextMenu
+        },
+        directives: {
+            autofocus: new Autofocus()
         }
     })
     export default class RoleCard extends Vue {
@@ -46,6 +69,7 @@
         @Prop({ default: () => { return {} } }) form!: any
 
         public innerModel: any = {}
+        public newPermissionValue = ''
 
         @Watch('model', { immediate: true })
         public onModelChange (value: any, oldValue: any): void {
@@ -66,6 +90,16 @@
 
         public save (): void {
             this.$emit('submit', this.innerModel)
+        }
+
+        public onEsc (): void {
+            (this.$refs.permissionAddContext as InlineContextMenu).close()
+        }
+
+        public permissionAdd (): void {
+            this.$emit('permission', this.newPermissionValue)
+            this.newPermissionValue = ''
+            this.onEsc()
         }
     }
 </script>
