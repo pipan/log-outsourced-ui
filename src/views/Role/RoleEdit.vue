@@ -7,7 +7,8 @@
             :permissions="permissions"
             :form="form"
             @submit="save($event)"
-            @cancel="cancel()"></role-card>
+            @cancel="cancel()"
+            @permission="createPermission($event)"></role-card>
         <error-status
             v-if="!role"
             status="404"
@@ -84,6 +85,18 @@
                 data: {
                     uid: this.uid,
                     body: model
+                }
+            })
+        }
+
+        public createPermission (name: string): void {
+            this.channel.dispatch({
+                event: 'permission@create',
+                data: {
+                    body: {
+                        project_uuid: this.project.uuid,
+                        name: name
+                    }
                 }
             })
         }

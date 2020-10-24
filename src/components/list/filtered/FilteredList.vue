@@ -1,11 +1,10 @@
 <template>
     <div class="list">
         <div class="list__header">
-            <h2>{{title}}</h2>
+            <h2 class="flex">{{title}}</h2>
             <filter-context-menu
                 v-if="filterAvailable"
                 :value="filterValue"
-                class="top-s"
                 @filter="onFilter($event)"></filter-context-menu>
         </div>
         <slot></slot>
@@ -20,7 +19,6 @@
 <script lang="ts">
     import FilterContextMenu from '@/components/contextmenu/FilterContextMenu.vue'
     import { Autofocus } from '@/directives/form/Autofocus'
-    import { Press } from '@/directives/form/Press'
     import { Component, Vue, Prop } from 'vue-property-decorator'
 
     @Component({
@@ -28,8 +26,7 @@
             FilterContextMenu
         },
         directives: {
-            autofocus: new Autofocus(),
-            press: new Press()
+            autofocus: new Autofocus()
         }
     })
     export default class FilteredList extends Vue {

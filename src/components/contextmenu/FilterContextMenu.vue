@@ -2,11 +2,12 @@
     <inline-context-menu
         ref="filterContext"
         icon="filter_list"
+        :relative="true"
         :attantion="value !== ''">
         <input
             type="text"
             v-autofocus="true"
-            v-press:Escape="onEsc"
+            @keydown.esc="onEsc()"
             :value="value"
             class="field__input field__input--auto left-s"
             @input="$emit('filter', $event.target.value)" />
@@ -16,7 +17,6 @@
 <script lang="ts">
     import InlineContextMenu from '@/components/contextmenu/InlineContextMenu.vue'
     import { Autofocus } from '@/directives/form/Autofocus'
-    import { Press } from '@/directives/form/Press'
     import { Component, Vue, Prop } from 'vue-property-decorator'
 
     @Component({
@@ -24,8 +24,7 @@
             InlineContextMenu
         },
         directives: {
-            autofocus: new Autofocus(),
-            press: new Press()
+            autofocus: new Autofocus()
         }
     })
     export default class FilterContextMenu extends Vue {

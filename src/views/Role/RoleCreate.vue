@@ -6,7 +6,8 @@
                 :form="form"
                 :permissions="permissions"
                 @submit="save($event)"
-                @cancel="cancel()"></role-card>
+                @cancel="cancel()"
+                @permission="createPermission($event)"></role-card>
         </section>
     </div>
 </template>
@@ -85,6 +86,18 @@
                             name: 'role.list',
                             params: this.$route.params
                         })
+                    }
+                }
+            })
+        }
+
+        public createPermission (name: string): void {
+            this.channel.dispatch({
+                event: 'permission@create',
+                data: {
+                    body: {
+                        project_uuid: this.project.uuid,
+                        name: name
                     }
                 }
             })
