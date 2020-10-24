@@ -21,6 +21,11 @@ export class ModuleBuilder {
         this.repo = SimpleRepository.fromKeyProperty('uuid')
     }
 
+    public withRepository (repo: Repository<any>): ModuleBuilder {
+        this.repo = repo
+        return this
+    }
+
     public withCreateAction (httpFactory: () => CreateHttp, alertable: Alertable, serverValidator: ServerValidator): ModuleBuilder {
         return this.withDomainAction('create', new CreateController(this.repo, httpFactory, alertable, serverValidator))
     }

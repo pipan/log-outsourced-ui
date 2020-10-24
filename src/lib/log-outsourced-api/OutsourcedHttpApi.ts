@@ -23,6 +23,8 @@ import { PermissionHttpApi } from './domain/permission/PermissionHttpApi'
 import { PermissionApi } from './domain/permission/PermissionApi'
 import { DefaultRoleHttpApi } from './domain/settings/defaultrole/DefaultRoleHttpApi'
 import { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
+import { ProjectKeyHttpApi } from './domain/settings/projectkey/ProjectKeyHttpApi'
+import { ProjectKeyApi } from './domain/settings/projectkey/ProjectKeyApi'
 
 export class OutsourcedHttpApi implements OutsourcedApi {
     private domains: any
@@ -47,6 +49,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             log: new LogHttpApi(host),
             invite: new InviteHttpApi(host),
             defaultRoles: new DefaultRoleHttpApi(host, authHttp),
+            projectKeys: new ProjectKeyHttpApi(host, authHttp),
             auth: authApi
         }
 
@@ -109,5 +112,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
 
     public defaultRoles (): DefaultRoleApi {
         return this.domains.defaultRoles
+    }
+
+    public projectKeys (): ProjectKeyApi {
+        return this.domains.projectKeys
     }
 }

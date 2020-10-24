@@ -14,6 +14,7 @@ import { HandlerModule } from '@/module/handler'
 import { PermissionModule } from '@/module/permission/PermissionModule'
 import { FormModule } from '@/module/form'
 import { DefaultRoleModule } from '@/module/defaultrole'
+import { ProjectKeyModule } from '@/module/projectkey'
 
 export class Bootstrap {
     public static getModules (): Module[] {
@@ -47,9 +48,14 @@ export class Bootstrap {
             form.getServerValidator()
         )
         const defaultRole = new DefaultRoleModule(http.getApi(), alert.getAlertable())
+        const projectKey = new ProjectKeyModule(
+            http.getApi(),
+            alert.getAlertable(),
+            form.getServerValidator()
+        )
 
         const app = new AppModule(alert.getAlertable())
 
-        return [form, http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, defaultRole, app]
+        return [form, http, alert, auth, connection, project, administrator, invite, role, permission, user, handler, listener, defaultRole, projectKey, app]
     }
 }

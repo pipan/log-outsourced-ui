@@ -14,7 +14,6 @@ import ProjectLayout from '@/views/Project/ProjectLayout.vue'
 import ProjectList from '@/views/Project/ProjectList.vue'
 import ProjectCreate from '@/views/Project/ProjectCreate.vue'
 import ProjectEdit from '@/views/Project/ProjectEdit.vue'
-import ProjectSettings from '@/views/Project/ProjectSettings.vue'
 import UserView from '@/views/User/UserView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import UserEdit from '@/views/User/UserEdit.vue'
@@ -28,6 +27,9 @@ import ListenerEdit from '@/views/Logging/ListenerEdit.vue'
 import SettingsLayout from '@/views/Settings/SettingsLayout.vue'
 import AdministratorView from '@/views/Administrator/AdministratorView.vue'
 import AdministratorInvite from '@/views/Administrator/AdministratorInvite.vue'
+import ProjectKeyList from '@/views/ProjectKey/ProjectKeyList.vue'
+import ProjectKeyCreate from '@/views/ProjectKey/ProjectKeyCreate.vue'
+import ProjectKeyRename from '@/views/ProjectKey/ProjectKeyRename.vue'
 import { Store } from '@/lib/framework'
 import { Channel, ProxyChannel, Closable } from '@wildebeest/observable'
 
@@ -248,11 +250,29 @@ export class VueApplication {
                                     children: [
                                         {
                                             path: 'project',
-                                            component: ProjectSettings,
+                                            component: ProjectKeyList,
                                             props: props,
-                                            name: 'settings.project',
+                                            name: 'projectkey.list',
                                             meta: {
-                                                nav: 'project'
+                                                nav: 'projectkey'
+                                            }
+                                        },
+                                        {
+                                            path: 'project/create',
+                                            component: ProjectKeyCreate,
+                                            props: props,
+                                            name: 'projectkey.create',
+                                            meta: {
+                                                nav: 'projectkey'
+                                            }
+                                        },
+                                        {
+                                            path: 'project/rename',
+                                            component: ProjectKeyRename,
+                                            props: props,
+                                            name: 'projectkey.rename',
+                                            meta: {
+                                                nav: 'projectkey'
                                             }
                                         },
                                         {

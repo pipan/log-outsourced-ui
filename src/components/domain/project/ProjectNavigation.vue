@@ -44,7 +44,7 @@
             user: 'user.list',
             role: 'role.list',
             logging: 'logging.list',
-            settings: 'settings.project'
+            settings: 'projectkey.list'
         }
 
         public open (navName: string): void {

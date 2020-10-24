@@ -10,6 +10,7 @@ import { RoleApi } from './domain/role/RoleApi'
 import { UserApi } from './domain/user/UserApi'
 import { PermissionApi } from './domain/permission/PermissionApi'
 import { DefaultRoleApi } from './domain/settings/defaultrole/DefaultRoleApi'
+import { ProjectKeyApi } from './domain/settings/projectkey/ProjectKeyApi'
 
 export class OutsourcedProxyApi implements OutsourcedApi {
     private api!: OutsourcedApi
@@ -64,5 +65,9 @@ export class OutsourcedProxyApi implements OutsourcedApi {
 
     public defaultRoles (): DefaultRoleApi {
         return this.api.defaultRoles()
+    }
+
+    public projectKeys (): ProjectKeyApi {
+        return this.api.projectKeys()
     }
 }

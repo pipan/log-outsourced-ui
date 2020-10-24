@@ -71,7 +71,7 @@
             this.defaultRolesProperty.connectFn((items: any[]) => {
                 this.model.roles = items
             })
-            this.defaultRolesWatcher.withRepository(this.store.defaultroles)
+            this.defaultRolesWatcher.withRepository(this.store.defaultRoles)
                 .withBinding(this.defaultRolesProperty)
         }
 

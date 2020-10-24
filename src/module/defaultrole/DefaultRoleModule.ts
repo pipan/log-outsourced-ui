@@ -13,7 +13,7 @@ export class DefaultRoleModule implements Module {
         this.api = api
         this.alertable = alertable
         this.store = (new Store())
-            .withStringRepository('defaultroles')
+            .withStringRepository('defaultRoles')
     }
 
     public boot (context: BootContext): void {
@@ -21,7 +21,7 @@ export class DefaultRoleModule implements Module {
     }
 
     public register (context: RegisterContext, store: Store): void {
-        const repo = store.get('defaultroles')
+        const repo = store.get('defaultRoles')
 
         context.withController(
                 'defaultrole@load',
