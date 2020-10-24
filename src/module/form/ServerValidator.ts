@@ -22,7 +22,6 @@ export class ServerValidator {
         for (const key in response.body.errors) {
             form.error[key] = response.body.errors[key][0]
         }
-        console.log(form)
         this.repo.insert(form)
     }
 }

@@ -46,7 +46,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
             roles: new RoleHttpApi(host, authHttp),
             handler: new HandlerHttpApi(host, authHttp),
             listener: new ListenerHttpApi(host, authHttp),
-            log: new LogHttpApi(host),
+            log: new LogHttpApi(host, authHttp),
             invite: new InviteHttpApi(host),
             defaultRoles: new DefaultRoleHttpApi(host, authHttp),
             projectKeys: new ProjectKeyHttpApi(host, authHttp),
@@ -60,6 +60,9 @@ export class OutsourcedHttpApi implements OutsourcedApi {
         this.domains.roles.connect(this.responseChannel)
         this.domains.invite.connect(this.responseChannel)
         this.domains.auth.connect(this.responseChannel)
+        this.domains.defaultRoles.connect(this.responseChannel)
+        this.domains.projectKeys.connect(this.responseChannel)
+        this.domains.log.connect(this.responseChannel)
     }
 
     public connectFn (fn: (data: any) => void): Closable {

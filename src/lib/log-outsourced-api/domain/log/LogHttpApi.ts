@@ -1,29 +1,36 @@
 import { LogApi } from './LogApi'
+import { InterceptableHttp, HttpFetch } from '../../http'
+import { AuthHttp } from '../auth/AuthHttp'
 
-export class LogHttpApi implements LogApi {
+export class LogHttpApi extends InterceptableHttp implements LogApi {
     private host: string
+    private authHttp: AuthHttp
 
-    public constructor (host: string) {
+    public constructor (host: string, authHttp: AuthHttp) {
+        super()
         this.host = host
+        this.authHttp = authHttp
     }
 
-    public single (project: string, log: any): Promise<Response> {
-        return fetch(this.host + '/logs/' + project, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(log)
-        })
+    public single (projectUuid: string, log: any): Promise<Response> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/logs/single?project_uuid=' + projectUuid)
+            .withJson(log)
+            .withMethod('POST')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 
-    public batch (project: string, data: Array<any>): Promise<Response> {
-        return fetch(this.host + '/logs/' + project + '/batch', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+    public batch (projectUuid: string, data: Array<any>): Promise<Response> {
+        const http = HttpFetch.fromUrl(this.host + '/api/v1/logs/batch?project_uuid=' + projectUuid)
+            .withJson({
+                logs: data
+            })
+            .withMethod('POST')
+
+        return this.send(
+            this.authHttp.send(http)
+        )
     }
 }
