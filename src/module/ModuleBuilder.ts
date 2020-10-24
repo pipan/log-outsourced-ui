@@ -9,7 +9,7 @@ import { LoadHttp } from '@/lib/log-outsourced-api/http/LoadHttp'
 import { LoadController } from './LoadController'
 import { LoadForProjectController } from './LoadForProjectController'
 import { ClearController } from './ClearController'
-import { ServerValidator } from './form'
+import { FormValidator } from './form'
 
 export class ModuleBuilder {
     private domain: string
@@ -26,16 +26,16 @@ export class ModuleBuilder {
         return this
     }
 
-    public withCreateAction (httpFactory: () => CreateHttp, alertable: Alertable, serverValidator: ServerValidator): ModuleBuilder {
-        return this.withDomainAction('create', new CreateController(this.repo, httpFactory, alertable, serverValidator))
+    public withCreateAction (httpFactory: () => CreateHttp, alertable: Alertable, FormValidator: FormValidator): ModuleBuilder {
+        return this.withDomainAction('create', new CreateController(this.repo, httpFactory, alertable, FormValidator))
     }
 
     public withDeleteAction (httpFactory: () => DeleteHttp, alertable: Alertable): ModuleBuilder {
         return this.withDomainAction('delete', new DeleteController(this.repo, httpFactory, alertable))
     }
 
-    public withUpdateAction (httpFactory: () => UpdateHttp, alertable: Alertable, serverValidator: ServerValidator): ModuleBuilder {
-        return this.withDomainAction('update', new UpdateController(this.repo, httpFactory, alertable, serverValidator))
+    public withUpdateAction (httpFactory: () => UpdateHttp, alertable: Alertable, FormValidator: FormValidator): ModuleBuilder {
+        return this.withDomainAction('update', new UpdateController(this.repo, httpFactory, alertable, FormValidator))
     }
 
     public withLoadAction (httpFactory: () => LoadHttp): ModuleBuilder {

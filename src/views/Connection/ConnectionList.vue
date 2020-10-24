@@ -68,6 +68,11 @@
         }
 
         public remove (connection: any): void {
+            const consent = confirm('You are about to delete connection: ' + connection.username + '@' + connection.host)
+            if (!consent) {
+                return
+            }
+
             this.channel.dispatch({
                 event: 'connection@delete',
                 data: connection

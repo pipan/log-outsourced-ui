@@ -2,6 +2,7 @@
     <select-field
         label="Handle by"
         :value="value"
+        :error="error"
         :options="options"
         @change="$emit('change', $event)"></select-field>
 </template>
@@ -18,6 +19,7 @@
     export default class HandlerSelect extends Vue {
         @Prop({ default: () => [] }) readonly handlers!: any[];
         @Prop({ default: '' }) readonly value!: string;
+        @Prop({ default: '' }) readonly error!: string;
 
         public options: Array<any> = []
 

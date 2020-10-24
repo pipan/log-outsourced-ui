@@ -1,8 +1,9 @@
 <template>
     <div>
-        <div class="field field--filter">
+        <div class="field field--filter" :class="{'field--error': error !== ''}">
             <label class="field__label field__label--full">
                 <div>{{ label }}</div>
+                <div class="field__error top-s" v-if="error">{{ error }}</div>
             </label>
             <filter-context-menu
                 ref="filterContext"
@@ -42,6 +43,7 @@
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: () => [] }) readonly options!: any[];
         @Prop({ default: () => [] }) readonly value!: any[];
+        @Prop({ default: '' }) readonly error!: string;
         @Prop({ default: '' }) readonly filterProp!: string;
         @Prop({ default: 10 }) readonly filterAvailableSince!: number;
 

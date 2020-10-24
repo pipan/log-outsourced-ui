@@ -26,7 +26,7 @@ export class Bootstrap {
         const project = new ProjectModule(
             http.getApi(),
             alert.getAlertable(),
-            form.getServerValidator()
+            form.getFormValidator()
         )
         const administrator = new AdministratorModule(http.getApi(), alert.getAlertable())
         const invite = new InviteModule(connection.getService(), http.getApiFactory())
@@ -34,24 +34,24 @@ export class Bootstrap {
         const role = new RoleModule(
             http.getApi(),
             alert.getAlertable(),
-            form.getServerValidator()
+            form.getFormValidator()
         )
         const user = new UserModule(
             http.getApi(),
             alert.getAlertable(),
-            form.getServerValidator()
+            form.getFormValidator()
         )
         const handler = new HandlerModule(http.getApi())
         const listener = new ListenerModule(
             http.getApi(),
             alert.getAlertable(),
-            form.getServerValidator()
+            form.getFormValidator()
         )
         const defaultRole = new DefaultRoleModule(http.getApi(), alert.getAlertable())
         const projectKey = new ProjectKeyModule(
             http.getApi(),
             alert.getAlertable(),
-            form.getServerValidator()
+            form.getFormValidator()
         )
 
         const app = new AppModule(alert.getAlertable())

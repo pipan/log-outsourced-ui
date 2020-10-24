@@ -3,28 +3,31 @@
         <form @submit.prevent="save()" autocomplete="off">
             <header class="card__header">{{ title }}</header>
             <div class="card__body">
-                <div v-if="model">
+                <div v-if="innerModel">
                     <string-field
                         label="Name"
-                        :value="model.name"
-                        @change="model.name = $event"></string-field>
+                        :value="innerModel.name"
+                        :error="form.error ? form.error.name : ''"
+                        @change="innerModel.name = $event"></string-field>
                     <multi-select
                         class="top-m"
                         label="Log levels"
-                        :value="model.rules"
+                        :value="innerModel.rules"
+                        :error="form.error ? form.error.rules : ''"
                         :options="['debug','info','notice','warning','error','critical','alert','emergency']"
-                        @change="model.rules = $event"></multi-select>
+                        @change="innerModel.rules = $event"></multi-select>
                     <handler-select
                         :handlers="handlers"
-                        :value="model.handler_slug"
+                        :value="innerModel.handler_slug"
+                        :error="form.error ? form.error.handler_slug : ''"
                         @change="onHandlerChange($event)"></handler-select>
                 </div>
                 <form-builder
                     v-if="fields.length > 0"
                     class="top-m"
                     :fields="fields"
-                    :values="model.handler_values"
-                    @change="model.handler_values = $event"></form-builder>
+                    :values="innerModel.handler_values"
+                    @change="innerModel.handler_values = $event"></form-builder>
             </div>
             <footer class="card__footer">
                 <button type="button" class="btn btn--secondary right-s" @click="$emit('cancel')">CANCEL</button>
@@ -53,18 +56,32 @@
     })
     export default class ListenerCreateCard extends Vue {
         @Prop({ default: () => { return {} } }) readonly model: any
+        @Prop({ default: () => { return {} } }) readonly form!: any
         @Prop({ default: '' }) readonly title!: string
         @Prop({ default: () => [] }) readonly handlers!: any[]
 
         public fields: Array<any> = []
 
+        public innerModel: any = {}
+
         @Watch('handlers')
         public onHandlersChange (value: any[], oldvalue: any[]): void {
-            this.onHandlerChange(this.model.handler_slug)
+            this.onHandlerChange(this.innerModel.handler_slug)
         }
 
         @Watch('model', { immediate: true })
         public onModelChange (value: any, oldvalue: any): void {
+            let rulesClone: string[] = []
+            if (value.rules) {
+                rulesClone = [...value.rules]
+            }
+            this.innerModel = {
+                uuid: value.uuid,
+                name: value.name,
+                rules: rulesClone,
+                handler_slug: value.handler_slug,
+                handler_values: Object.assign({}, value.handler_values)
+            }
             this.onHandlerChange(value.handler_slug)
         }
 
@@ -82,7 +99,7 @@
             const handler = this.getHandlerBySlug(handlerSlug)
             if (!handler) {
                 this.fields = []
-                this.model.handler_slug = ''
+                this.innerModel.handler_slug = ''
                 return
             }
             const newFields = []
@@ -101,19 +118,22 @@
             }
             this.fields = newFields
 
-            this.model.handler_slug = handler.slug
+            this.innerModel.handler_slug = handler.slug
         }
 
         public save (): void {
             const saveData: any = {
-                name: this.model.name,
-                rules: this.model.rules,
-                handler_slug: this.model.handler_slug,
+                name: this.innerModel.name,
+                rules: this.innerModel.rules,
+                handler_slug: this.innerModel.handler_slug,
                 handler_values: {}
             }
 
             for (const field of this.fields) {
-                saveData.handler_values[field.id] = this.model.handler_values[field.id]
+                if (!this.innerModel.handler_values) {
+                    continue
+                }
+                saveData.handler_values[field.id] = this.innerModel.handler_values[field.id]
             }
 
             this.$emit('save', saveData)

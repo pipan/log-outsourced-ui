@@ -3,17 +3,17 @@ import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { RoleLoadController } from './controller/RoleLoadController'
 import { ModuleBuilder } from '../ModuleBuilder'
 import { Alertable } from '../alert'
-import { ServerValidator } from '../form'
+import { FormValidator } from '../form'
 
 export class RoleModule implements Module {
     private api: OutsourcedApi
     private cModule: Module
 
-    constructor (api: OutsourcedApi, alertable: Alertable, serverValidator: ServerValidator) {
+    constructor (api: OutsourcedApi, alertable: Alertable, FormValidator: FormValidator) {
         this.api = api
         this.cModule = (new ModuleBuilder('role'))
-            .withCreateAction(() => api.roles(), alertable, serverValidator)
-            .withUpdateAction(() => api.roles(), alertable, serverValidator)
+            .withCreateAction(() => api.roles(), alertable, FormValidator)
+            .withUpdateAction(() => api.roles(), alertable, FormValidator)
             .withDeleteAction(() => api.roles(), alertable)
             .withClearOnProjectOpen()
             .build()

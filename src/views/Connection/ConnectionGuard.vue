@@ -35,6 +35,7 @@
     import ConnectionLogin from '@/components/domain/connection/ConnectionLogin.vue'
     import { PropertyWatcher, SingleResourceWatcher } from '@/lib/watcher'
     import { PropertyChange } from '@wildebeest/repository'
+    import { Uid } from '../Uid'
 
     @Component({
         components: {
@@ -45,6 +46,8 @@
     export default class ConnectionGuard extends Vue {
         @Prop() channel!: Channel<any>
         @Prop() store!: any
+
+        public uid = Uid.next()
 
         public connection: any = null
         public connectionProperty: Channel<any> = new ProxyChannel()
@@ -87,6 +90,7 @@
             this.channel.dispatch({
                 event: 'auth@access',
                 data: {
+                    uid: this.uid,
                     body: {
                         username: this.connection.username,
                         password: password
