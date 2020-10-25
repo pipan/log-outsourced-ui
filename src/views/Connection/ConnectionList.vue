@@ -5,7 +5,7 @@
             @add="create()">
             <double-lined-item
                 v-for="connection of this.connections"
-                :key="connection.name"
+                :key="connection.id"
                 :text="connection.name"
                 :subtext="connection.username + '@' + connection.host"
                 :value="connection"

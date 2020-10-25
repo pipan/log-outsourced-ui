@@ -2,6 +2,7 @@ import { Controller } from '@/lib/framework'
 import { Repository } from '@wildebeest/repository'
 import { OutsourcedProxyApi } from '@/lib/log-outsourced-api'
 import { ApiFactory } from '../ApiFactory'
+import { Host } from '@/module/Host'
 
 export class OpenController implements Controller {
     private api: OutsourcedProxyApi
@@ -17,11 +18,10 @@ export class OpenController implements Controller {
     }
 
     public action (data?: any): void {
-        let result = this.repo.query()
+        const connection = this.repo.query()
             .property(data)
+            .imidiate()
 
-        const connection = result.get()
-        result.close()
         if (!connection) {
             this.api.set(
                 this.factory.create('')
@@ -29,16 +29,12 @@ export class OpenController implements Controller {
             return
         }
 
-        result = this.authTokens.query()
-            .property(connection.username + '@' + connection.host)
+        const host = Host.fromConnection(connection)
 
-        const token = result.get() || {}
-        result.close()
+        const token = this.authTokens.query()
+            .property(connection.username + '@' + host)
+            .imidiate() || {}
 
-        let host = connection.host
-        if (!host.startsWith('http')) {
-            host = 'https://' + host
-        }
         this.api.set(
             this.factory.create(host, token)
         )
