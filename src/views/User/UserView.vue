@@ -12,10 +12,10 @@
                     :text="item.username"
                     :subtext="item.roles.join(', ')"
                     :value="item"
-                    :contexts="['Delete']"
+                    :contexts="item.roles.length > 0 ? ['Disable'] : []"
                     :active="user && item.uuid === user.uuid"
                     @select="open($event)"
-                    @delete="remove($event)">
+                    @disable="disable($event)">
                 </double-lined-item>
             </filtered-list>
         </section>
@@ -118,13 +118,13 @@
             })
         }
 
-        public remove (user: any): void {
-            const consent = confirm('You are about to delete a user: ' + user.username)
+        public disable (user: any): void {
+            const consent = confirm('You are about to remove all roles for user: ' + user.username)
             if (!consent) {
                 return
             }
             this.channel.dispatch({
-                event: 'user@delete',
+                event: 'user@disable',
                 data: {
                     body: user
                 }

@@ -1,10 +1,10 @@
 <template>
     <div class="alert" :class="getClass()">
-        <div class="alert__icon right-m" v-if="alert.icon">
+        <div class="alert__icon" v-if="alert.icon">
             <span class="material-icons">{{ alert.icon }}</span>
         </div>
         <div class="alert__message right-m" v-if="alert.message">{{ alert.message }}</div>
-        <button class="btn" type="button" @click="close()">OK</button>
+        <button class="btn alert__close" type="button" @click="close()">OK</button>
     </div>
 </template>
 
