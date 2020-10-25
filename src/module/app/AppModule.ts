@@ -5,6 +5,7 @@ import { UnauthorizedController } from './controller/UnauthorizedController'
 import { OpenConnectionController } from './controller/OpenConnectionController'
 import { CloseConnectionController } from './controller/CloseConnectionController'
 import { ServerErrorController } from './controller/ServerErrorController'
+import { ForbiddenController } from './controller/ForbiddenController'
 
 export class AppModule implements Module {
     private alertable: Alertable
@@ -32,6 +33,10 @@ export class AppModule implements Module {
             .withController(
                 'http@401',
                 new UnauthorizedController(error)
+            )
+            .withController(
+                'http@403',
+                new ForbiddenController(this.alertable)
             )
             .withController(
                 'http@500',
