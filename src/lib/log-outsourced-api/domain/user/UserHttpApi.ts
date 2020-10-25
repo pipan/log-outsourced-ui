@@ -37,16 +37,6 @@ export class UserHttpApi implements UserApi {
         )
     }
 
-    public delete (user: any): Promise<any> {
-        const http = HttpFetch.fromUrl(this.host + '/api/v1/users/' + user.uuid)
-            .withJson()
-            .withMethod('DELETE')
-
-        return this.interceptor.intercept(
-            this.authHttp.send(http)
-        )
-    }
-
     public update (user: any): Promise<any> {
         const http = HttpFetch.fromUrl(this.host + '/api/v1/users/' + user.uuid)
             .withJson(user)

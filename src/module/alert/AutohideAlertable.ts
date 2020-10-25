@@ -8,7 +8,8 @@ export class AutohideAlertable implements Alertable {
     private delay: number
 
     private icons: {[key: string]: string} = {
-        success: 'thumb_up_alt',
+        info: 'done',
+        success: 'done',
         warning: 'warning',
         error: 'error'
     }

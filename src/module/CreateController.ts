@@ -25,7 +25,7 @@ export class CreateController implements Controller {
                     return response
                 }
                 this.repo.insert(response.body)
-                this.alertable.success('')
+                this.alertable.success('Saved')
                 if (data.success) {
                     data.success(response.body)
                 }

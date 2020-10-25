@@ -17,10 +17,12 @@ export class DeleteController implements Controller {
     public action (data?: any): void {
         this.httpFactory().delete(data.body)
             .then((response: any) => {
-                this.repo.remove(data.body)
-                this.alertable.success('')
-                if (data.success) {
-                    data.success()
+                if (response.ok) {
+                    this.repo.remove(data.body)
+                    this.alertable.success('Removed')
+                    if (data.success) {
+                        data.success()
+                    }
                 }
             })
     }

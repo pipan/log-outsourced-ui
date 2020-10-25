@@ -3,6 +3,7 @@ import { AlertCreateController } from './controller/AlertCreateController'
 import { AlertRemoveController } from './controller/AlertRemoveController'
 import { AutohideAlertable } from './AutohideAlertable'
 import { Alertable } from './Alertable'
+import { AlertTypeCreateController } from './controller/AlertTypeCreateController'
 
 export class AlertModule implements Module {
     private alertable: Alertable
@@ -30,6 +31,22 @@ export class AlertModule implements Module {
             .withController(
                 'alert@remove',
                 new AlertRemoveController(store.get('alerts'))
+            )
+            .withController(
+                'alert@info',
+                new AlertTypeCreateController('info', this.alertable)
+            )
+            .withController(
+                'alert@warning',
+                new AlertTypeCreateController('warning', this.alertable)
+            )
+            .withController(
+                'alert@error',
+                new AlertTypeCreateController('error', this.alertable)
+            )
+            .withController(
+                'alert@success',
+                new AlertTypeCreateController('success', this.alertable)
             )
     }
 

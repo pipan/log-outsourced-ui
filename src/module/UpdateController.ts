@@ -26,7 +26,7 @@ export class UpdateController implements Controller {
                 }
 
                 this.repo.insert(response.body)
-                this.alertable.success('')
+                this.alertable.success('Saved')
                 if (data.success) {
                     data.success(response.body)
                 }
