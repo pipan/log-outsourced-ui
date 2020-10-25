@@ -1,6 +1,7 @@
 import { Controller } from '@/lib/framework'
 import { Repository } from '@wildebeest/repository'
 import { StatefulChannel } from '@wildebeest/observable'
+import { Host } from '@/module/Host'
 
 export class OpenConnectionController implements Controller {
     private error: StatefulChannel<any>
@@ -23,8 +24,10 @@ export class OpenConnectionController implements Controller {
             return
         }
 
+        const host = Host.fromConnection(connection)
+
         const token = this.tokens.query()
-            .property(connection.username + '@' + connection.host)
+            .property(connection.username + '@' + host)
             .imidiate()
 
         if (token) {
