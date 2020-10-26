@@ -8,9 +8,9 @@
                 :key="item.uuid"
                 :text="item.name"
                 :value="item"
-                :contexts="['Edit', 'Delete']"
+                :contexts="['Rename', 'Delete']"
                 @select="open($event)"
-                @edit="edit($event)"
+                @rename="edit($event)"
                 @delete="remove($event)">
             </simple-list-item>
         </filtered-list>

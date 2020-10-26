@@ -1,7 +1,6 @@
 import { Controller } from '@/lib/framework'
 import { OutsourcedApi } from '@/lib/log-outsourced-api'
 import { Repository } from '@wildebeest/repository'
-import { FormValidator } from '@/module/form'
 import { StatefulChannel } from '@wildebeest/observable'
 
 export class AuthAccessController implements Controller {
@@ -31,13 +30,32 @@ export class AuthAccessController implements Controller {
                         data.success()
                     }
                 } else {
-                    if (response.status === 401) {
-                        this.error.dispatch({
-                            status: 401,
-                            message: 'Username or password is incorrect'
-                        })
+                    if (response.status >= 400) {
+                        if (response.status === 401) {
+                            this.error.dispatch({
+                                status: 401,
+                                errors: {
+                                    password: 'Username or password is incorrect'
+                                }
+                            })
+                        } else {
+                            this.error.dispatch({
+                                status: 401,
+                                errors: {
+                                    host: 'Wrong response from host'
+                                }
+                            })
+                        }
                     }
                 }
+            })
+            .catch(() => {
+                this.error.dispatch({
+                    status: 401,
+                    errors: {
+                        host: 'Cannot connect to host'
+                    }
+                })
             })
     }
 }

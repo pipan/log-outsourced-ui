@@ -8,7 +8,7 @@
                 <connection-login
                     v-if="connection && error.status === 401"
                     :connection="connection"
-                    :error="error"
+                    :errors="error.errors"
                     @cancel="back()"
                     @submit="login($event)">
                 </connection-login>

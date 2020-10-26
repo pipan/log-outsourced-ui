@@ -1,7 +1,7 @@
 <template>
     <section>
         <project-card
-            title="Create project"
+            title="Create Project"
             :form="form"
             @submit="save($event)"
             @cancel="cancel()"></project-card>

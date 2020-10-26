@@ -1,5 +1,5 @@
 <template>
-    <field :id="_uid" :label="label">
+    <field :id="_uid" :label="label" :error="error">
         <div class="top-s">{{ this.value }}</div>
     </field>
 </template>
@@ -16,6 +16,7 @@
     export default class StringField extends Vue {
         @Prop({ default: '' }) readonly label!: string;
         @Prop({ default: '' }) readonly value!: string;
+        @Prop({ default: '' }) readonly error!: string;
     }
 </script>
 

@@ -25,6 +25,7 @@
     import DoubleLinedItem from '../../components/list/double/DoubleLinedItem.vue'
     import SimpleList from '../../components/list/simple/SimpleList.vue'
     import { ListWatcher } from '@/lib/watcher'
+    import { QueryResult } from '@wildebeest/repository'
 
     @Component({
         components: {
@@ -38,20 +39,22 @@
         @Prop() readonly store!: any
 
         public connections: Array<any> = []
-        public connectionsChannel: Channel<any[]> = new ProxyChannel()
 
-        private watcher: ListWatcher<any> = new ListWatcher()
+        private query!: QueryResult<any>
 
         public created (): void {
-            this.connectionsChannel.connectFn((items: any[]) => {
-                this.connections = items
-            })
-            this.watcher.withRepository(this.store.connections)
-                .withBinding(this.connectionsChannel)
+            this.query = this.store.connections.query()
+                .orderBy('name')
+                .list()
+                .connectFn((items: any[]) => {
+                    this.connections = items
+                })
         }
 
         public beforeDestroy (): void {
-            this.watcher.stop()
+            if (this.query) {
+                this.query.close()
+            }
         }
 
         public open (connection: any): void {

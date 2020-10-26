@@ -20,7 +20,7 @@ export class ConnectionUpdateController implements Controller {
             host: body.host,
             username: body.username
         })
-        this.alertable.success('')
+        this.alertable.success('Saved')
 
         if (data.success) {
             data.success()

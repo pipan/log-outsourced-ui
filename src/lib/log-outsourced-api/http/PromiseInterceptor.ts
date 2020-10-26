@@ -24,8 +24,7 @@ export class PromiseInterceptor {
                     type: 'error',
                     response: err
                 })
-                // todo: netreba to vyhodit exception
-                return err
+                throw err
             })
     }
 }

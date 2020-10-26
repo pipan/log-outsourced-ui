@@ -5,13 +5,14 @@
             <div class="card__body">
                 <constant-field
                     label="User"
-                    :value="connection.username + '@' + connection.host"></constant-field>
+                    :value="connection.username + '@' + connection.host"
+                    :error="errors ? errors.host : ''"></constant-field>
                 <password-field
                     :autofocus="true"
                     id="password"
                     label="Password"
                     :value="model.password"
-                    :error="error.message"
+                    :error="errors ? errors.password : ''"
                     @change="model.password = $event"></password-field>
             </div>
             <footer class="card__footer">
@@ -35,7 +36,7 @@
     })
     export default class ConnectionLogin extends Vue {
         @Prop() readonly connection!: any
-        @Prop() readonly error!: any
+        @Prop() readonly errors!: any
 
         public model: any = {
             password: ''
