@@ -1,7 +1,7 @@
 <template>
     <section>
         <project-card
-            title="Edit project"
+            title="Rename Project"
             :model="project"
             :form="form"
             @submit="save($event)"

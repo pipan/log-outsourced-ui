@@ -14,7 +14,7 @@ export class ConnectionCreateController implements Controller {
     public action (data?: any): void {
         const body = data.body
         const connection = this.service.create(body)
-        this.alertable.success('')
+        this.alertable.success('Saved')
         if (data.success) {
             data.success(connection)
         }

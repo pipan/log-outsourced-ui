@@ -13,6 +13,6 @@ export class ConnectionDeleteController implements Controller {
 
     public action (data?: any): void {
         this.connections.remove(data)
-        this.alertable.success('')
+        this.alertable.success('Removed')
     }
 }

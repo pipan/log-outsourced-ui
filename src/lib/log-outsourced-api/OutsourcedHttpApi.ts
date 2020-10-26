@@ -59,7 +59,7 @@ export class OutsourcedHttpApi implements OutsourcedApi {
         this.domains.permissions.connect(this.responseChannel)
         this.domains.roles.connect(this.responseChannel)
         this.domains.invite.connect(this.responseChannel)
-        this.domains.auth.connect(this.responseChannel)
+        // this.domains.auth.connect(this.responseChannel)
         this.domains.defaultRoles.connect(this.responseChannel)
         this.domains.projectKeys.connect(this.responseChannel)
         this.domains.log.connect(this.responseChannel)
