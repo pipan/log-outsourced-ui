@@ -15,7 +15,6 @@ Create [new connection](#connection) to the demo server with these credentials.
 * Username: root
 * Password: root
 
-
 ## Usage
 
 This section will guide you trou every aspect of your outsourced server. We hope, this guide will show you full potential of this service.
@@ -45,6 +44,26 @@ You decided to use outsourced server for logging. Good. Logging section enables 
 You can also choose different handlers for different log levels. You can also have multiple handlers for one level. It's up to you. In this example, we want to store low level logs in `file` and high level logs in `redis`.
 
 ![setup logging rules](docs/assets/images/create_logging.gif)
+
+### Set Permissions
+
+The idea behind permissions is for your application to ask if user has permissions. You, as a application creator, don't care how outsourced server will manage permissions for user, you just want to know if a user has permissions.
+
+We took a role base approach to permissions. First of all, you have to create `roles`. Roles are a conveniet way to name and group permissions together under some common type. Roles can represent your organization structure or they can be something more abstract.
+
+![create roles](docs/assets/images/create_roles.gif)
+
+As you can see, we did not have any permissions to choose from, so we had to create them manually. That is because, we don't have any application connected to this project. If you have a lice application connected to your project you will see all permissions your application ever requested to verify. Ofcourse, you can still create permissions manually if you want to.
+
+After you have your roles created, you can assign roles to users. And that is basically it. When your application request a permission verification, outsourced server will look at all roles that this user have and check if those roles have requested permissions.
+
+![assign permissions to user](docs/assets/images/create_user.gif)
+
+### Set Default Roles
+
+You may want to set a `default roles` for new users. User is considered new, if your application want to check permissions for, user that is not in outsourced system yet. To set up default roles, go to `Settings`, select `User` and pick roles that should be assign to new users by default.
+
+![set up default roles](docs/assets/images/setup_default_roles.gif)
 
 ### Administrators
 
