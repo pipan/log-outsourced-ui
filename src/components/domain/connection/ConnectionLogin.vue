@@ -5,8 +5,13 @@
             <div class="card__body">
                 <constant-field
                     label="User"
-                    :value="connection.username + '@' + connection.host"
+                    :value="getUsername()"
                     :error="errors ? errors.host : ''"></constant-field>
+                <input
+                    style="display: none"
+                    type="text"
+                    name="username"
+                    :value="getUsername()" />
                 <password-field
                     :autofocus="true"
                     id="password"
@@ -44,6 +49,10 @@
 
         public cancel (): void {
             this.$emit('cancel')
+        }
+
+        public getUsername (): string {
+            return this.connection.username + '@' + this.connection.host
         }
 
         public save (): void {
