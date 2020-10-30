@@ -1,7 +1,7 @@
 .alert-container {
     position: fixed;
-    right: var(--unit-m);
-    bottom: var(--unit-m);
+    right: var(--unit-s);
+    bottom: var(--unit-s);
     width: auto;
     z-index: 30;
     display: flex;
@@ -15,7 +15,7 @@
     border-radius: var(--corner-radius);
     color: var(--fg);
     padding: var(--unit-s);
-    margin-top: var(--unit-m);
+    margin-top: var(--unit-s);
 
     &:first-of-type {
         margin-top: 0px;
@@ -69,10 +69,13 @@
 @media (min-width: 1280px) {
     .alert-container {
         max-width: 500px;
+        right: var(--unit-m);
+        bottom: var(--unit-m);
     }
 
     .alert {
         padding: var(--unit-s) var(--unit-m);
+        margin-top: var(--unit-m);
         
         &__message {
             flex: 1 1 auto;
