@@ -1,5 +1,6 @@
 import { Kernel } from './lib/framework'
 import { VueApplication, Bootstrap } from './app'
+import './registerServiceWorker'
 
 const kernel = new Kernel()
 kernel.boot(Bootstrap.getModules())

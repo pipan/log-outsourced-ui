@@ -1,4 +1,4 @@
 export interface Validation {
     isValid (): boolean;
-    getErrors (): Map<string, string>
+    getErrors (): Map<string, string>;
 }

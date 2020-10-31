@@ -1,7 +1,6 @@
 {
   "name": "@outsourced/log",
   "version": "0.1.4",
-  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -11,6 +10,7 @@
     "@wildebeest/observable": "^0.4.2",
     "@wildebeest/repository": "0.3.4",
     "clipboard-copy": "^3.1.0",
+    "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.1",
@@ -20,7 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
-    "@vue/cli-plugin-pwa": "^4.5.8",
+    "@vue/cli-plugin-pwa": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
     "@vue/eslint-config-standard": "^5.1.2",
@@ -35,5 +35,6 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.8.3",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "license": "MIT"
 }
