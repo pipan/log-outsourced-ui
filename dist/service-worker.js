@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.6b4bf34549266e42093f911431aff255.js"
+  "/precache-manifest.31b45608661cc6910ae929cc580e7312.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "@outsourced/log"});
