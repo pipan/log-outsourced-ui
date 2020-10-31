@@ -44,7 +44,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/chunk-vendors.de91607a.js"
   },
   {
-    "revision": "7c77899076fe4b355aed8f0cf5a373e9",
+    "revision": "a74d42ca0f7e5be9514b5f4f141de4d6",
     "url": "/manifest.json"
   },
   {
@@ -58,9 +58,5 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "3efa0b75c1d05165d93d4fe50627f5a6",
     "url": "/safari-pinned-tab.svg"
-  },
-  {
-    "revision": "2672444b686b372798f73a92b09d685c",
-    "url": "/site.webmanifest"
   }
 ]);

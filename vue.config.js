@@ -14,6 +14,7 @@ module.exports = {
         },
         manifestOptions: {
             background_color: "#323937",
+            start_url: "/",
             icons: [
                 {
                   src: 'favicon-32x32.png',
@@ -36,17 +37,17 @@ module.exports = {
                   type: 'image/svg+xml'
                 },
                 {
-                  src: 'mstile150x150.png',
+                  src: 'mstile-150x150.png',
                   sizes: '150x150',
                   type: 'image/png'
                 },
                 {
-                    src: 'andriod-chrome-192x192.png',
+                    src: 'android-chrome-192x192.png',
                     sizes: '192x192',
                     type: 'image/png'
                 },
                 {
-                src: 'andriod-chrome-384x384.png',
+                src: 'android-chrome-384x384.png',
                 sizes: '384x384',
                 type: 'image/png'
                 },
