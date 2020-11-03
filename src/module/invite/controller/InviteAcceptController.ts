@@ -3,6 +3,7 @@ import { Alertable } from '@/module/alert'
 import { Repository } from '@wildebeest/repository'
 import { ConnectionService } from '@/module/connection'
 import { ApiFactory } from '@/module/http'
+import { Host } from '@/module/Host'
 
 export class InviteAcceptController implements Controller {
     private repo: Repository<any>
@@ -16,7 +17,8 @@ export class InviteAcceptController implements Controller {
     }
 
     public action (data?: any): void {
-        const host = data.host
+        const name = data.host
+        const host = Host.fromConnectionHost(data.host)
         const body = data.body
         const inviteApi = this.apiFactory.create(host)
 
@@ -29,8 +31,8 @@ export class InviteAcceptController implements Controller {
             .then((response: any) => {
                 this.repo.remove(invite)
                 this.connectionService.create({
-                    name: host,
-                    host: host,
+                    name: name,
+                    host: name,
                     username: invite.username
                 })
                 if (data.success) {
